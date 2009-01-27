@@ -1,0 +1,9 @@
+#!/bin/sh
+unset DISPLAY
+[ "$#" == "0" ] && exec man qterm
+[ "$#" == "1" ] && exec man qterm
+[ "$1" != "-t" ] && exec man qterm
+[ "$2" == "immediate" ] && exec echo "please use /etc/init.d/pbs_server restart instead"
+[ "$2" == "delay" ] && exec echo "untested option"
+[ "$2" != "quick" ] && exec man qterm
+/opt/pbs/bin/qterm -t quick
