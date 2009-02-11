@@ -60,6 +60,19 @@ __vcs_dir() {
   svk_dir ||
   hg_dir ||
   base_dir="$PWD"
-  echo "${vcs:+($vcs)}${_bold}${base_dir/$HOME/~}${_normal}${vcs:+\[$ref\]${_bold}${sub_dir}${_normal}}"
+# echo "${vcs:+($vcs)}${_bold}${base_dir/$HOME/~}${_normal}${vcs:+\[$ref\]${_bold}${sub_dir}${_normal}}"
+if [ -n "$vcs" ]; then
+__vcs_prefix="($vcs)"
+__vcs_base_dir="${base_dir/$HOME/~}"
+__vcs_ref="[$ref]"
+__vcs_sub_dir="${sub_dir}"
+else
+__vcs_prefix=''
+__vcs_base_dir="${PWD/$HOME/~}"
+__vcs_ref=''
+__vcs_sub_dir=''
+fi
 }
-PS1='${debian_chroot:+($debian_chroot)}\u@\h:$(__vcs_dir)\$ '
+#PS1='${debian_chroot:+($debian_chroot)}\u@\h:$(__vcs_dir)\$ '
+PROMPT_COMMAND=__vcs_dir
+PS1='\u@\h:$__vcs_prefix\[${_bold}\]${__vcs_base_dir}\[${_normal}\]${__vcs_ref}\[${_bold}\]${__vcs_sub_dir}\[${_normal}\]\$ '
