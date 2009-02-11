@@ -1,12 +1,4 @@
-# .bashrc
-
-# Source global definitions
-if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
-fi
-
-# User specific aliases and functions
-export SVN_EDITOR=vim
+# Only tested on Mac OS X + git 1.6
 
 # VCS
 _bold=$(tput bold)
@@ -73,6 +65,5 @@ __vcs_ref=''
 __vcs_sub_dir=''
 fi
 }
-#PS1='${debian_chroot:+($debian_chroot)}\u@\h:$(__vcs_dir)\$ '
 PROMPT_COMMAND=__vcs_dir
 PS1='\u@\h:$__vcs_prefix\[${_bold}\]${__vcs_base_dir}\[${_normal}\]${__vcs_ref}\[${_bold}\]${__vcs_sub_dir}\[${_normal}\]\$ '
