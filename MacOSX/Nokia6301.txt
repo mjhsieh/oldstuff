@@ -3,3 +3,7 @@ This is a iSync plugin for Nokia 6301.
 Copy this *.phoneplugin bundle into $HOME/Library/PhonePlugins/ or
 /Library/PhonePlugins/ to finish the installation. After this,
 restart iSync.
+
+This is a modified version of the plugin from
+Klaus Kjeldsen at
+http://klauskjeldsen.dk/2007/06/08/free-nokia-6300-isync-plugin/
