@@ -1,0 +1,162 @@
+#!/usr/bin/env perl
+# This was only tested on OSCAR's OpenPBS.....
+# Use it at your own risk.
+#
+# Mengjuei Hsieh, Molecular Biology and Biochemistry,
+# UC Irvine, Irvine, CA 92697
+#
+
+open(INPUT, "/opt/pbs/bin/qmgr -c 'print server' |") || die "Error running qmgr\n";
+&process_qmgr;
+close (INPUT);
+open(INPUT, "/opt/pbs/bin/pbsnodes -a |") || die "Error running pbsnodes$!\n";
+&process_pbsnode;
+&print_caption;
+&print_data;
+close (INPUT);
+open(INPUT, "/opt/pbs/bin/qstat -na1 |") || die "Error running qstat\n";
+&process_qstat;
+close (INPUT);
+
+
+
+
+sub process_qstat {
+    $countqueued=0;
+    while ( <INPUT> ) {
+       if (/ Q   --     -- $/) {
+          $countqueued++;
+       }
+    }
+    print "                    There are $countqueued job(s) queued. \n";
+}
+
+sub by_mostly_numeric_reversely {
+    ($b <=> $a)||($b cmp $a);
+}
+
+sub process_qmgr {
+    @origqq = <INPUT>;
+    @qq = sort by_mostly_numeric_reversely (grep {! /workq/} (grep {/create queue/} @origqq)); #workq is all
+    $nqueue=0;
+    foreach $string (@qq) {
+	$nqueue++;
+	$string =~ s/create queue //;
+	chomp ($QUEUE[$nqueue]=$string);
+    }
+}
+
+sub print_caption {
+    print ".------------------------------------------------------------.\n";
+    print "|     * OpenPBS NODES REPORT (v0.052) * (by mjhsieh)         |\n";
+    print "`------------------------------------------------------------'\n";
+    print "      Queue         Free       CPU       Nodes     Nodes Down \n";
+    print "      Name          Nodes      in use    Defined   or Offline \n";
+    print "      ----------    -----      -----     -----     -----      \n";
+}
+
+format MYFORMAT =
+      @<<<<<<<<<    @<<<<      @<<<<     @<<<<     @<<<<
+      $queue_s,     $free_s,   $jobs_s,  $node_s,  $ofln_s
+.
+
+sub print_data {
+    $~ = 'MYFORMAT';
+    $queue_s = "";
+    $free_s = 0;
+    $jobs_s = 0;
+    $node_s = 0;
+    $ofln_s = 0;
+    for($i=1;$i<@QUEUE;$i++){
+	$queue_s = $QUEUE[$i];
+	$free_s = $free_q{$i};
+	$jobs_s = $jobs_q{$i};
+	$node_s = $node_q{$i};
+	$ofln_s = $ofln_q{$i};
+	write ();
+    }
+#   if(@QUEUE<1){
+#	$queue_s = "workq";
+#	$free_s = $free_q{1};
+#	$jobs_s = $jobs_q{1};
+#	$node_s = $node_q{1};
+#	$ofln_s = $ofln_q{1};
+#	write ();
+#    }
+    if(@QUEUE>1){
+       print "      --------------------------------------------------\n";
+       $queue_s = "Summary:";
+    }else{
+       $queue_s = "workq";
+    }
+    $free_s = $freec_total;
+    $node_s = $nodec_total;
+    $ofln_s = $oflnc_total;
+    $jobs_s = $jobsc_total;
+    write ();
+}
+
+sub process_pbsnode {
+    $nodec_total=0;
+    $freec_total=0;
+    $oflnc_total=0;
+    $jobsc_total=0;
+    for($i=1;$i<@QUEUE;$i++){
+	$free_q{$i}=0;
+	$jobs_q{$i}=0;
+	$node_q{$i}=0;
+	$ofln_q{$i}=0;
+    }
+    while ( <INPUT> ) {
+	$whichq=0;
+	$bool_ofln=0;
+	while(! /^\n/){
+	    if (/state =/) {
+		chomp (($state) = /.*state.* = (.*\s*)/);
+		if ($state =~ /free/){
+		    $bool_free=1;
+		    $freec_total++;
+		}elsif ($state =~ /offline/) {
+		    $bool_ofln=1;
+		    $bool_free=0;
+		    $oflnc_total++;
+		}elsif ($state =~ /down/) {
+		    $bool_ofln=1;
+		    $oflnc_total++;
+		    $bool_free=0;
+		}else{
+		    $bool_free=0;
+		}
+	    }elsif(/np =/){
+	    }elsif(/ntype =/){
+	    }elsif(/status =/){
+	    }elsif(/jobs =/){
+		chomp (($jobs) = /.*jobs.* = (.*\s*)/);
+		@fields = split(/, /, $jobs);
+		$jobsc = 1 + $#fields;
+		$jobsc_total += $jobsc;
+	    }elsif(! /^    /){
+		$nodec_total++;
+	    }elsif(/properties =/){
+		for($i=1;$i<@QUEUE;$i++){
+		    if (/$QUEUE[$i]/) {
+			$whichq=$i;
+	                if($bool_free==1){
+	                   $free_q{$whichq}++;
+	                }elsif($bool_ofln==1){
+	                   $ofln_q{$whichq}++;
+	                }
+	                $node_q{$whichq}++;
+		    }
+		}
+	    }else{
+		print "DOH! There's still other possibility?\n";
+		print $_;
+	    }
+
+	    $_=<INPUT>;
+	}
+	$jobs_q{$whichq}+=$jobsc; # Serious Flaw! multiple queue does not show right number!
+	$jobsc=0;
+    }
+}

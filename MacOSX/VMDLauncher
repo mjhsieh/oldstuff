@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# VMDLauncher
+# Purpose: start VMD from within a Terminal.app session
+
+p=`dirname "$0"`
+osascript << EOT
+tell application "System Events" to set terminalOn to (exists process "Terminal")
+tell application "Terminal"
+    if (terminalOn) then
+	do script "\"$p/../Resources/VMD.app/Contents/MacOS/VMD\"; exit"
+    else
+	do script "\"$p/../Resources/VMD.app/Contents/MacOS/VMD\"; exit" in front window
+    end if
+end tell
+EOT
