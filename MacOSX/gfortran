@@ -1,0 +1,3 @@
+#!/bin/sh
+myfortran="/opt/local/bin/gfortran-mp-4.3"
+$myfortran $*
