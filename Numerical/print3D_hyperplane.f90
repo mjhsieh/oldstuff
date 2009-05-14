@@ -33,45 +33,53 @@ program print3DHyperplane
 end program
 
 subroutine hppidx(xm,ym,zm,xmymzm,xmym,nhpp,hpporder,totprevhpp)
+!  This provides a 3-d hyperplane ordering sequence in hpporder.
+!
+!  To use it, refer to this example:
+!       do i = 1, nhpp
+!          print *,hpporder(totprevhpp(i)+1:totprevhpp(i+1))
+!       enddo
+!
 !  Inspired by Ushiro Yasunori from http://www.netlib.org/ddsv
-!  This provide a 3-d hyperplane ordering sequence
+!  Author: Mengjuei Hsieh, University of California Irvine
    implicit none
+
    integer xm,ym,zm,xmymzm,xmym,nhpp
-   integer i,j,k,ind,ierr
+   integer i,j,k,mygrid,ierr
    integer hpporder(*),totprevhpp(*)
    integer, allocatable :: whichhpp(:)
    integer, allocatable :: lastinhpp(:)
-
-   allocate( whichhpp(xmymzm), stat = ierr )
+   allocate( whichhpp(xmymzm),stat = ierr )
    ! Which hyperplane does this grid belong to.
    allocate( lastinhpp(nhpp), stat = ierr )
    ! The last grid's rank in the hp ordering
 
-   totprevhpp(1)=0
-   lastinhpp=0
-   do k=0,zm-1
-      do j=0,ym-1
-         ind=k*xmym+j*xm
-         do i=1,xm
-            whichhpp(ind+i)=i+j+k
+   totprevhpp(1) = 0
+   lastinhpp     = 0
+
+   do k=0, zm-1
+      do j=0, ym-1
+         mygrid=k*xmym+j*xm
+         do i=1, xm
+            whichhpp(mygrid+i)=i+j+k
          enddo 
       enddo
    enddo
-   do j=1,xmymzm
-      lastinhpp(whichhpp(j))=lastinhpp(whichhpp(j))+1
+   do i=1, xmymzm
+      lastinhpp(whichhpp(i))=lastinhpp(whichhpp(i))+1
    enddo
    totprevhpp(2)=totprevhpp(1)+lastinhpp(1)
    lastinhpp(1)=totprevhpp(1)
-   do i=2,nhpp
+   do i=2, nhpp
       totprevhpp(i+1)=totprevhpp(i)+lastinhpp(i)
       lastinhpp(i)=totprevhpp(i)
    enddo
-   do j=1,xmymzm
-      lastinhpp(whichhpp(j))=lastinhpp(whichhpp(j))+1
-      hpporder(lastinhpp(whichhpp(j)))=j
+   do i=1, xmymzm
+      lastinhpp(whichhpp(i))=lastinhpp(whichhpp(i))+1
+      hpporder(lastinhpp(whichhpp(i)))=j
    enddo
 
-   deallocate( whichhpp,stat = ierr )
+   deallocate( whichhpp, stat = ierr )
    deallocate( lastinhpp,stat = ierr )
    return
 end subroutine hppidx
