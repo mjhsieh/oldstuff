@@ -9,7 +9,7 @@ program print3DHyperplane
    zm      = 4
    xmymzm  = xm*ym*zm
    xmym    = xm*ym
-   nhpp = xm+ym+zm-2 ! The number of hyperplanes in a cube mesh
+   nhpp    = xm+ym+zm-2 ! The number of hyperplanes in a cube mesh
 
    ! +-+-+-+  In this 2d example xm = 4, ym = 3, total number of
    ! | | | |  hyperplanes in this example is 6, i.e. xm + ym - 1
@@ -29,7 +29,7 @@ program print3DHyperplane
    enddo
 
    deallocate( hpporder,  stat = ierr )
-   deallocate( totprevhpp, stat = ierr )
+   deallocate( totprevhpp,stat = ierr )
 end program
 
 subroutine hppidx(xm,ym,zm,xmymzm,xmym,nhpp,hpporder,totprevhpp)
@@ -57,26 +57,28 @@ subroutine hppidx(xm,ym,zm,xmymzm,xmym,nhpp,hpporder,totprevhpp)
    totprevhpp(1) = 0
    lastinhpp     = 0
 
-   do k=0, zm-1
-      do j=0, ym-1
+   ! H_m is the hyperplane
+   ! m = i + j + k
+   do k =  0, zm-1
+      do j = 0, ym-1
          mygrid=k*xmym+j*xm
-         do i=1, xm
+         do i = 1, xm
             whichhpp(mygrid+i)=i+j+k
          enddo 
       enddo
    enddo
-   do i=1, xmymzm
+   do i = 1, xmymzm
       lastinhpp(whichhpp(i))=lastinhpp(whichhpp(i))+1
    enddo
    totprevhpp(2)=totprevhpp(1)+lastinhpp(1)
    lastinhpp(1)=totprevhpp(1)
-   do i=2, nhpp
+   do i = 2, nhpp
       totprevhpp(i+1)=totprevhpp(i)+lastinhpp(i)
       lastinhpp(i)=totprevhpp(i)
    enddo
-   do i=1, xmymzm
+   do i = 1, xmymzm
       lastinhpp(whichhpp(i))=lastinhpp(whichhpp(i))+1
-      hpporder(lastinhpp(whichhpp(i)))=j
+      hpporder(lastinhpp(whichhpp(i)))=i
    enddo
 
    deallocate( whichhpp, stat = ierr )
