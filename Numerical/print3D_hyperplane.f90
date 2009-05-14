@@ -2,22 +2,21 @@ program print3DHyperplane
    implicit none
    integer xm,     ym,   zm
    integer xmymzm, xmym, nhpp
-   integer ierr, i,j
+   integer ierr,   i
    integer, allocatable :: hpporder(:), totprevhpp(:)
    xm      = 4
    ym      = 4
    zm      = 4
    xmymzm  = xm*ym*zm
    xmym    = xm*ym
-   nhpp    = xm+ym+zm-2 ! The number of hyperplanes in a cube mesh
-
+   nhpp    = xm+ym+zm-2
+   ! The number of hyperplanes in a cube mesh
    ! +-+-+-+  In this 2d example xm = 4, ym = 3, total number of
    ! | | | |  hyperplanes in this example is 6, i.e. xm + ym - 1
    ! +-+-+-+
    ! | | | |
    ! +-+-+-+
 
-   !   hpporder(xmymzm),whichhpp(xmymzm),totprevhpp(nhpp+1),lastinhpp(nhpp)
    allocate( hpporder(xmymzm),  stat = ierr )
    !   All numbered grids sorted with hyperplane ordering
    allocate( totprevhpp(nhpp+1),stat = ierr )
@@ -40,7 +39,7 @@ subroutine hppidx(xm,ym,zm,xmymzm,xmym,nhpp,hpporder,totprevhpp)
 !          print *,hpporder(totprevhpp(i)+1:totprevhpp(i+1))
 !       enddo
 !
-!  Inspired by Ushiro Yasunori from http://www.netlib.org/ddsv
+!  Inspired by Ushiro Yasunori's code in http://netlib.org/ddsv
 !  Author: Mengjuei Hsieh, University of California Irvine
    implicit none
 
