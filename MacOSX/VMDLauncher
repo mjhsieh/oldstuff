@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# VMDLauncher
+# VMD\ 1.8.6.app/Contents/MacOS/VMDLauncher
 # Purpose: start VMD from within a Terminal.app session
 
 p=`dirname "$0"`
@@ -14,3 +14,4 @@ tell application "Terminal"
     end if
 end tell
 EOT
+# VMD\ 1.8.6.app/Contents/MacOS/startup.command is not required.
