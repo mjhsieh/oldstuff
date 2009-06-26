@@ -1,7 +1,9 @@
 #!/bin/sh
+# Usage: qterm [-t immediate|delay|quick] [server ...]
 unset DISPLAY
 [ "$#" == "0" ] && exec man qterm
 [ "$#" == "1" ] && exec man qterm
+[  $# -gt  2  ] && exec man qterm
 [ "$1" != "-t" ] && exec man qterm
 [ "$2" == "immediate" ] && exec echo "please use /etc/init.d/pbs_server restart instead"
 [ "$2" == "delay" ] && exec echo "untested option"
