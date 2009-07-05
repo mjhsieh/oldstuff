@@ -1,4 +1,9 @@
 #!/usr/bin/perl -w
+# Title:  A script to retreive information from installation records
+#         in Mac OS X Leopard or greater.
+# Author: Mengjuei Hsieh
+# 
+#
 use strict;
 use warnings;
 use Foundation;
