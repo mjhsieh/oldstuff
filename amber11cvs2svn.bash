@@ -1,8 +1,19 @@
 #!/bin/bash
-(cd amber11.cvs; cvs -z3 update -Pd)
-if [ -d amber11.cvs -a -d amber11.svn ]; then
+die(){
+   echo $* > /dev/stderr
+   exit 1
+}
+
+if [ -d amber11.cvs] ; then
+   (cd amber11.cvs; cvs -z3 update -Pd)
+else
+   die amber11.cvs repository required
+fi
+if [ -d amber11.svn ]; then
    rsync -avx --exclude 'bin' --exclude 'exe' --exclude 'CVS' --exclude '.svn' \
          --delete amber11.cvs/ amber11.svn/
+else
+   die amber11.svn repository required
 fi
 cd amber11.svn
 for missedfile in $(svn st | grep -e '^!' | sed -e 's/!	//'); do
