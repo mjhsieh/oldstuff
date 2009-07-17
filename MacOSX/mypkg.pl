@@ -1,8 +1,7 @@
 #!/usr/bin/perl -w
 # Title:  A script to retreive information from installation records
 #         in Mac OS X Leopard or greater.
-# Author: Mengjuei Hsieh
-# 
+# Author: Mengjuei Hsieh, University of California Irvine
 #
 use strict;
 use warnings;
@@ -135,21 +134,57 @@ sub prn_usage {
     print "     files PKGID           (List files installed by the specified package)\n"; 
 }
 
+# use forking open so child can send to parent
 sub execute_command {
-    my $command_prog_ref = shift;
-    my $command_argv_ref = shift;
-    my @result_output = ();
+    my $cmd_prog = shift;
+    my $cmd_argv = shift;
+    my @cmd_output = ();
     if (open(CHILD, "-|")) {
         while (<CHILD>) {
             chomp;
-            push(@result_output,$_);
+            push(@cmd_output,$_);
         }
         close(CHILD);
     } else {
-        exec(@$command_prog_ref, @$command_argv_ref);
+        exec(@$cmd_prog, @$cmd_argv);
     }
 
-    return @result_output;
+    return @cmd_output;
 }
 
 main();
+exit 0;
+
+=head1 NAME
+
+mypkg.pl - Make querying Mac OS X packages easier.
+
+=head1 SYNOPSIS
+
+mypkg.pl <verb> [package]
+
+=head1 DESCRIPTION
+
+blah
+
+=head1 SEE ALSO
+
+blah
+
+=head1 TODO
+
+blah
+
+=head1 AUTHOR
+
+Mengjuei Hsieh, University of California Irvine
+
+=head1 CREDITS
+
+blah
+
+=head1 COPYRIGHT AND DISCLAIMER
+
+Current under new BSD LICENSE
+
+=cut
