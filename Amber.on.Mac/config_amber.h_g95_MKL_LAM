@@ -49,7 +49,7 @@ FREEFORMAT_FLAG= -ffree-form
 #------------------------------------------------------------------------------
 LOAD= /opt/amber10/bin/mpif77   $(LOCALFLAGS) $(AMBERBUILDFLAGS)
 LOADCC= gcc  $(LOCALFLAGS) $(AMBERBUILDFLAGS)
-LOADLIB=  -L/Library/Frameworks/Intel_MKL.framework/Libraries/32 -lmkl_lapack -lmkl_intel -lguide -lpthread
+LOADLIB=  -L/Library/Frameworks/Intel_MKL.framework/Libraries/32 -lmkl_intel -lmkl_intel_thread -lguide -lpthread
 LM= -lm
 XHOME= /usr/X11R6
 XLIBS= -L/usr/X11R6/lib
