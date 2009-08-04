@@ -1,0 +1,88 @@
+#==============================================================================
+# AMBER Makefile configuration for compiler/architecture: g95
+# Generated via command: ./configure_amber -lamsource -nosanderidc -nobintraj -p4 g95
+#
+# Configuration script written mainly by Joe Krahn, Scott Brozell, and
+# Dave Case, with contributions from lots of people.
+#==============================================================================
+
+#------------------------------------------------------------------------------
+# AMBERBUILDFLAGS provides a hook into the build process for installers;
+# for example, to build debug versions of the amber programs
+# make -e AMBERBUILDFLAGS="-DDEBUG -g"
+#------------------------------------------------------------------------------
+AMBERBUILDFLAGS=
+
+#------------------------------------------------------------------------------
+# LOCALFLAGS is intended for program specific modifications to the
+# Fortran build process and may be modified by the program's local makefile
+#------------------------------------------------------------------------------
+LOCALFLAGS=
+
+#------------------------------------------------------------------------------
+# Availability and method of delivery of math and optional libraries
+#------------------------------------------------------------------------------
+USE_BLASLIB=$(VENDOR_SUPPLIED)
+USE_LAPACKLIB=$(VENDOR_SUPPLIED)
+
+#------------------------------------------------------------------------------
+# C compiler
+#------------------------------------------------------------------------------
+CC= gcc
+CPLUSPLUS=g++
+CFLAGS= -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -O2 -m32 $(AMBERBUILDFLAGS)
+CPPFLAGS= $(AMBERBUILDFLAGS)
+
+#------------------------------------------------------------------------------
+# Fortran preprocessing and compiler.
+# FPPFLAGS holds the main Fortran options, such as whether MPI is used.
+#------------------------------------------------------------------------------
+FPPFLAGS= -I/opt/amber10/include -P -DNO_SANDER_DIVCON -xassembler-with-cpp -DMKL -DMPI $(AMBERBUILDFLAGS)
+FPP= cpp -traditional $(FPPFLAGS)
+FC= /opt/amber10/bin/mpif77
+FFLAGS= -O0  -fno-second-underscore -march=pentium4 -mfpmath=sse -msse -msse2 -malign-double $(LOCALFLAGS) $(AMBERBUILDFLAGS)
+FOPTFLAGS= -O3  -fno-second-underscore -march=pentium4 -mfpmath=sse -msse -msse2 -malign-double $(LOCALFLAGS) $(AMBERBUILDFLAGS)
+FREEFORMAT_FLAG= -ffree-form
+
+#------------------------------------------------------------------------------
+# Loader:
+#------------------------------------------------------------------------------
+LOAD= /opt/amber10/bin/mpif77   $(LOCALFLAGS) $(AMBERBUILDFLAGS)
+LOADCC= gcc  $(LOCALFLAGS) $(AMBERBUILDFLAGS)
+LOADLIB=  -L/Library/Frameworks/Intel_MKL.framework/Libraries/32 -lmkl_lapack -lmkl_intel -lguide -lpthread
+LM= -lm
+XHOME= /usr/X11R6
+XLIBS= -L/usr/X11R6/lib
+
+#------------------------------------------------------------------------------
+#  Other stuff:
+#------------------------------------------------------------------------------
+.SUFFIXES:  .f90
+EMPTY=
+AR=ar rv
+M4=m4
+RANLIB=ranlib
+SFX=
+NETCDF=
+NETCDFLIB=
+MODULEDIR=-I
+testsanderDIVCON=skipsanderDIVCON
+INCDIVCON= 
+LIBDIVCON= 
+
+#  Location for executables, etc:
+
+BINDIR=/opt/amber10/bin
+LIBDIR=/opt/amber10/lib
+INCDIR=/opt/amber10/include
+DATDIR=/opt/amber10/dat
+
+#  default rules for Fortran and C compilation:
+
+.f.o:   $<
+	$(FPP) $< > _$<
+	$(FC) -c $(FFLAGS) -o $@ _$<
+
+.c.o:
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
+
