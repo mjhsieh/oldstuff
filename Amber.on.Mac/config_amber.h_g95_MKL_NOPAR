@@ -1,6 +1,6 @@
 #==============================================================================
 # AMBER Makefile configuration for compiler/architecture: g95
-# Generated via command: ./configure_amber -lamsource -nosanderidc -nobintraj -p4 g95
+# Generated via command: ./configure_amber -nopar -p4 -nobintraj -nosanderidc g95
 #
 # Configuration script written mainly by Joe Krahn, Scott Brozell, and
 # Dave Case, with contributions from lots of people.
@@ -37,9 +37,9 @@ CPPFLAGS= $(AMBERBUILDFLAGS)
 # Fortran preprocessing and compiler.
 # FPPFLAGS holds the main Fortran options, such as whether MPI is used.
 #------------------------------------------------------------------------------
-FPPFLAGS= -I/opt/amber10/include -P -DNO_SANDER_DIVCON -xassembler-with-cpp -DMKL -DMPI $(AMBERBUILDFLAGS)
+FPPFLAGS= -P -DNO_SANDER_DIVCON -xassembler-with-cpp -DMKL $(AMBERBUILDFLAGS)
 FPP= cpp -traditional $(FPPFLAGS)
-FC= /opt/amber10/bin/mpif77
+FC= g95
 FFLAGS= -O0  -fno-second-underscore -march=pentium4 -mfpmath=sse -msse -msse2 -malign-double $(LOCALFLAGS) $(AMBERBUILDFLAGS)
 FOPTFLAGS= -O3  -fno-second-underscore -march=pentium4 -mfpmath=sse -msse -msse2 -malign-double $(LOCALFLAGS) $(AMBERBUILDFLAGS)
 FREEFORMAT_FLAG= -ffree-form
@@ -47,7 +47,7 @@ FREEFORMAT_FLAG= -ffree-form
 #------------------------------------------------------------------------------
 # Loader:
 #------------------------------------------------------------------------------
-LOAD= /opt/amber10/bin/mpif77   $(LOCALFLAGS) $(AMBERBUILDFLAGS)
+LOAD= g95   $(LOCALFLAGS) $(AMBERBUILDFLAGS)
 LOADCC= gcc  $(LOCALFLAGS) $(AMBERBUILDFLAGS)
 LOADLIB=  -L/Library/Frameworks/Intel_MKL.framework/Versions/Current/lib/32 -lmkl_intel -lmkl_intel_thread -lguide -lpthread
 LM= -lm
@@ -72,10 +72,10 @@ LIBDIVCON=
 
 #  Location for executables, etc:
 
-BINDIR=/opt/amber10/bin
-LIBDIR=/opt/amber10/lib
-INCDIR=/opt/amber10/include
-DATDIR=/opt/amber10/dat
+BINDIR=/opt/amber10.serial/bin
+LIBDIR=/opt/amber10.serial/lib
+INCDIR=/opt/amber10.serial/include
+DATDIR=/opt/amber10.serial/dat
 
 #  default rules for Fortran and C compilation:
 
