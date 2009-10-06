@@ -1,0 +1,76 @@
+Index: src/gleap/freelib/boost/mpl/apply_wrap.hpp
+--- src/gleap/freelib/boost/mpl/apply_wrap.hpp	(original)
++++ src/gleap/freelib/boost/mpl/apply_wrap.hpp	(current)
+@@ -78,7 +78,8 @@
+ 
+ ///// iteration, depth == 1
+ 
+-#elif BOOST_PP_ITERATION_DEPTH() == 1
++#else //BOOST_PP_ITERATION_DEPTH()
++#if BOOST_PP_ITERATION_DEPTH() == 1
+ 
+ #   define i_ BOOST_PP_FRAME_ITERATION(1)
+ 
+@@ -197,4 +198,5 @@
+ 
+ #   undef j_
+ 
++#endif // BOOST_PP_ITERATION_DEPTH
+ #endif // BOOST_PP_IS_ITERATING
+Index: src/gleap/freelib/boost/mpl/aux_/advance_backward.hpp
+--- src/gleap/freelib/boost/mpl/aux_/advance_backward.hpp	(original)
++++ src/gleap/freelib/boost/mpl/aux_/advance_backward.hpp	(current)
+@@ -79,7 +79,8 @@
+ 
+ ///// iteration, depth == 1
+ 
+-#elif BOOST_PP_ITERATION_DEPTH() == 1
++#else // BOOST_PP_ITERATION_DEPTH()
++#if BOOST_PP_ITERATION_DEPTH() == 1
+ #define i_ BOOST_PP_FRAME_ITERATION(1)
+ 
+ template<>
+@@ -121,4 +122,5 @@
+ #   undef AUX778076_ITER_1
+ #   undef AUX778076_ITER_0
+ 
++#endif // BOOST_PP_ITERATION_DEPTH()
+ #endif // BOOST_PP_IS_ITERATING
+Index: src/gleap/freelib/boost/mpl/aux_/advance_forward.hpp
+--- src/gleap/freelib/boost/mpl/aux_/advance_forward.hpp	(original)
++++ src/gleap/freelib/boost/mpl/aux_/advance_forward.hpp	(current)
+@@ -79,7 +79,8 @@
+ 
+ ///// iteration, depth == 1
+ 
+-#elif BOOST_PP_ITERATION_DEPTH() == 1
++#else //BOOST_PP_ITERATION_DEPTH()
++#if BOOST_PP_ITERATION_DEPTH() == 1
+ #define i_ BOOST_PP_FRAME_ITERATION(1)
+ 
+ template<>
+@@ -120,4 +121,5 @@
+ #   undef AUX778076_ITER_1
+ #   undef AUX778076_ITER_0
+ 
++#endif //BOOST_PP_ITERATION_DEPTH
+ #endif // BOOST_PP_IS_ITERATING
+Index: src/gleap/freelib/boost/mpl/aux_/numeric_op.hpp
+--- src/gleap/freelib/boost/mpl/aux_/numeric_op.hpp	(original)
++++ src/gleap/freelib/boost/mpl/aux_/numeric_op.hpp	(current)
+@@ -287,7 +287,8 @@
+ 
+ ///// iteration, depth == 1
+ 
+-#elif BOOST_PP_ITERATION_DEPTH() == 1
++#else //BOOST_PP_ITERATION_DEPTH() == 1
++#if BOOST_PP_ITERATION_DEPTH() == 1
+ 
+ #   define i_ BOOST_PP_FRAME_ITERATION(1)
+ 
+@@ -308,4 +309,5 @@
+ 
+ #   undef i_
+ 
++#endif //BOOST_PP_ITERATION_DEPTH
+ #endif // BOOST_PP_IS_ITERATING
