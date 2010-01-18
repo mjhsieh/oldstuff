@@ -1,0 +1,372 @@
+#ifndef XCOMM
+#define XCOMM #
+#endif
+
+#ifndef NormalLibXaw
+#define NormalLibXaw YES
+#endif
+
+#ifndef ProfileLibXaw 
+#define NormalLibXaw NO
+#endif 
+
+#ifndef DebugLibXaw
+#define DebugLibXaw NO
+#endif
+
+#ifndef SharedLibXaw
+#define SharedLibXaw NO
+#endif
+
+
+#ifndef DoNormalLib 
+#if (ProjectX < 5)
+#define DoNormalLib YES
+#else
+#define DoNormalLib NormalLibXaw
+#endif
+#endif
+
+#ifndef DoProfileLib 
+#define DoProfileLib ProfileLibXaw
+#endif
+
+#ifndef DoDebugLib 
+#define DoDebugLib DebugLibXaw
+#endif
+
+#ifndef DoSharedLib 
+#define DoSharedLib SharedLibXaw
+#endif
+
+#ifdef AvoidNullMakeCommand
+#undef AvoidNullMakeCommand
+#endif
+
+#define AvoidNullMakeCommand YES
+
+LIBRARY_NAME = Xraw
+SOX_REVISION = 4.0
+
+XCOMM XRAW_DEBUG = -DEBUG_XRAW_MALLOC
+
+#if (ProjectX < 5)
+
+  CCOPTIONS = LibraryCCOptions
+STD_DEFINES = LibraryDefines
+CDEBUGFLAGS = $(XRAW_DEBUG) LibraryCDebugFlags
+
+#else
+
+/* R5 needs another .tmpl file to find these #def's.  This .tmpl file will */
+/* also set STD_DEFINES and CDEBUGFLAGS properly.                          */
+
+#include <Library.tmpl>
+
+CDEBUGFLAGS = $(XRAW_DEBUG) LibraryCDebugFlags
+
+#endif /* (ProjectX < 5) */
+
+
+#include "Xraw.tmpl"
+
+          DEFINES = -DSHAPE $(XAWBCDEFINES)
+         INCLUDES = -I. -I..
+     INSTALLFLAGS = $(INSTINCFLAGS)
+         LINTLIBS = $(LINTXTOLL) $(LINTXLIB) 
+      ALLINCLUDES = $(INCLUDES) $(EXTRA_INCLUDES) $(TOP_INCLUDES) $(STD_INCLUDES) $(VENDOR_INCLUDES)
+
+
+HEADERS = \
+	3d.h \
+	AllWidgets.h \
+	Arrow.h \
+	ArrowP.h  \
+	AsciiSink.h \
+	AsciiSinkP.h \
+	AsciiSrc.h \
+	AsciiSrcP.h \
+	AsciiText.h \
+	AsciiTextP.h \
+	Box.h \
+	BoxP.h \
+	Cardinals.h \
+	Clock.h \
+	ClockP.h \
+	Command.h \
+	CommandP.h \
+	color.h \
+	Container.h \
+	ContainerP.h \
+	Dialog.h \
+	DialogP.h \
+	Form.h \
+	FormP.h \
+	Frame.h \
+	FrameP.h \
+	Grip.h \
+	GripP.h \
+	Label.h \
+	LabelP.h \
+	List.h \
+	ListP.h \
+	Logo.h \
+	LogoP.h \
+	MenuButton.h \
+	MenuButtoP.h \
+	Mailbox.h \
+	MailboxP.h \
+	Paned.h \
+	PanedP.h \
+	Panner.h \
+	PannerP.h \
+	Porthole.h \
+	PortholeP.h \
+	Repeater.h \
+	RepeaterP.h \
+	Reports.h \
+	Scrollbar.h \
+	ScrollbarP.h \
+	ScrolledTable.h \
+	ScrolledTableP.h \
+	Separator.h \
+	SeparatorP.h \
+	Simple.h \
+	SimpleP.h \
+	SimpleMenu.h \
+	SimpleMenP.h \
+	Sme.h \
+	SmeP.h \
+	SmeBSB.h \
+	SmeBSBP.h \
+	SmeLine.h \
+	SmeLineP.h \
+	StripChart.h \
+	StripCharP.h \
+	table.h \
+	Table.h \
+	TableP.h \
+	Text.h \
+	TextP.h \
+	TextSink.h \
+	TextSinkP.h \
+	TextSrc.h \
+	TextSrcP.h \
+	Toggle.h \
+	ToggleP.h \
+	Tree.h \
+	TreeP.h \
+	Viewport.h \
+	ViewportP.h \
+	XawAll.h \
+	XawInit.h 
+
+SRCS = \
+	3d.c \
+	AllWidgets.c \
+	Arrow.c \
+	AsciiSink.c \
+	AsciiSrc.c \
+	AsciiText.c \
+	Box.c \
+	Clock.c \
+	Command.c \
+	color.c \
+	Container.c \
+	Dialog.c \
+	Form.c \
+	Frame.c \
+	Grip.c \
+	Label.c \
+	List.c \
+	Logo.c \
+	MenuButton.c \
+	Mailbox.c \
+	Paned.c \
+	Panner.c \
+	Porthole.c \
+	Repeater.c \
+	Scrollbar.c \
+	ScrolledTable.c \
+	Separator.c \
+	Simple.c \
+	SimpleMenu.c \
+	Sme.c \
+	SmeBSB.c \
+	SmeLine.c \
+	StripChart.c \
+	table.c \
+	Table.c \
+	Text.c \
+	TextSink.c \
+	TextSrc.c \
+	TextAction.c \
+	TextPop.c \
+	TextTr.c \
+	Toggle.c \
+	Tree.c \
+	Viewport.c \
+	Vendor.c \
+	XawInit.c
+
+#if SharedDataSeparation
+UNSHAREDOBJS = AllWidgets.o sharedlib.o
+#endif
+
+OBJS = \
+	3d.o \
+	AllWidgets.o \
+	Arrow.o \
+	AsciiSink.o \
+	AsciiSrc.o \
+	AsciiText.o \
+	Box.o \
+	Clock.o \
+	Command.o \
+	color.o \
+	Container.o \
+	Dialog.o \
+	Form.o \
+	Frame.o \
+	Grip.o \
+	Label.o \
+	List.o \
+	Logo.o \
+	MenuButton.o \
+	Paned.o \
+	Panner.o \
+	Porthole.o \
+	Repeater.o \
+	Scrollbar.o \
+ 	ScrolledTable.o \
+	Separator.o \
+	Simple.o \
+	SimpleMenu.o \
+	Sme.o \
+	SmeBSB.o \
+	SmeLine.o \
+	StripChart.o \
+	table.o \
+	Table.o \
+	Text.o \
+	TextSink.o \
+	TextSrc.o \
+	TextAction.o \
+	TextPop.o \
+	TextTr.o \
+	Toggle.o \
+	Tree.o \
+	Vendor.o \
+	Viewport.o \
+	XawInit.o 
+
+#if (ProjectX < 5)
+
+XCOMM ################################################
+XCOMM                  ProjectX < 5
+XCOMM
+
+#if DoSharedLib
+# if DoDebugLib
+SharedAndDebuggedLibraryObjectRule()
+# else
+XrawSharedLibraryObjectRule() /* instead of SharedLibraryObjectRule() */
+# endif
+#else
+# if DoDebugLib && DoProfileLib
+DebuggedAndProfiledLibraryObjectRule()
+# else
+# if DoDebugLib
+XrawDebuggedLibraryObjectRule() /* instead of DebuggedLibraryObjectRule() */
+#  else
+#   if DoProfileLib
+ProfiledLibraryObjectRule()
+#   else
+NormalLibraryObjectRule()
+#   endif
+#  endif
+# endif
+#endif
+
+#if DoSharedLib
+NormalSharedLibraryTarget($(LIBRARY_NAME),$(SOX_REVISION),$(OBJS))
+InstallSharedLibrary($(LIBRARY_NAME),$(SOX_REVISION),$(USRLIBDIR))
+#endif
+
+#if DoDebugLib
+DebuggedLibraryTarget($(LIBRARY_NAME),$(OBJS))
+#endif
+
+#if DoNormalLib
+NormalLibraryTarget($(LIBRARY_NAME),$(OBJS))
+LintLibraryTarget($(LIBRARY_NAME),$(SRCS))
+InstallLibrary($(LIBRARY_NAME),$(USRLIBDIR))
+InstallLintLibrary($(LIBRARY_NAME),$(LINTLIBDIR))
+#endif
+
+#if DoProfileLib
+ProfiledLibraryTarget($(LIBRARY_NAME),$(OBJS))
+InstallLibrary($(LIBRARY_NAME)_p,$(USRLIBDIR))
+#endif
+
+XCOMM
+XCOMM ################################################
+
+
+#else           /*  ProjectX == 5  */
+
+
+XCOMM ################################################
+XCOMM               ProjectX == 5
+XCOMM   
+
+LibraryObjectRule()
+
+#if DoSharedLib
+#  if DoNormalLib
+SharedLibraryTarget($(LIBRARY_NAME),$(SOX_REVISION),$(OBJS),shared,..)
+#  else
+SharedLibraryTarget($(LIBRARY_NAME),$(SOX_REVISION),$(OBJS),.,.)
+#  endif
+InstallSharedLibrary($(LIBRARY_NAME),$(SOX_REVISION),$(USRLIBDIR))
+InstallSharedLibraryData($(LIBRARY_NAME),$(SOX_REVISION),$(USRLIBDIR))
+#endif
+
+#if DoNormalLib
+NormalLibraryTarget($(LIBRARY_NAME),$(OBJS))
+InstallLibrary($(LIBRARY_NAME),$(USRLIBDIR))
+#endif
+
+#if DoProfileLib
+ProfiledLibraryTarget($(LIBRARY_NAME),$(OBJS))
+InstallLibrary($(LIBRARY_NAME)_p,$(USRLIBDIR))
+#endif
+
+#if DoDebugLib
+DebuggedLibraryTarget($(LIBRARY_NAME),$(OBJS))
+InstallLibrary($(LIBRARY_NAME)_d,$(USRLIBDIR))
+#endif
+
+XCOMM
+XCOMM ################################################
+XCOMM
+
+#endif 
+
+#if defined(CrayArchitecture) && defined(CrayUsingSCC)
+XCOMM
+XCOMM # Cray SCC optimizer is broken
+XCOMM
+SpecialObjectRule(Paned.o,  ,-hnoopt)
+#endif
+
+DependTarget()
+NormalLintTarget($(SRCS))
+
+XrawBuildIncludes($(HEADERS),$(LIBRARY_NAME),../..)
+XrawBuildIncludes($(HEADERS),Xaw,../..)
+
+#if DoSharedLib
+XrawSharedLibraryRevisionLink($(SOXAWREV))
+#endif
+

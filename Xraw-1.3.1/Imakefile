@@ -1,0 +1,27 @@
+#define IHaveSubdirs
+
+
+SUBDIRS = Xraw examples
+
+
+all::
+	@case '${MFLAGS}' in *[ik]*) set +e;; esac; \
+	for i in $(SUBDIRS) ;\
+	do \
+		(cd $$i ; echo making "in $(CURRENT_DIR)/$$i..."; \
+			$(MAKE) $(MFLAGS) all); \
+	done
+
+world::
+	$(MAKE) $(MFLAGS) Makefile 
+	$(MAKE) $(MFLAGS) Makefiles 
+	$(MAKE) $(MFLAGS) clean     
+	$(MAKE) $(MFLAGS) includes  
+	$(MAKE) $(MFLAGS) depend
+	$(MAKE) $(MFLAGS) all    
+
+clean::
+	$(RM) -rf ./X11 
+
+DependSubdirs($(SUBDIRS))
+

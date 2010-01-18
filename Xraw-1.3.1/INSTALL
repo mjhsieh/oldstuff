@@ -1,0 +1,16 @@
+Xraw == The Remake of The Athena Widget Set
+_________________________________________________________
+
+To install:
+
+xmkmf
+make world
+...
+cd exmple/list_user
+list_user
+
+_________________________________________________________
+Drop me a line, if you well have some problem
+
+romsky@oea.ihep.su    (Russia)
+romsky@munin.ucsf.edu (USA)

@@ -1,0 +1,13 @@
+#ifndef NullParameter
+#define NullParameter /*  */
+#endif
+
+        DEPLIBS = ../../Xraw/libXraw.a
+XCOMM   MALLOC_DEBUG = -L../../dbmalloc -ldbmalloc
+XCOMM  LOCAL_LDFLAGS = -u XtRealloc -u _XtHeapInit -L../../dbmalloc -ldbmalloc
+
+          M4Cmd = m4
+
+#if defined(SunArchitecture)
+          M4Cmd = /usr/5bin/m4
+#endif

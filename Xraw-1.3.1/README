@@ -1,0 +1,49 @@
+
+                                     Xraw 
+
+                     The Remake of The Athena Widget Set
+
+                                 version 1.3.1
+________________________________________________________________________
+
+  The Xraw is a result of evolution well-known Athena Widget Set 
+(called as Xaw; author Chris D. Reterson formerly MIT X Consortium) during
+development X Window version of the LEaP molecular graphics program in
+the AMBER Project at Peter Kollman's lab at the University of California,
+San Francisco.
+
+  The main goal of this work was to update GUI and approach main public 
+domain widget set as Xaw is toward to OSF/Motif.
+
+  Some new widgets were created (Table, ScrolledTable, Frame etc..).
+  
+  Xraw is compatible with R4 and R5.  
+It compiles cleanly on a SunOS 4.1.3, Ultrix 4.4, HPUX A.09.05.
+
+  You can find docs for this set on:
+
+  http://www.amber.ucsf.edu/~romsky/Xraw/
+
+
+__Notes_________________________________________________________________
+
+  Docs not for all widget have been made yet (ask me what you need for)..
+
+  There is not warranty for full compatibility with Xaw..
+
+  If you have an idea of new widget, drop me two lines..
+
+
+
+__Acknowledgement______________________________________________________
+
+   Bill Ross commissioned the work and provided helpful suggestions.
+It REALLY could not have been done without him - thanks, Bill!
+
+__The_Remaker__________________________________________________________
+
+Vladimir T. Romanovski
+romsky@oea.ihep.su    (Russia)
+romsky@munin.ucsf.edu (USA)
+
+7 Jule 1996

@@ -1,0 +1,18 @@
+#ifndef XCOMM
+#define XCOMM #
+#endif
+
+XCOMM ##############################################################
+XCOMM   Colection of examples of using Xraw             
+XCOMM 
+
+#define IHaveSubdirs
+#define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)'
+
+SUBDIRS = \
+	list_user 
+
+
+MakeSubdirs($(SUBDIRS))
+DependSubdirs($(SUBDIRS))
+

@@ -1,0 +1,39 @@
+#ifndef XCOMM
+#define XCOMM #
+#endif
+
+XCOMM ##############################################################
+XCOMM     Some tests for Xraw widget set    
+XCOMM     Vladimir Romanovski
+
+
+LOCAL_LIBRARIES = $(MALLOC_DEBUG) -L../../Xraw -lXraw -lXmu -lXt -lX11 -lXext
+  SYS_LIBRARIES = -lm
+       INCLUDES = -I../..
+
+#include "../Client.tmpl"
+
+       PROGRAMS = data_to_look list_user
+
+
+XCOMM ##############################################################
+XCOMM     list of user from /etc/passwd
+XCOMM
+
+depend::
+	@awk -f stuff_passwd.awk  < /etc/passwd > data_to_look
+
+data_to_look: /etc/passwd
+	awk -f stuff_passwd.awk  < /etc/passwd > $@
+
+
+XCOMM ##############################################################
+XCOMM     ScrolledTable widget used example
+XCOMM
+
+          SRCS1 = list_user.c
+          OBJS1 = list_user.o
+     
+ComplexProgramTarget_1(list_user, $(LOCAL_LIBRARIES), NullParameter)
+
+
