@@ -1,0 +1,16 @@
+c Polymer bead-spring chains
+
+      parameter (maxown=1000,maxother=1000,maxtotal=1000,maxtype=3)
+      parameter (maxbond=1000,maxangle=1)
+      parameter (maxdihed=1,maximpro=1)
+      parameter (maxbondper=2,maxangleper=1)
+      parameter (maxdihedper=1,maximproper=1)
+      parameter (maxexch=100,maxsend=1000,maxsendone=1000,maxswap=32)
+      parameter (maxneigh=100,maxsneigh=35,maxbin=1000)
+      parameter (maxfix=1,maxdiag=1)
+
+      parameter (maxbondtype=3,maxangletype=1)
+      parameter (maxdihedtype=1,maximprotype=1)
+
+      parameter (nkmax=1,kmaxdim=3*nkmax*nkmax*nkmax)
+      parameter (maxgrid=1,maxfft=1)

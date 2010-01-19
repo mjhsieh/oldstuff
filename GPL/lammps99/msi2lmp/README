@@ -1,0 +1,81 @@
+msi2lmp tool documentation
+
+IMPORTANT Note:
+
+Two forcefield files, cvff.frc and cff91.frc, are needed to generate
+LAMMPS data files from MSI output.  We do not distribute these files
+with LAMMPS because Accelys (nee MSI/BioSym) sells them as part of
+their molecular modeling packages.  If you are using the msi2lmp tool,
+presumably you already have these Accelys files on your system.  You
+should place copies of the 2 files in this directory.
+
+The files included in the directory are as follows:
+
+ - This README
+
+ - Msi2LMP2.h -- Contains #includes, global variables, and definition of 
+		 two data structures, the first contains information from 
+		 each atom and the second  
+		 contains information for each forcefield term.
+
+ - Forcefield.h -- Contains the definition of the forcefield data structures
+
+ - Msi2LMP2.c -- Process command line options and requests further info,
+	         Contains main()
+		 Calls ReadCarFile(), and ReadMdfFile() to fill atom structures
+                 Calls ReadFrcFile() to read .frc file into memory
+ 		 Calls MakeLists() and ReadCoefficients() to fill BondList
+			structures
+		 Calls BuildLMP() to create LAMMPS input file and write data
+			to it.
+                 Calls CreateOutputReport to create a report file
+
+ - FrcMenu.c -- Menu function for prompting user for input if they did
+		not specify a forcefield in the command line
+
+ - ReadCarFile.c -- From original Msi2LMP.  Allocates memory for data
+                 	based on number of atoms and fills position info
+          		from .car file into data structure.
+		    Only change is atom number is assigned to
+		       data strucure atoms[k].no
+
+ - ReadMdfFile.c -- Reads connectivity info into atoms data structure
+		    also updates charge parameter.  Calls LinkConnections.c
+		    to match connections names with numbers.
+
+- LinkConnections.c -- Matches connection names to the number of the 
+		       corresponding atom.
+
+- ReadFrcFile.c -- Reads the forcefield coefficients into memory
+
+- InitializeItems.c -- Initializes data items in forcefield structures
+		       (i.e. number of members, number of parameters)
+
+- SearchAndFill.c -- Function that searches for each forcefield item and
+                     fills in parameters for each item
+
+- MakeLists.c -- Fills in the BondList structures by determining bonds,
+		 angles, torsions, and oops.  Reduces 'types' into 'a',
+		 assigning only unique types to 'a'.  Searches .frc
+		 file for equivalece potentials.  For class 2, the 
+		 cross terms are generated.
+
+- ReadCoefficientsF1.c   -- Reads coefficients from the forcefield data and 
+  ReadCoefficientsF2.c	    stores them in the 'param' item of the BondList 
+			    structure. F1 is for class I and F2 for class 2
+
+ - SearchDynamicFrc.c -- Searches the forcefield data structures to match
+			 parameters to data. 
+
+ - BuildLMP.c -- Creates data.root output file and writes appropriate data
+
+ - CreateOutputReport - Creates report.root which prints all the parameters
+			assigned 
+
+ - Makefile -- the file defining parameters for the make utility
+
+ - Data directory -- sample .car and .mdf data files
+
+8-6-97 Mike Peachey 
+	n8179@ironwood.cray.com
+	peachey@halide.chem.ncsu.edu

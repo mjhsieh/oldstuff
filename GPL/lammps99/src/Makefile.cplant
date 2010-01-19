@@ -1,0 +1,36 @@
+# Makefile for Computational Plant
+
+SHELL = /bin/sh
+.IGNORE:
+
+# System-specific settings
+
+F77 =		/Net/mp/cplant/current/bin/f77
+F77FLAGS =	-O -DSYNC
+CC =		/Net/mp/cplant/current/bin/cc
+CCFLAGS =	-O -DFFT_DEC
+LINK =		/Net/mp/cplant/current/bin/f77
+LINKFLAGS =	-O
+USRLIB =	-lmpi -ldxml
+SYSLIB =
+SIZE =		size
+
+# Link rule
+
+$(EXE):	$(OBJ)
+	$(LINK) $(LINKFLAGS) $(OBJ) $(USRLIB) $(SYSLIB) -o $(EXE)
+	$(SIZE) $(EXE)
+
+# Compilation rules
+
+.f.o:
+	@cp $< $*.F
+	$(F77) $(F77FLAGS) -c $*.F
+	@rm $*.F
+
+.c.o:
+	$(CC) $(CCFLAGS) -c $<
+
+# Individual dependencies
+
+$(OBJ):	$(INC)

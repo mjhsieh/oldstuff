@@ -1,0 +1,16 @@
+c Small lattice of charged atoms
+
+      parameter (maxown=512,maxother=512,maxtotal=512,maxtype=1)
+      parameter (maxbond=1,maxangle=1)
+      parameter (maxdihed=1,maximpro=1)
+      parameter (maxbondper=1,maxangleper=1)
+      parameter (maxdihedper=1,maximproper=1)
+      parameter (maxexch=100,maxsend=10000,maxsendone=1000,maxswap=32)
+      parameter (maxneigh=80,maxsneigh=40,maxbin=1000)
+      parameter (maxfix=1,maxdiag=1)
+
+      parameter (maxbondtype=1,maxangletype=1)
+      parameter (maxdihedtype=1,maximprotype=1)
+
+      parameter (nkmax=8,kmaxdim=3*nkmax*nkmax*nkmax)
+      parameter (maxgrid=10000,maxfft=4096)

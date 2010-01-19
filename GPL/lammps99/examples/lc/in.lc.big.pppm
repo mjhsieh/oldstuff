@@ -1,0 +1,17 @@
+# Test runs of 3x3 array of liquid-crystal molecules
+
+units		real
+
+timestep	1.0
+neighbor	2.0 0 20 0 1
+
+thermo flag	50
+
+coulomb style	pppm 10.0 1.0E-4
+nonbond style	lj/cutoff 10.0 0
+mixing style	arithmetic
+
+read data	data.lc.big
+create temp	uniform 300.0 4762
+
+run		100

@@ -1,0 +1,19 @@
+# Test runs of single liquid-crystal molecule
+
+units		real
+
+timestep	1.0
+neighbor	0.5 0 20 0 1
+
+periodicity	1 1 1
+
+thermo flag	100
+
+coulomb style	cutoff 5.0
+nonbond style	lj/cutoff 5.0 0
+mixing style	arithmetic
+
+read data	data.lc.small.nonperiodic
+create temp	uniform 300.0 492895
+
+run		1000

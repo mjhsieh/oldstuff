@@ -1,0 +1,87 @@
+# Test runs of 2-d LJ flow simulation
+# can toggle on/off various constraints and initial conditions
+
+units		lj
+dimension	2
+periodicity	0 1 0
+newton flag	0
+
+timestep	0.003
+neighbor	0.3 1 1 5 1
+
+thermo flag	100
+thermo style	1
+
+#read data	data.flow.cold
+read data	data.flow.warm
+
+# flow atom potentials
+coulomb style	none
+nonbond style	lj/cutoff 1.12246 1
+nonbond coeff	1 1 1.0 1.0 1.12246
+nonbond coeff	1 2 1.0 1.0 1.12246
+nonbond coeff	2 2 1.0 1.0 1.12246
+
+# warm wall potentials
+nonbond coeff	1 3 1.0 1.0 0.0
+nonbond coeff	2 3 1.0 1.0 0.0
+nonbond coeff	3 3 1.0 1.0 0.0
+bond style	harmonic
+bond coeff	1 100.0 0.0
+
+# fixed cold wall or aveforce wall
+#create group	types 2 2
+#create temp	velocity 0.0 0.0 0.0
+
+# fixed warm wall
+create group	types 2 2
+create temp	uniform 1.0 23565
+create group	types 3 3
+create temp	velocity 0.0 0.0 0.0
+
+# constant v cold wall
+#create group	types 2 2
+#create temp	velocity 5.0 0.0 0.0
+
+# constant v warm wall
+create group	types 2 2
+create temp	uniform 1.0 23565
+create group	types 3 3
+create temp	velocity 5.0 0.0 0.0
+
+# initialize flow atoms
+create group	remainder
+create temp	uniform 1.0 482748
+
+# fixed/constant-v cold wall
+#fix style	1 setforce 0.0 0.0 0.0
+#assign fix	1 type 2
+
+# aveforce wall
+#fix style	1 aveforce 2.0 0.0 0.0
+#assign fix	1 type 2
+#fix style	1 aveforce 0.0 0.0 0.0
+#assign fix	1 region INF INF INF -7.5 INF INF
+#fix style	2 aveforce 0.0 0.0 0.0
+#assign fix	2 region INF INF 7.5 INF INF INF
+
+# fixed/constant-v warm wall
+fix style	1 setforce 0.0 0.0 0.0
+assign fix	1 type 3
+
+# thermostat flow atoms (either of 2 assigns is equivalent)
+fix style	2 rescale 1.0 1.0 20 0.02
+assign fix	2 type 1
+#assign fix	2 region INF INF -7.0 7.0 INF INF
+
+# thermostat warm wall atoms
+fix style	3 rescale 1.0 1.0 20 0.02
+assign fix	3 type 2
+
+# Poiselle flow atoms
+#fix style	4 addforce 10.0 0.0 0.0
+#assign fix	4 type 1
+
+dump atoms	50 dump.flow.warm
+
+run		1000

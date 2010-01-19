@@ -1,0 +1,68 @@
+# Bead-spring polymer simulation with small-molecule diffusion
+# 50-length chains
+# 8 A chains, 8 B chains, 10 A monomers
+
+units		lj
+newton flag	0
+
+special bonds   0.0 1.0 1.0
+
+timestep	0.006
+neighbor	0.4 0 1 5 1
+
+thermo style	1
+true flag	1
+
+# Soft potential start-up in two stages
+
+coulomb style	none
+nonbond style	soft 1.12246
+nonbond coeff	1 1 1.0 30.0 1.12246
+nonbond coeff	1 2 1.0 30.0 1.12246
+nonbond coeff	1 3 1.0 30.0 1.12246
+nonbond coeff	2 2 1.0 30.0 1.12246
+nonbond coeff	2 3 1.0 30.0 1.12246
+nonbond coeff	3 3 1.0 30.0 1.12246
+
+bond style	fene/shift
+bond coeff	1 30.0 1.5 1.0 1.0 0.0
+bond coeff	2 30.0 1.5 1.0 1.0 0.2
+
+temp control	rescale 0.0 0.0 100 0.4
+thermo flag	200
+
+read data	data.chain.ab
+create temp	uniform 0.0 12345
+
+run		10000
+
+nonbond style	soft 1.12246
+nonbond coeff	1 1 30.0 60.0 1.12246
+nonbond coeff	1 2 30.0 60.0 1.12246
+nonbond coeff	1 3 30.0 60.0 1.12246
+nonbond coeff	2 2 30.0 60.0 1.12246
+nonbond coeff	2 3 30.0 60.0 1.12246
+nonbond coeff	3 3 30.0 60.0 1.12246
+
+run		10000
+
+# Main run with LJ potentials
+
+reset timestep	0
+
+nonbond style	lj/shift 1.12246 1
+nonbond coeff	1 1 1.0 1.0 0.0 1.12246
+nonbond coeff	1 2 1.0 1.0 0.1 1.12246
+nonbond coeff	1 3 1.0 1.0 0.0 1.12246
+nonbond coeff	2 2 1.0 1.0 0.2 1.12246
+nonbond coeff	2 3 1.0 1.0 0.1 1.12246
+nonbond coeff	3 3 1.0 1.0 0.0 1.12246
+
+bond style	fene/shift
+bond coeff	1 30.0 1.5 1.0 1.0 0.0
+bond coeff	2 30.0 1.5 1.0 1.0 0.2
+
+temp control	rescale 1.0 1.0 1000 0.05
+thermo flag	200
+
+run		10000

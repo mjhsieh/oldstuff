@@ -1,0 +1,135 @@
+ LAMMPS 99 (June 1999)
+# 512-atoms w/ charges for quick cutoff/Ewald/PPPM test
+ Timestep 1.
+ Neighbor 0.26845000000000002,  0,  1,  0,  1
+ Thermo flag 1
+ Read data data.charge
+ 3-d grid of procs = 1,  2*2
+ Create temp uniform  300.,  4762
+ Nonbond style none
+#coulomb style	cutoff 2.73155
+#coulomb style	ewald 2.73155 1.0E-4
+ Coulomb style pppm 2.7315499999999999,  1.00000000000000005E-4
+# comment in this line for comparison with version 5.0
+#pppm mesh	16 16 16
+ Run 2
+ 
+ PPPM g = 1.4142141089937417
+ Needed PPPM nx,ny,nz = 3*14
+ Actual PPPM nx,ny,nz =  3*15
+ --------------- Step        0 ---- CPU =      0.0000 (sec) ---------------
+ Total E =    -65871.2559 Total KE=       457.8488 Temp    =       300.0000
+ Total PE=    -66329.1047 E_bond  =         0.0000 E_angle =         0.0000
+ E_dihed =         0.0000 E_impr  =         0.0000 E_vdwl  =         0.0000
+ E_coul  =     11332.7547 E_long  =    -77661.8595 Press   =   -160091.2034
+ --------------- Step        1 ---- CPU =      0.0454 (sec) ---------------
+ Total E =    -61922.1907 Total KE=     17689.4554 Temp    =     11590.8058
+ Total PE=    -79611.6461 E_bond  =         0.0000 E_angle =         0.0000
+ E_dihed =         0.0000 E_impr  =         0.0000 E_vdwl  =         0.0000
+ E_coul  =        73.1205 E_long  =    -79684.7665 Press   =    273030.5178
+ --------------- Step        2 ---- CPU =      0.1196 (sec) ---------------
+ Total E =   5075916.7441 Total KE=   5318765.0653 Temp    =   3485057.7249
+ Total PE=   -242848.3212 E_bond  =         0.0000 E_angle =         0.0000
+ E_dihed =         0.0000 E_impr  =         0.0000 E_vdwl  =         0.0000
+ E_coul  =   -154829.6234 E_long  =    -88018.6978 Press   = 464737956.6076
+ Loop time: 0.15227505564689636  on 4  procs for 512  atoms
+ 
+ Nbond time/%:       0.016435      10.7932
+ Long  time/%:       0.025916      17.0194
+ Bond  time/%:       0.000002       0.0013
+ Angle time/%:       0.000001       0.0008
+ Dihed time/%:       0.000001       0.0004
+ Impro time/%:       0.000027       0.0176
+ Nay-1 time/%:       0.024367      16.0022
+ Nay-2 time/%:       0.000006       0.0042
+ Exch  time/%:       0.000966       0.6341
+ Comm  time/%:       0.002884       1.8942
+ Fcomm time/%:       0.000787       0.5172
+ I/O   time/%:       0.000000       0.0000
+ Other time/%:       0.080882      53.1155
+ 
+ Nbond time:       0.0164 ave       0.0164 max       0.0164 min
+  Histogram:    1    1    0    0    0    0    1    0    0    1
+ Long  time:       0.0259 ave       0.0259 max       0.0259 min
+  Histogram:    1    0    1    0    0    0    1    0    0    1
+ Bond  time:       0.0000 ave       0.0000 max       0.0000 min
+  Histogram:    2    0    0    0    1    0    0    0    0    1
+ Angle time:       0.0000 ave       0.0000 max       0.0000 min
+  Histogram:    1    1    0    1    0    0    0    0    0    1
+ Dihed time:       0.0000 ave       0.0000 max       0.0000 min
+  Histogram:    3    0    0    0    0    0    0    0    0    1
+ Impro time:       0.0000 ave       0.0000 max       0.0000 min
+  Histogram:    1    0    0    1    0    0    0    1    0    1
+ Nay-1 time:       0.0244 ave       0.0259 max       0.0237 min
+  Histogram:    2    1    0    0    0    0    0    0    0    1
+ Nay-2 time:       0.0000 ave       0.0000 max       0.0000 min
+  Histogram:    2    0    0    0    0    0    0    0    0    2
+ Exch  time:       0.0010 ave       0.0010 max       0.0010 min
+  Histogram:    2    0    0    1    0    0    0    0    0    1
+ Comm  time:       0.0029 ave       0.0030 max       0.0028 min
+  Histogram:    2    0    0    0    0    0    0    0    0    2
+ Fcomm time:       0.0008 ave       0.0008 max       0.0008 min
+  Histogram:    1    0    0    1    0    0    1    0    0    1
+ I/O   time:       0.0000 ave       0.0000 max       0.0000 min
+  Histogram:    4    0    0    0    0    0    0    0    0    0
+ Other time:       0.0809 ave       0.0815 max       0.0793 min
+  Histogram:    1    0    0    0    0    0    0    0    0    3
+ 
+ PPPM timing info:
+   Make_rho time = 1.85626745223999023E-3
+   Make_rho % of long time = 7.16256231277419
+   Poisson time = 1.43299400806427002E-2
+   Poisson % of long time = 55.293265333111009
+   Electric_field time = 2.5050044059753418E-3
+   Electric_field % of long time = 9.6657677911235549
+   Brick2fft time per timestep = 1.14605426788330091E-3
+   Total brick2fft time = 2.29210853576660182E-3
+   Brick2fft % of long time = 8.8442913736696553
+   Fillbrick time per timestep = 1.95553302764892587E-3
+   Total fillbrick time = 3.91106605529785174E-3
+   Fillbrick % of long time = 15.091173578808769
+   FFT time per timestep = 6.37350082397460972E-3
+   Total FFT time = 1.27470016479492194E-2
+   FFT % of long time = 49.185365769516039
+ 
+ Nlocal:         128.0000 ave     140.0000 max     122.0000 min
+  Histogram:    1    1    1    0    0    0    0    0    0    1
+ Nother:         384.0000 ave     390.0000 max     372.0000 min
+  Histogram:    1    0    0    0    0    0    0    1    1    1
+ Nbonds:           0.0000 ave       0.0000 max       0.0000 min
+  Histogram:    4    0    0    0    0    0    0    0    0    0
+ Nangle:           0.0000 ave       0.0000 max       0.0000 min
+  Histogram:    4    0    0    0    0    0    0    0    0    0
+ Ndihed:           0.0000 ave       0.0000 max       0.0000 min
+  Histogram:    4    0    0    0    0    0    0    0    0    0
+ Nimpro:           0.0000 ave       0.0000 max       0.0000 min
+  Histogram:    4    0    0    0    0    0    0    0    0    0
+ Neighs:        6957.2500 ave    7649.0000 max    6588.0000 min
+  Histogram:    1    1    1    0    0    0    0    0    0    1
+ Nswaps:         384.0000 ave     406.0000 max     368.0000 min
+  Histogram:    2    0    0    0    0    0    1    0    0    1
+ Nspecs:           0.0000 ave       0.0000 max       0.0000 min
+  Histogram:    4    0    0    0    0    0    0    0    0    0
+ 
+ Ave neighs/atom = 54.353515625
+ Ave nspecs/atom = 0.E+0
+ Number of reneighborings = 2
+ Dangerous reneighborings = 2
+ 
+ Max # of local atoms = 140  out of 800
+ Max # of other atoms = 388  out of 6000
+ Max # of bonds = 0  out of 1000
+ Max # of angles = 0  out of 1500
+ Max # of dihedrals = 0  out of 1200
+ Max # of impropers = 0  out of 200
+ Max # of bonds/atom = 0  out of 6
+ Max # of angles/atom = 0  out of 18
+ Max # of dihedrals/atom = 0  out of 40
+ Max # of impropers/atom = 0  out of 15
+ Max # of neighbors = 7649  out of 600000
+ Max used in exchange buffer = 17  out of 100
+ Max sent in all swaps = 406  out of 10000
+ Max sent in one swap = 137  out of 4000
+ 
+ # of swaps = 4  Needs = 0,  2*1
+ Cutneigh = 3.  Cut/Box = 0.375,  2*0.75

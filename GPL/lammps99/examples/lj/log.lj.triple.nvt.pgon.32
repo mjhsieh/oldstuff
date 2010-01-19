@@ -1,0 +1,125 @@
+ LAMMPS 99 (June 1999)
+# 2048 LJ monomers - three monomer types
+# run NVE/NVT/NPT ensembles
+ Units lj
+ Timestep  4.6200000000000000E-003
+ Neighbor  0.3000000000000000                1           1           5
+            1
+#temp control	rescale 1.0 1.0 20 0.02
+ Temp control nose/hoover   1.000000000000000        1.000000000000000     
+    5.000000000000000     
+#press control	nose/hoover 0.62928 0.62928 0.1
+ Thermo flag         100
+ Thermo style           1
+ Coulomb style none
+ Nonbond style lj/cutoff   2.500000000000000                1
+ Nonbond coeff           1           1   1.000000000000000     
+    1.000000000000000        1.122460000000000     
+ Nonbond coeff           1           2   1.095450000000000     
+    1.175000000000000        1.318890000000000     
+ Nonbond coeff           1           3   1.118030000000000     
+    1.075000000000000        1.206640000000000     
+ Nonbond coeff           2           2   1.200000000000000     
+    1.350000000000000        1.515320000000000     
+ Nonbond coeff           2           3   1.224740000000000     
+    1.250000000000000        1.403070000000000     
+ Nonbond coeff           3           3   1.250000000000000     
+    1.150000000000000        1.290830000000000     
+ Read data data.lj.triple
+ 3-d grid of procs =           2           4           4
+ Create temp uniform    1.000000000000000            87287
+ Run         500
+
+ Step Temp E_nbond E_bond E_long E_total Pressure Volume
+       0  1.000000  1.328286  0.000000  0.000000  2.828286  7.505132  3413.3357
+     100  1.112849  1.861113  0.000000  0.000000  3.530387 10.073408  3413.3357
+     200  0.964298  1.721023  0.000000  0.000000  3.167469  9.491559  3413.3357
+     300  0.935604  1.597900  0.000000  0.000000  3.001306  9.029612  3413.3357
+     400  1.102300  1.875571  0.000000  0.000000  3.529020 10.128188  3413.3357
+     500  0.906518  1.620365  0.000000  0.000000  2.980142  9.120754  3413.3357
+ Loop time:   7.137739398748636      on          32 procs for        2048 atoms
+
+ Nbond time/%:       1.273862      17.8469
+ Long  time/%:       0.254958       3.5720
+ Bond  time/%:       0.001706       0.0239
+ Angle time/%:       0.001317       0.0185
+ Dihed time/%:       0.001177       0.0165
+ Impro time/%:       0.251527       3.5239
+ Nay-1 time/%:       1.457285      20.4166
+ Nay-2 time/%:       0.000331       0.0046
+ Exch  time/%:       0.074926       1.0497
+ Comm  time/%:       0.987474      13.8346
+ Fcomm time/%:       0.725109      10.1588
+ I/O   time/%:       0.000000       0.0000
+ Other time/%:       2.108067      29.5341
+
+ Nbond time:       1.2739 ave       1.2768 max       1.2712 min
+  Histogram:    6    8    2    0    0    0    2    5    6    3
+ Long  time:       0.2550 ave       0.2588 max       0.2509 min
+  Histogram:    2    7    3    4    0    0    1    6    4    5
+ Bond  time:       0.0017 ave       0.0018 max       0.0017 min
+  Histogram:    3    8   11    5    2    1    0    0    0    2
+ Angle time:       0.0013 ave       0.0013 max       0.0013 min
+  Histogram:    1    4    6    3    1    7    7    1    0    2
+ Dihed time:       0.0012 ave       0.0012 max       0.0012 min
+  Histogram:    2    0    4    3    6    3    5    2    4    3
+ Impro time:       0.2515 ave       0.2531 max       0.2500 min
+  Histogram:    3    4    4    1    4    1    6    2    4    3
+ Nay-1 time:       1.4573 ave       1.6496 max       1.3226 min
+  Histogram:    3    5    3    4    3    9    3    0    1    1
+ Nay-2 time:       0.0003 ave       0.0004 max       0.0003 min
+  Histogram:   12   11    4    3    0    1    0    0    0    1
+ Exch  time:       0.0749 ave       0.0774 max       0.0720 min
+  Histogram:    3    4    2    0    1    5    7    4    5    1
+ Comm  time:       0.9875 ave       1.0132 max       0.9593 min
+  Histogram:    2    2    1    8    2    5    3    4    3    2
+ Fcomm time:       0.7251 ave       0.7463 max       0.7135 min
+  Histogram:    6    4    4    6    4    3    3    0    0    2
+ I/O   time:       0.0000 ave       0.0000 max       0.0000 min
+  Histogram:   32    0    0    0    0    0    0    0    0    0
+ Other time:       2.1081 ave       2.2603 max       1.8655 min
+  Histogram:    1    1    0    2    4    9    3    4    4    4
+
+ Nlocal:          64.0000 ave      70.0000 max      57.0000 min
+  Histogram:    2    1    3    5    3    2    7    3    2    4
+ Nother:         299.9375 ave     314.0000 max     283.0000 min
+  Histogram:    1    1    2    2    7    8    4    2    4    1
+ Nbonds:           0.0000 ave       0.0000 max       0.0000 min
+  Histogram:   32    0    0    0    0    0    0    0    0    0
+ Nangle:           0.0000 ave       0.0000 max       0.0000 min
+  Histogram:   32    0    0    0    0    0    0    0    0    0
+ Ndihed:           0.0000 ave       0.0000 max       0.0000 min
+  Histogram:   32    0    0    0    0    0    0    0    0    0
+ Nimpro:           0.0000 ave       0.0000 max       0.0000 min
+  Histogram:   32    0    0    0    0    0    0    0    0    0
+ Neighs:         365.1563 ave     409.0000 max     303.0000 min
+  Histogram:    2    1    1    4    1    8    6    1    3    5
+ Nswaps:         299.9375 ave     317.0000 max     281.0000 min
+  Histogram:    1    3    5    3    3    4    4    3    1    5
+ Nspecs:           0.0000 ave       0.0000 max       0.0000 min
+  Histogram:   32    0    0    0    0    0    0    0    0    0
+
+ Ave neighs/atom =   5.705566    
+ Ave nspecs/atom =  0.0000000E+00
+ Number of reneighborings =          61
+ Dangerous reneighborings =           0
+
+ Max # of local atoms =         100 out of        2048
+ Max # of other atoms =         300 out of        1200
+ Max # of bonds =           0 out of           1
+ Max # of angles =           0 out of           1
+ Max # of dihedrals =           0 out of           1
+ Max # of impropers =           0 out of           1
+ Max # of bonds/atom =           0 out of           1
+ Max # of angles/atom =           0 out of           1
+ Max # of dihedrals/atom =           0 out of           1
+ Max # of impropers/atom =           0 out of           1
+ Max # of neighbors =         600 out of      163840
+ Max used in exchange buffer =          21 out of         100
+ Max sent in all swaps =         332 out of       10000
+ Max sent in one swap =         102 out of        1000
+ Max # of bins =         175 out of        1000
+
+ # of swaps =           6 Needs =           1           1           1
+ Cutneigh =   1.815320000000000      Cut/Box =  0.2411331125660675     
+   0.4822662251321349       0.4822662251321349     

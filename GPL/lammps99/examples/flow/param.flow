@@ -1,0 +1,16 @@
+c Simple 2-d Flow tests
+
+      parameter (maxown=250,maxother=500,maxtotal=250,maxtype=3)
+      parameter (maxbond=40,maxangle=1)
+      parameter (maxdihed=1,maximpro=1)
+      parameter (maxbondper=1,maxangleper=1)
+      parameter (maxdihedper=1,maximproper=1)
+      parameter (maxexch=100,maxsend=10000,maxsendone=4000,maxswap=32)
+      parameter (maxneigh=750,maxsneigh=35,maxbin=1000)
+      parameter (maxfix=10,maxdiag=1)
+
+      parameter (maxbondtype=1,maxangletype=1)
+      parameter (maxdihedtype=1,maximprotype=1)
+
+      parameter (nkmax=1,kmaxdim=3*nkmax*nkmax*nkmax)
+      parameter (maxgrid=1,maxfft=1)

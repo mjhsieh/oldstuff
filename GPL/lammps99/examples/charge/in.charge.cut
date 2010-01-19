@@ -1,0 +1,20 @@
+# 512-atoms w/ charges for quick cutoff/Ewald/PPPM test
+
+timestep	1.0
+neighbor	0.26845 0 1 0 1
+
+thermo flag	1
+
+read data	data.charge
+create temp	uniform 300.0 4762
+
+nonbond style	none
+
+coulomb style	cutoff 2.73155
+#coulomb style	ewald 2.73155 1.0E-4
+#coulomb style	pppm 2.73155 1.0E-4
+
+# comment in this line for comparison with version 5.0
+#pppm mesh	16 16 16
+
+run		2

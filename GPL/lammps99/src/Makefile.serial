@@ -1,0 +1,34 @@
+# Makefile for SGI O2/R10000 w/ MPI stubs
+
+SHELL = /bin/sh
+.IGNORE:
+
+# System-specific settings
+
+F77 =		f77
+F77FLAGS =	-O -n32 -I../STUBS -DSYNC
+CC =		cc
+CCFLAGS =	-O -n32 -I../STUBS -DFFT_SGI
+LINK =		f77
+LINKFLAGS =	-O -n32 -L../STUBS
+USRLIB =	-lmpi -lcomplib.sgimath
+SYSLIB = 
+SIZE =		size
+
+# Link rule
+
+$(EXE):	$(OBJ)
+	$(LINK) $(LINKFLAGS) $(OBJ) $(USRLIB) $(SYSLIB) -o $(EXE)
+	$(SIZE) $(EXE)
+
+# Compilation rules
+
+.f.o:
+	$(F77) $(F77FLAGS) -c $<
+
+.c.o:
+	$(CC) $(CCFLAGS) -c $<
+
+# Individual dependencies
+
+$(OBJ):	$(INC)

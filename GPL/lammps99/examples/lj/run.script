@@ -1,0 +1,27 @@
+lmp_sgi < in.lj.single.nve
+mv log.lammps log.lj.single.nve.sgi.1
+lmp_sgi < in.lj.single.nvt
+mv log.lammps log.lj.single.nvt.sgi.1
+lmp_sgi < in.lj.single.npt
+mv log.lammps log.lj.single.npt.sgi.1
+
+lmp_sgi < in.lj.triple.nve
+mv log.lammps log.lj.triple.nve.sgi.1
+lmp_sgi < in.lj.triple.nvt
+mv log.lammps log.lj.triple.nvt.sgi.1
+lmp_sgi < in.lj.triple.npt
+mv log.lammps log.lj.triple.npt.sgi.1
+
+#yod -comm 1000000 -sz 32 lmp_pgon < in.lj.single.nve
+#mv log.lammps log.lj.single.nve.pgon.32
+#yod -comm 1000000 -sz 32 lmp_pgon < in.lj.single.nvt
+#mv log.lammps log.lj.single.nvt.pgon.32
+#yod -comm 1000000 -sz 32 lmp_pgon < in.lj.single.npt
+#mv log.lammps log.lj.single.npt.pgon.32
+
+#yod -comm 1000000 -sz 32 lmp_pgon < in.lj.triple.nve
+#mv log.lammps log.lj.triple.nve.pgon.32
+#yod -comm 1000000 -sz 32 lmp_pgon < in.lj.triple.nvt
+#mv log.lammps log.lj.triple.nvt.pgon.32
+#yod -comm 1000000 -sz 32 lmp_pgon < in.lj.triple.npt
+#mv log.lammps log.lj.triple.npt.pgon.32

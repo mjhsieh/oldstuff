@@ -1,0 +1,23 @@
+# 2048 LJ monomers - single monomer type
+# run NVE/NVT/NPT ensembles
+
+units		lj
+
+timestep	0.00462
+neighbor	0.3 1 1 5 1
+
+temp control	rescale 1.24 1.24 20 0.02
+#temp control	nose/hoover 1.24 1.24 44.0089
+#press control	nose/hoover 0.61048 0.61048 0.440089
+
+thermo flag	100
+thermo style	1
+
+coulomb style	none
+nonbond style	lj/cutoff 2.5 1
+nonbond coeff	1 1 1.0 1.0 2.5
+
+read data	data.lj.single
+create temp	uniform 1.24 387983
+
+run		500

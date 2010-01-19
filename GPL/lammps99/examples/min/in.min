@@ -1,0 +1,26 @@
+# Minimization test of small molecule
+
+periodicity       1 1 1              nonperiodic
+
+timestep          1.0		     femtosecs (not used in minimization)
+neighbor          0.0 0 1 0 0        skin, neigh-style freq delay boolflag
+
+# use processor grid command for comparison to LAMMPS version 5
+# also neighbor command must be delay=0 for comparison to version 5
+# processor grid	  2 4 4
+
+thermo flag       0                     suppress step printing
+dump atoms        2 dump.min            dump start and end atom positions
+dump forces       1 dump.min.force      dump starting forces only
+
+coulomb style     smooth 10.0 20.0      smooth cutoff
+nonbond style     lj/cutoff 20.0 0      sharp cutoff, no offset
+
+mixing style      arithmetic            governs nonbond sigma
+special bonds     0.0  0.0  0.5         must match CCEMD
+
+read data         data.min
+
+min style         hftn                  only defined option for now
+min file          log.min.data          output file (delete for none)
+minimize	  0.01 1000 1000        |g|_inf tol, maxiters, maxfns

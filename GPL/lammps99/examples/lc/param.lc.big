@@ -1,0 +1,16 @@
+c Liquid Crystal molecules - 3x3 molecules
+
+      parameter (maxown=1000,maxother=4000,maxtotal=6750,maxtype=10)
+      parameter (maxbond=1000,maxangle=2000)
+      parameter (maxdihed=3000,maximpro=1000)
+      parameter (maxbondper=6,maxangleper=18)
+      parameter (maxdihedper=40,maximproper=15)
+      parameter (maxexch=100,maxsend=10000,maxsendone=4000,maxswap=32)
+      parameter (maxneigh=750,maxsneigh=35,maxbin=1000)
+      parameter (maxfix=1,maxdiag=1)
+
+      parameter (maxbondtype=14,maxangletype=22)
+      parameter (maxdihedtype=12,maximprotype=7)
+
+      parameter (nkmax=21,kmaxdim=3*nkmax*nkmax*nkmax)
+      parameter (maxgrid=10000,maxfft=4096)

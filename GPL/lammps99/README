@@ -1,0 +1,35 @@
+This is the LAMMPS 99 software, written in F77.
+
+Copyright (2003) Sandia Corporation.  Under the terms of Contract
+DE-AC04-94AL85000 with Sandia Corporation, the U.S. Government retains
+certain rights in this software.  This software is distributed under
+the GNU General Public License.
+
+LAMMPS stands for Large-scale Atomic/Molecular Massively Parallel
+Simulator.
+
+This LAMMPS 99 version has been superceded by more current versions.
+See the <A HREF="http://www.cs.sandia.gov/~sjplimp/lammps.html">LAMMPS
+WWW Site</A> for more information.
+
+LAMMPS is a classical molecular dynamics simulation code designed to
+run efficiently on parallel computers.  It was developed at Sandia
+National Laboratories, a US Department of Energy facility, with
+funding from the DOE.
+
+The primary author and contact for LAMMPS is Steve Plimpton, who can
+be contacted at sjplimp@sandia.gov.  The LAMMPS WWW page is at
+www.cs.sandia.gov/~sjplimp/lammps.html.
+
+The LAMMPS 99 distribution includes the following files and directories:
+
+README			this file
+LICENSE			the GNU General Public License (GPL)
+doc			documentation
+src			source code
+examples		test problems and output
+tools			additional pre- and post-processing tools
+msi2lmp			tool for converting to/from LAMMPS format
+
+See the doc/README.html file for information on how to make and use
+LAMMPS.

@@ -1,0 +1,26 @@
+Polymer chain definition
+
+0.6281331503    rhostar
+53689748        random # seed (8 digits or less)
+3               # of sets of chains (list blank line + 6 values for each set)
+
+8               number of chains
+50              monomers/chain
+1               type of monomers (for output into LAMMPS file)
+1               type of bonds (for output into LAMMPS file)
+0.97            distance between monomers (in reduced units of sigma)
+1.02            no distance less than this from site i-1 to i+1 (reduced unit)
+
+8               number of chains
+50              monomers/chain
+2               type of monomers (for output into LAMMPS file)
+2               type of bonds (for output into LAMMPS file)
+1.17            distance between monomers (in reduced units of sigma)
+1.22            no distance less than this from site i-1 to i+1 (reduced unit)
+
+10              number of chains
+1               monomers/chain
+3               type of monomers (for output into LAMMPS file)
+0               type of bonds (for output into LAMMPS file)
+0.97            distance between monomers (in reduced units of sigma)
+1.02            no distance less than this from site i-1 to i+1 (reduced unit)

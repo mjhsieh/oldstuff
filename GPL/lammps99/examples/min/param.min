@@ -1,0 +1,16 @@
+c Small molecule minimization
+
+      parameter (maxown=455,maxother=500,maxtotal=455,maxtype=16)
+      parameter (maxbond=459,maxangle=616)
+      parameter (maxdihed=702,maximpro=181)
+      parameter (maxbondper=6,maxangleper=18)
+      parameter (maxdihedper=40,maximproper=15)
+      parameter (maxexch=100,maxsend=10000,maxsendone=4000,maxswap=32)
+      parameter (maxneigh=750,maxsneigh=35,maxbin=1000)
+      parameter (maxfix=1,maxdiag=1)
+
+      parameter (maxbondtype=28,maxangletype=52)
+      parameter (maxdihedtype=20,maximprotype=20)
+
+      parameter (nkmax=1,kmaxdim=3*nkmax*nkmax*nkmax)
+      parameter (maxgrid=1,maxfft=1)

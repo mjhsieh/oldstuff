@@ -1,0 +1,13 @@
+#lmp_sgi < in.charge.cut
+#mv log.lammps log.charge.cut.sgi.1
+#lmp_sgi < in.charge.ewald
+#mv log.lammps log.charge.ewald.sgi.1
+#lmp_sgi < in.charge.pppm
+#mv log.lammps log.charge.pppm.sgi.1
+
+yod -comm 1000000 -sz 4 lmp_pgon < in.charge.cut
+mv log.lammps log.charge.cut.pgon.4
+yod -comm 1000000 -sz 4 lmp_pgon < in.charge.ewald
+mv log.lammps log.charge.ewald.pgon.4
+yod -comm 1000000 -sz 4 lmp_pgon < in.charge.pppm
+mv log.lammps log.charge.pppm.pgon.4

@@ -1,0 +1,24 @@
+The test and benchmarking inputs are in several directories.  Each
+test case has an input script (in.*), an input data file (data.*), a
+sample parameter file that could be used to compile the code
+(param.*), and sample outputs (log.*).  The suffix on the outputs
+represents the machine type and # of processors it was run on.
+
+lj		2048-atom runs of a monomeric and ternary LJ mixture
+			using NVE, NVT, NPT ensembles,
+			data files were created using tools/setup_lj.f
+charge		512 charged atoms, couple of timesteps to test
+			Coulombic cutoff, Ewald, PPPM
+class2		small molecule with class II force fields
+min		small molecule minimization
+lc		small and large version of liquid crystal molecular
+			simulation, tests periodic and non-periodic,
+			class I force fields, cutoffs, Ewald, PPPM
+flow		2-d LJ system with various constraints and temperature
+			creation options to model flow thru a channel
+polymer		bead-spring polymer models of 16 50-mer chains, system
+			a is all the same type chain, system ab has
+			2 types of chains with different diameter	
+			monomers and also includes a few free monomers,
+			the data files were created from the def files
+			using tools/setup_chain.f
