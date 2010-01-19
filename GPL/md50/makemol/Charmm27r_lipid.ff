@@ -1,0 +1,385 @@
+#  \\\\\\\ CHARMM27r All-Hydrogen Lipid Parameter File ///////
+#  \\\\\\\\\\\\\\\\\\ Developmental /////////////////////////
+#              Alexander D. MacKerell Jr.
+#                   September 1998
+# All comments to ADM jr.  email:alex,mmiris.ab.umd.edu
+#              telephone: 410-706-7442
+# These files are a beta release; additional parameter development
+# and testing may lead to alteration of the contents.
+#
+# 27r - revision according J.B.Klauda et al, JPCb, 109, 5300 (2005)
+#
+#
+#
+#
+#references
+#
+#LIPIDS
+#
+#Schlenkrich, M., Brickmann, J., MacKerell, Jr., A.D., and Karplus, M.
+#Empirical Potential Energy Function for Phospholipids: Criteria for
+#Parameter Optimization and Applications, in "Biological Membranes: A
+#Molecular Perspective from Computation and Experiment," K.M. Merz and
+#B. Roux, Eds. Birkhauser, Boston, 1996, pp 31-81.
+#
+#new ALKANES
+#
+#Yin, D. and MacKerell, Jr. A.D. Combined Ab initio/Empirical Approach
+#for the Optimization of Lennard-Jones Parameters. Journal of
+#Computational Chemistry, 1998, 19: 334-338.
+#
+#ALKENES
+#
+#Feller, S.E., Yin, D., Pastor, R.W., and MacKerell, Jr., A.D.,
+#Molecular Dynamics Simulation of Unsaturated Lipids at Low Hydration:
+#Parameterization and Comparison with Diffraction Studies.  Biophysical
+#Journal, 73:2269-2279, 1997.
+#
+#new PHOSPHATE
+#
+#MacKerell, Jr., A.D. Influence of Water and Sodium on the Energetics
+#of Dimethylphosphate and its Implications For DNA Structure, Journal
+#de Chimie Physique, 1997, 94: 1436-1447.
+#
+#IONS
+#
+#all ions from Roux and coworkers
+#
+# correct alkene dihedral parameters required due to change
+# in the alkane vdw parameters and apparent discrepancy with
+# the published surface for 2-butene
+#
+#
+BONDS
+#
+#V(bond) = Kb(b - b0)**2
+#
+#Kb: kcal/mole/A**2
+#b0: A
+#
+#atom type Kb          b0
+#
+CTL3  CL     1.5220      837.40  ! methyl acetat                                 
+CTL2  CL     1.5220      837.40  ! methyl acetat                                 
+CTL1  CL     1.5220      837.40  ! methyl acetat                                 
+OBL   CL     1.2200     3140.25  ! methyl acetat                                 
+OSL   CL     1.3340      628.05  ! methyl acetat                                 
+OHL   CL     1.4000      963.01  ! methyl acetat                                 
+HOL   OHL    0.9600     2281.91  ! acetic aci                                 
+CTL1  HAL1   1.1110     1293.78  ! alkanes, 3/9                                 
+CTL2  HAL2   1.1110     1293.78  ! alkanes, 4/9                                 
+CTL3  HAL3   1.1110     1348.21  ! alkanes, 4/9                                 
+CTL3  OSL    1.4300     1423.58  ! phosphat                                 
+CTL2  OSL    1.4300     1423.58  ! phosphat                                 
+CTL1  OSL    1.4300     1423.58  ! phosphat                                 
+OSL   PL     1.6000     1130.49  ! phosphat                                 
+O2L   PL     1.4800     2428.46  ! phosphat                                 
+OHL   PL     1.5900      992.32  ! phosphat                                 
+NH3L  HCL    1.0400     1716.67  ! ethanolamin                                 
+NH3L  CTL2   1.5100     1092.81  ! ethanolamin                                 
+NTL   CTL2   1.5100      900.20  ! tetramethylammoniu                                 
+NTL   CTL5   1.5100      900.20  ! tetramethylammoniu                                 
+CTL5  HL     1.0800     1256.10  ! tetramethylammoniu                                 
+CTL2  HL     1.0800     1256.10  ! tetramethylammoniu                                 
+CTL1  CTL1   1.5000      931.61  ! alkanes, 3/9                                 
+CTL1  CTL2   1.5380      931.61  ! alkanes, 3/9                                 
+CTL1  CTL3   1.5380      931.61  ! alkanes, 3/9                                 
+CTL2  CTL2   1.5300      931.61  ! alkanes, 3/9                                 
+CTL2  CTL3   1.5280      931.61  ! alkanes, 3/9                                 
+CTL3  CTL3   1.5300      931.61  ! alkanes, 3/9                                 
+OHL   CTL1   1.4200     1792.04  !  glycero                                 
+OHL   CTL2   1.4200     1792.04  !  glycero                                 
+OHL   CTL3   1.4200     1792.04  !  glycero                                 
+SL    O2L    1.4480     2260.98  ! methylsulfat                                 
+SL    OSL    1.5750     1046.75  ! methylsulfat                                 
+HT    HT     1.5139        0.00  ! from TIPS3P geometry (for SHAKE w/PARAM                                 
+HT    OT     0.9572     1884.15  ! from TIPS3P geometr                                 
+CEL2  CEL2   1.3300     2135.37  ! ethene yin,adm jr., 12/9                                 
+HEL2  CEL2   1.1000     1528.25  ! propene; from ethene, yin,adm jr., 12/9                                 
+CEL1  CTL3   1.5040     1603.62  ! butene, yin,adm jr., 12/9                                 
+CEL1  CEL2   1.3420     2093.50  ! propene, yin,adm jr., 12/9                                 
+HEL1  CEL1   1.1000     1509.41  ! propene, yin,adm jr., 12/9                                 
+CEL1  CTL2   1.5020     1528.25  ! butene; from propene, yin,adm jr., 12/9                                 
+CEL1  CEL1   1.3400     1842.28  ! butene, yin,adm jr., 12/9                                 
+#
+ANGLES
+#
+#V(angle) = Ktheta(Theta - Theta0)**2
+#
+#V(Urey-Bradley) = Kub(S - S0)**2
+#
+#Ktheta: kcal/mole/rad**2
+#Theta0: degrees
+#Kub: kcal/mole/A**2 (Urey-Bradley)
+#S0: A
+#
+#atom types     Ktheta    Theta0   Kub     S0
+#
+OBL   CL    CTL3   125.00    293.09   2.4420     83.74  ! methyl acetat
+OBL   CL    CTL2   125.00    293.09   2.4420     83.74  ! methyl acetat
+OBL   CL    CTL1   125.00    293.09   2.4420     83.74  ! methyl acetat
+OSL   CL    OBL    125.90    376.83   2.2576    669.92  ! acetic aci
+CL    OSL   CTL1   109.60    167.48   2.2651    125.61  ! methyl acetat
+CL    OSL   CTL2   109.60    167.48   2.2651    125.61  ! methyl acetat
+CL    OSL   CTL3   109.60    167.48   2.2651    125.61  ! methyl acetat
+HAL2  CTL2  CL     109.50    138.17   2.1630    125.61  ! methyl acetat
+HAL3  CTL3  CL     109.50    138.17   2.1630    125.61  ! methyl acetat
+CTL2  CTL2  CL     108.000     217.724  ! alkan
+CTL3  CTL2  CL     108.000     217.724  ! alkan
+OSL   CL    CTL3   109.00    230.28   2.3260     83.74  ! methyl acetat
+OSL   CL    CTL2   109.00    230.28   2.3260     83.74  ! methyl acetat
+OHL   CL    OBL    123.00    209.35   2.2620    879.27  ! acetic aci
+OHL   CL    CTL3   110.500     230.285  ! acetic aci
+OHL   CL    CTL2   110.500     230.285  ! acetic aci
+HOL   OHL   CL     115.000     230.285  ! acetic aci
+OSL   CTL1  CTL2   110.100     316.956  ! acetic aci
+OSL   CTL1  CTL3   110.100     316.956  ! acetic aci
+OSL   CTL2  CTL1   110.100     316.956  ! acetic aci
+OSL   CTL2  CTL2   110.100     316.956  ! acetic aci
+OSL   CTL2  CTL3   110.100     316.956  ! acetic aci
+HAL2  CTL2  HAL2   109.00    148.64   1.8020     22.61  ! alkane, 3/9
+HAL3  CTL3  HAL3   108.40    148.64   1.8020     22.61  ! alkane, 3/9
+HAL1  CTL1  OSL    109.500     251.220  ! phosphat
+HAL2  CTL2  OSL    109.500     251.220  ! phosphat
+HAL3  CTL3  OSL    109.500     251.220  ! phosphat
+CTL2  OSL   PL     120.00     83.74   2.3300    146.54  ! phosphat
+CTL3  OSL   PL     120.00     83.74   2.3300    146.54  ! phosphat
+HOL   OHL   PL     115.00    125.61   2.3000    167.48  ! phosphat
+OSL   PL    OSL    104.300     334.960  ! phosphat
+OSL   PL    O2L    111.600     414.094  ! phosphat
+OSL   PL    OHL    108.000     201.395  ! phosphat
+O2L   PL    O2L    120.000     502.440  ! phosphat
+O2L   PL    OHL    108.230     414.094  ! phosphat
+NTL   CTL2  HL     109.50    167.48   2.1300    113.05  ! tetramethylammoniu
+NTL   CTL5  HL     109.50    167.48   2.1300    113.05  ! tetramethylammoniu
+HL    CTL2  HL     109.50    100.49   1.7670    117.24  ! tetramethylammoniu
+HL    CTL5  HL     109.50    100.49   1.7670    117.24  ! tetramethylammoniu
+CTL5  NTL   CTL2   109.50    251.22   2.4660    108.86  ! tetramethylammoniu
+CTL5  NTL   CTL5   109.50    251.22   2.4660    108.86  ! tetramethylammoniu
+HL    CTL2  CTL2   110.10    139.97   2.1790     94.33  ! alkan
+HL    CTL2  CTL3   110.10    139.97   2.1790     94.33  ! alkan
+HAL1  CTL1  CTL1   110.10    144.45   2.1790     94.33  ! alkane, 3/9
+HAL1  CTL1  CTL2   110.10    144.45   2.1790     94.33  ! alkane, 3/9
+HAL1  CTL1  CTL3   110.10    144.45   2.1790     94.33  ! alkane, 3/9
+HAL2  CTL2  CTL1   110.10    110.96   2.1790     94.33  ! alkane, 4/9
+HAL2  CTL2  CTL2   110.10    110.96   2.1790     94.33  ! alkane, 4/9
+HAL2  CTL2  CTL3   110.10    144.87   2.1790     94.33  ! alkane, 4/9
+HAL3  CTL3  CTL1   110.10    139.97   2.1790     94.33  ! alkane, 4/9
+HAL3  CTL3  CTL2   110.10    144.87   2.1790     94.33  ! alkane, 4/9
+HAL3  CTL3  CTL3   110.10    157.01   2.1790     94.33  ! alkane, 4/9
+NTL   CTL2  CTL2   115.000     283.460  ! tetramethylammoniu
+NTL   CTL2  CTL3   115.000     283.460  ! tetramethylammoniu
+HCL   NH3L  CTL2   109.50    138.17   2.0560     16.75  ! ethanolamin
+HCL   NH3L  HCL    109.500     171.667  ! ethanolamin
+NH3L  CTL2  CTL2   110.000     283.460  ! ethanolamin
+NH3L  CTL2  HAL2   107.50    188.41   2.0836    146.54  ! ethanolamin
+CTL1  CTL1  CTL1   111.00    223.38   2.5610     33.50  ! alkane, 3/9
+CTL1  CTL1  CTL2   113.50    244.31   2.5610     46.73  ! glycero
+CTL1  CTL1  CTL3   108.50    223.38   2.5610     33.50  ! alkane, 3/9
+CTL1  CTL2  CTL1   113.50    244.31   2.5610     46.73  ! glycero
+CTL1  CTL2  CTL2   113.50    244.31   2.5610     46.73  ! glycero
+CTL1  CTL2  CTL3   113.50    244.31   2.5610     46.73  ! glycero
+CTL2  CTL1  CTL2   113.50    244.31   2.5610     46.73  ! glycero
+CTL2  CTL1  CTL3   113.50    244.31   2.5610     46.73  ! glycero
+CTL2  CTL2  CTL2   113.60    244.31   2.5610     46.73  ! alkane, 3/9
+CTL2  CTL2  CTL3   115.00    242.85   2.5610     33.50  ! alkane, 3/9
+HOL   OHL   CTL1   106.000     240.752  ! glycero
+HOL   OHL   CTL2   106.000     240.752  ! glycero
+HOL   OHL   CTL3   106.000     240.752  ! glycero
+OHL   CTL1  CTL2   110.100     316.956  ! glycero
+OHL   CTL2  CTL1   110.100     316.956  ! glycero
+OHL   CTL2  CTL2   110.100     316.956  ! glycero
+OHL   CTL2  CTL3   110.100     316.956  ! glycero
+OHL   CTL1  HAL1   108.890     192.183  ! glycero
+OHL   CTL2  HAL2   108.890     192.183  ! glycero
+OHL   CTL3  HAL3   108.890     192.183  ! glycero
+O2L   SL    O2L    109.47    544.31   2.4500    146.54  ! methylsulfat
+O2L   SL    OSL     98.000     355.895  ! methylsulfat
+CTL2  OSL   SL     109.00     62.80   1.9000    113.05  ! methylsulfat
+CTL3  OSL   SL     109.00     62.80   1.9000    113.05  ! methylsulfat
+HT    OT    HT     104.520     230.285  ! FROM TIPS3P GEOMETR
+CEL1  CEL1  CTL2   123.500     200.976  ! from 2-butene, yin,adm jr., 12/9
+CEL1  CEL1  CTL3   123.500     200.976  ! 2-butene, yin,adm jr., 12/9
+CEL2  CEL1  CTL2   126.000     200.976  ! 1-butene; from propene, yin,adm jr., 12/9
+CEL2  CEL1  CTL3   125.200     196.789  ! propene, yin,adm jr., 12/9
+HEL1  CEL1  CEL1   119.500     217.724  ! 2-butene, yin,adm jr., 12/9
+HEL1  CEL1  CEL2   118.000     175.854  ! propene, yin,adm jr., 12/9
+HEL1  CEL1  CTL2   116.000     167.480  ! 1-butene; from propene, yin,adm jr., 12/9
+HEL1  CEL1  CTL3   117.000      92.114  ! propene, yin,adm jr., 12/9
+HEL2  CEL2  CEL1   120.500     188.415  ! propene, yin,adm jr., 12/9
+HEL2  CEL2  CEL2   120.500     232.378  ! ethene, yin,adm jr., 12/9
+HEL2  CEL2  HEL2   119.000      79.553  ! propene, yin,adm jr., 12/9
+CEL1  CTL2  CTL2   112.200     133.984  ! 1-butene; from propene, yin,adm jr., 12/9
+CEL1  CTL2  CTL3   112.200     133.984  ! 1-butene; from propene, yin,adm jr., 12/9
+HAL2  CTL2  CEL1   111.500     188.415  ! 1-butene; from propene, yin,adm jr., 12/9
+HAL3  CTL3  CEL1   111.500     175.854  ! 2-butene, yin,adm jr., 12/9
+#
+TORSIONS
+#
+#V(dihedral) = Kchi(1 + cos(n(chi) - delta))
+#
+#Kchi: kcal/mole
+#n: multiplicity
+#delta: degrees
+#
+#atom types             Kchi    n   delta
+#
+X     CTL1  OHL   X           0.       0.586   3  ! glycero
+X     CTL2  OHL   X           0.       0.586   3  ! glycero
+X     CTL3  OHL   X           0.       0.586   3  ! glycero
+OBL   CL    CTL2  HAL2      180.       0.000   6  ! acetic aci
+OBL   CL    CTL3  HAL3      180.       0.000   6  ! acetic aci
+OSL   CL    CTL2  HAL2      180.       0.000   6  ! acetic aci
+OSL   CL    CTL3  HAL3      180.       0.000   6  ! acetic aci
+OBL   CL    OSL   CTL1      180.       4.040   1  ! methyl acetat
+OBL   CL    OSL   CTL1      180.      16.120   2  ! methyl acetat
+OBL   CL    OSL   CTL2      180.       4.040   1  ! methyl acetat
+OBL   CL    OSL   CTL2      180.      16.120   2  ! methyl acetat
+OBL   CL    OSL   CTL3      180.       4.040   1  ! methyl acetat
+OBL   CL    OSL   CTL3      180.      16.120   2  ! methyl acetat
+X     CL    OSL   X         180.       8.583   2  ! methyl acetat
+X     CTL2  CL    X         180.       0.209   6  ! methyl acetat
+X     CTL3  CL    X         180.       0.209   6  ! methyl acetat
+X     CL    OHL   X         180.       8.583   2  ! acetic aci
+HAL2  CTL2  CL    OHL       180.       0.000   6  
+HAL3  CTL3  CL    OHL       180.       0.000   6  
+OSL   PL    OSL   CTL2      180.       5.024   1  ! phosphate, new NA, 4/98, adm jr
+OSL   PL    OSL   CTL2      180.       0.419   2  ! phosphate, new NA, 4/98, adm jr
+OSL   PL    OSL   CTL2      180.       0.419   3  ! phosphate, new NA, 4/98, adm jr
+O2L   PL    OSL   CTL2        0.       0.419   3  ! phosphate, new NA, 4/98, adm jr
+OSL   PL    OSL   CTL3      180.       5.024   1  ! phosphate, new NA, 4/98, adm jr
+OSL   PL    OSL   CTL3      180.       0.419   2  ! phosphate, new NA, 4/98, adm jr
+OSL   PL    OSL   CTL3      180.       0.419   3  ! phosphate, new NA, 4/98, adm jr
+O2L   PL    OSL   CTL3        0.       0.419   3  ! phosphate, new NA, 4/98, adm jr
+OHL   PL    OSL   CTL2        0.       3.978   2  ! terminal phosphat
+OHL   PL    OSL   CTL2        0.       2.093   3  ! terminal phosphat
+OHL   PL    OSL   CTL3        0.       3.978   2  ! terminal phosphat
+OHL   PL    OSL   CTL3        0.       2.093   3  ! terminal phosphat
+X     OHL   PL    X           0.       1.256   3  ! terminal phosphat
+X     CTL1  OSL   X           0.       0.000   3  ! phosphate, new NA, 4/98, adm jr
+X     CTL2  OSL   X           0.       0.000   3  ! phosphate, new NA, 4/98, adm jr
+X     CTL3  OSL   X           0.       0.000   3  ! phosphate, new NA, 4/98, adm jr
+CTL3  CTL2  OSL   CL        180.       2.931   1  ! ethyl acetate, 12/9
+CTL2  CTL2  OSL   CL        180.       2.931   1  ! ethyl acetate, 12/9
+CTL3  CTL1  OSL   CL        180.       2.931   1  ! ethyl acetate, 12/9
+CTL2  CTL1  OSL   CL        180.       2.931   1  ! ethyl acetate, 12/9
+CTL1  CTL2  CL    OSL       180.      -0.628   1  ! methyl propionate, 12/9
+CTL1  CTL2  CL    OSL       180.       2.219   2  ! methyl propionate, 12/9
+CTL2  CTL2  CL    OSL       180.      -0.628   1  ! methyl propionate, 12/9
+CTL2  CTL2  CL    OSL       180.       2.219   2  ! methyl propionate, 12/9
+CTL3  CTL2  CL    OSL       180.      -0.628   1  ! methyl propionate, 12/9
+CTL3  CTL2  CL    OSL       180.       2.219   2  ! methyl propionate, 12/9
+X     CTL2  NTL   X           0.       1.089   3  ! tetramethylammoniu
+X     CTL5  NTL   X           0.       0.963   3  ! tetramethylammoniu
+X     CTL2  NH3L  X           0.       0.419   3  ! ethanolamin
+NH3L  CTL2  CTL2  OHL       180.       2.931   1  ! ethanolamin
+NH3L  CTL2  CTL2  OSL       180.       2.931   1  ! ethanolamin
+NTL   CTL2  CTL2  OHL       180.      18.004   1  ! choline, 12/9
+NTL   CTL2  CTL2  OHL       180.      -1.675   3  ! choline, 12/9
+NTL   CTL2  CTL2  OSL       180.      13.817   1  ! choline, 12/9
+NTL   CTL2  CTL2  OSL       180.      -1.675   3  ! choline, 12/9
+X     CTL1  CTL1  X           0.       0.837   3  ! alkane, 3/9
+X     CTL1  CTL2  X           0.       0.837   3  ! alkane, 3/9
+X     CTL1  CTL3  X           0.       0.837   3  ! alkane, 3/9
+X     CTL2  CTL2  X           0.       0.796   3  ! alkane, 4/98, yin and mackerel
+X     CTL2  CTL3  X           0.       0.670   3  ! alkane, 4/98, yin and mackerel
+X     CTL3  CTL3  X           0.       0.639   3  ! alkane, 4/98, yin and mackerel
+CTL3  CTL2  CTL2  CTL3      180.       0.16    2  ! alkane, 11/2005
+CTL3  CTL2  CTL2  CTL3      180.       0.133   6  ! 
+CTL2  CTL2  CTL2  CTL3        0.       0.63    2  ! alkane, 11/2005
+CTL2  CTL2  CTL2  CTL3      180.       0.34    3  ! 
+CTL2  CTL2  CTL2  CTL3        0.       0.453   4  ! 
+CTL2  CTL2  CTL2  CTL3        0.       0.855   5  ! 
+CTL2  CTL2  CTL2  CTL2        0.       0.27    2  ! 
+CTL2  CTL2  CTL2  CTL2      180.       0.628   3  ! 
+CTL2  CTL2  CTL2  CTL2        0.       0.396   4  ! 
+CTL2  CTL2  CTL2  CTL2        0.       0.471   5  ! 
+HAL3  CTL3  OSL   SL          0.       0.000   3  ! methylsulfat
+CTL2  OSL   SL    O2L         0.       0.000   3  ! methylsulfat
+CTL3  OSL   SL    O2L         0.       0.000   3  ! methylsulfat
+HEL1  CEL1  CEL1  HEL1      180.       4.187   2  ! 2-butene, adm jr., 8/98 updat
+CTL3  CEL1  CEL1  HEL1      180.       4.187   2  ! 2-butene, adm jr., 8/98 updat
+X     CEL1  CEL1  X         180.       0.544   1  ! 2-butene, adm jr., 8/98 updat
+X     CEL1  CEL1  X         180.     100.488   2  ! 2-butene, adm jr., 8/98 updat
+X     CEL2  CEL2  X         180.      20.516   2  ! ethene, yin,adm jr., 12/9
+CTL2  CEL1  CEL2  HEL2      180.      21.772   2  ! propene, yin,adm jr., 12/9
+CTL3  CEL1  CEL2  HEL2      180.      21.772   2  ! propene, yin,adm jr., 12/9
+HEL1  CEL1  CEL2  HEL2      180.      21.772   2  ! propene, yin,adm jr., 12/9
+CEL1  CEL1  CTL2  HAL2        0.       0.126   3  ! butene, yin,adm jr., 12/9
+CEL1  CEL1  CTL3  HAL3        0.       0.126   3  ! butene, yin,adm jr., 12/9
+CEL1  CEL1  CTL2  CTL2        0.       1.675   3  ! 1-butene, adm jr., 8/98 updat
+CEL2  CEL1  CTL2  CTL2        0.       1.675   3  ! 1-butene, adm jr., 8/98 updat
+CEL2  CEL1  CTL2  CTL3        0.       1.675   3  ! 1-butene, adm jr., 8/98 updat
+CEL2  CEL1  CTL2  HAL2        0.       0.502   3  ! 1-butene, yin,adm jr., 12/9
+CEL2  CEL1  CTL3  HAL3      180.       0.209   3  ! propene, yin,adm jr., 12/9
+HEL1  CEL1  CTL2  CTL2        0.       0.502   3  ! butene, yin,adm jr., 12/9
+HEL1  CEL1  CTL2  CTL3        0.       0.502   3  ! butene, yin,adm jr., 12/9
+HEL1  CEL1  CTL2  HAL2        0.       3.643   3  ! butene, yin,adm jr., 12/9
+HEL1  CEL1  CTL3  HAL3        0.       1.424   3  ! butene, yin,adm jr., 12/9
+#
+#   Improper angles not implemented in Makemol
+#
+#V(improper) = Kpsi(psi - psi0)**2
+#
+#Kpsi: kcal/mole/rad**2
+#psi0: degrees
+#note that the second column of numbers (0) is ignored
+#
+#atom types           Kpsi                   psi0
+#
+#
+NONBONDED
+#
+#V(Lennard-Jones) = Eps,i,j[(Rmin,i,j/ri,j)**12 - 2(Rmin,i,j/ri,j)**6]
+#
+#epsilon: kcal/mole, Eps,i,j = sqrt(eps,i * eps,j)
+#Rmin/2: A, Rmin,i,j = Rmin/2,i + Rmin/2,j
+#
+#atom  ignored    epsilon      Rmin/2   ignored   eps,1-4       Rmin/2,1-4
+#
+HOL     0.4001    0.1926  
+HAL1    2.3522    0.0921  ! alkane, 3/9
+HAL2    2.3879    0.1172  ! alkane, yin and mackerell, 4/9
+HAL3    2.3879    0.1005  ! alkane, yin and mackerell, 4/9
+HCL     0.4001    0.1926  ! ethanolamin
+HT      0.4001    0.1926  
+HL      1.2474    0.1926  ! polar H on NC4
+HEL1    2.2275    0.1298  ! alkene, yin,adm jr., 12/9
+HEL2    2.2453    0.1089  ! alkene, yin,adm jr., 12/9
+#
+CL      3.5640    0.2931  ! methyl acetate updat
+CTL1    4.0540    0.0837    3.3858    0.0419  ! alkane, 3/9
+CTL2    3.5818    0.2345    3.3858    0.0419  ! alkane, 4/98, yin, adm jr
+CTL3    3.6353    0.3266    3.3858    0.0419  ! alkane, 4/98, yin, adm jr
+CTL5    3.6709    0.3350    3.3858    0.0419  ! old CTL
+CEL1    3.7244    0.2847  ! alkene, yin,adm jr., 12/9
+CEL2    3.7066    0.2680  ! alkene, yin,adm jr., 12/9
+#
+OBL     3.0294    0.5024    2.4948    0.5024  
+O2L     3.0294    0.5024  
+OHL     3.1541    0.6368  
+OSL     3.1541    0.6368  
+OT      3.1509    0.6368  
+#
+NH3L    3.2967    0.8374  ! ethanolamin
+NTL     3.2967    0.8374  ! as all other nitogen
+#
+SL      3.7422    1.9679  ! methylsulfat
+PL      3.8313    2.4494  ! ADM Jr
+DUM     0.0000    0.0000  ! dummy ato
+#
+# ions, note lack of NBFIXes
+#
+SOD     2.4302    0.1964  ! sodiu
+POT     3.1430    0.3643  ! potassiu
+CLA     4.0451    0.6280  ! chlorid
+CAL     2.4360    0.5024  ! Calciu
+MG      2.1117    0.0628  ! Magnesiu
+CES     3.7422    0.7955  
+#
+#               Emin        Rmin
+#            (kcal/mol)     (A)
+#
+#
+#
+END

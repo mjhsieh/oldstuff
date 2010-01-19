@@ -1,0 +1,103 @@
+####################################################
+#
+# makefile.sgi for SGI IRIX(TM)
+
+TARGETS = mddisplay preproc
+
+#
+# http://structbio.vanderbilt.edu/~cmoth/mddisplay/
+#
+# Please cite:
+#
+#    Callahan, T.J., Swanson, E., Lybrand, T.P.:
+#       MD Display: An interactive graphics program for visualization
+#       of molecular dynamics trajectories,
+#    Journal of Molecular Graphics, 1996, 14:39-41
+#
+# Do not distribute this code without explicit permission.
+# Do not incorporate into other codes without explicit permission.
+#
+# For information on dispui.c, the platform-indpendent
+# movie rendering core code, see:
+#
+# See "A 3D Stereo Movie Viewer with GLUT"
+# Chris Moth, C/C++ Users Journal, Sept 2003
+#
+#
+# This makefile will build preproc and mddisplay on SGI IRIX(TM) 
+# using the SGI MIPS/PRO C compiler.  If GLUT is already installed,
+# type
+#
+#   make -f makefile.sgi clean
+#   make -f makefile.sgi
+#
+# See the mddisplay.pdf manual on the website for instructions
+# on running preproc and mddisplay.
+#
+# If you need to install and build GLUT, see
+#
+#  http://freeware.sgi.com/index-by-alpha.html
+#
+# Scroll down to GLUT-3.7 and click on the Install button
+# to get the tardist file.  You will need root access to your system.
+#
+# These pages might also be helpful:
+#
+#  http://freeware.sgi.com/Installable/glut-3.7.html
+#
+#  http://freeware.sgi.com/cd-2/relnotes/glut.html
+#
+#
+#
+#
+##########################################################
+# You must specify the location of your GLUT library here
+# after installation.  Depending on the binary file types
+# you prefer, the line below might be /usr/freeware/lib/libglut.a
+# or /usr/freeware/lib64/libglut.a
+#
+# I have selected 32 bit library here for building an ELF N32 binary
+# Makefile for SGI IRIX - mips3
+# You must specify the location of your GLUT library here
+
+GLUT= /usr/freeware/lib32/libglut.a
+
+# Here are the libraries that will be linked into cujmovie
+# There should be no need to edit this line
+
+LLDLIBS = $(GLUT) -lGLU -lGL -lXmu -lXext -lX11 -lm
+
+# CC Compiler options
+# -------------------
+# I am using the -mips4 and -r10000 options for some legacy
+# hardware support.  Others should work fine, so long as the
+# correct GLUT library is specified above.
+#
+# I add -I /usr/freeware/include so that glut.h will be
+# seen in /usr/freeware/include/GL
+#
+# The SGI_STEREO #define allows cujmovie to display stereo
+# on legacy SGI hardware which lacks Quad Buffered stereo.
+# Functions in the SGI specific fullscreen_stereo.c module
+# support this.  Thanks for Mike Blackwell for permission
+# to distribute this code.
+#
+# I have also had some success using gcc for SGI IRIX. 
+# Replace the $(CC) line below with gcc.  And, adjust $(CFLAGS) as
+# needed.  I have no experience loading gcc onto an IRIX system.
+
+CFLAGS= -mips4 -r10000 -DSGI_STEREO -I /usr/freeware/include
+
+DISPLAY_OBJS = mddisplay.o displib.o dispui.o fullscreen_stereo.o
+PREPROC_OBJS = preproc.o displib.o
+
+default : $(TARGETS)
+
+preproc : $(PREPROC_OBJS) $(GLUT)
+	$(CC) -o $@ $(PREPROC_OBJS) 
+
+mddisplay : $(DISPLAY_OBJS) $(GLUT)
+	$(CC) -o $@ $(DISPLAY_OBJS) $(LLDLIBS)
+   
+clean: 
+	rm -f $(TARGETS) $(DISPLAY_OBJS) $(PREPROC_OBJS)

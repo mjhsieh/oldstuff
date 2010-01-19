@@ -1,0 +1,13 @@
+objects = aver.o cpu_intel.o input.o forces.o main.o mdstep.o \
+       restart.o scalar.o service.o setup.o tcf.o util.o 
+
+   FC = ifort
+   FFLAGS = -C -check all -traceback -fpe0
+   TARGET = mdd
+
+default: $(objects) 
+	$(FC) $(FFLAGS) -o $(TARGET) $(objects)
+   $(objects) : prcm.h dimpar.h
+
+clean: 
+	rm -f $(TARGET) *.o

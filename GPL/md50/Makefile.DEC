@@ -1,0 +1,24 @@
+#
+#   For unknown system: to count consumed cpu time, 
+#   supply cpu time counter in cpu_dummy.f file
+
+
+objects = aver.o cpu_linux.o forces.o main.o mdstep.o util.o \
+          input.o restart.o scalar.o service.o setup.o tcf.o getcpu.o
+
+#  Put name of your Fortran compiler here
+FC = f77
+
+#  Put compiler options here (optimization, etc)
+#  Sometimes file aver.f requires special options to treat
+#  long character strings (up to 32756)
+FFLAGS = -fast
+
+default: $(objects) 
+	$(FC) -o md $(objects)        
+   $(objects) : prcm.h 
+
+clean: 
+	rm -f md *.o
+
+

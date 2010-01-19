@@ -1,0 +1,48 @@
+#
+#  Example of input file for simulation of 256 flexible SPC waters 
+#  and 4 Na+Cl- ion pairs
+#
+Main_filename NaCl
+Verbose_level 5
+Path_DB    ../moldb
+Read_restart no
+Dump_restart 10000
+Check_only no
+
+#
+Molecule_types 3
+H2O 256
+Na+_SD  4
+Cl-_SD  4
+#
+Density 1.02
+Change_V no
+Change_T no
+Nose_thermostat 298. 30.
+#Barostate_NH 1. 1000.
+#Barostate_anisotropic no
+PBC rect
+COM_check yes 0
+#
+Time_step 2.
+Number_steps 12000
+Double_timestep 10
+R_cutoff 10.
+R_short 5.
+Neighbour_list 10
+Electrostatics Ewald 3. 9.
+Cut_forces 1.
+#
+Startup FCC
+#
+Output 1
+Serie_avegare 1000
+Average_from 3
+Average_int yes
+Dump_XMOL yes
+
+
+Trajectory asccrd 100. 1000 all
+#
+End
+

@@ -1,0 +1,11 @@
+A test sample to simulate 4 NaCl ion pairs dissolved in 248 water
+molecules. Output (which takes about 1.3M) is compressed.
+The output is large because level of output was set to "5", which
+gives a line per each MD step; then output data for RDF amd TCF take some
+place. Simulation time is 60 ps. Note, that this is NOT enogh to get 
+some properties of the solution, for example, the ion-ion radial
+distribution functions. Note also, that molecular dynamics trajectories
+are principally unstable, and specific values of physical quantities
+at each time step may be different while running the program on different
+machines. However, final averages must agree within the statistical error of 
+the simulation.

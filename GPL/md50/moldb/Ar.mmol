@@ -1,0 +1,23 @@
+#==================================================I
+#       Molecular Dynamics Data Base               I
+#       Configuration and interaction potential    I
+#==================================================I
+#           Argon                                  I
+#==================================================I 
+#       Number of sites
+ 1
+#       X        Y         Z         M          Q         sigma     epsilon
+Ar      0.        0.       0.      39.948      0.        3.41        0.9939
+#    Num. of strings for the reference
+4
+       Argon
+       Parameters from:          
+        ...       
+
+#   Num. of bonds
+ 0
+#   Num. of angles
+ 0
+#   Num of dihedrals
+ 0
+

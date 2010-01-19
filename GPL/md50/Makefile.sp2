@@ -1,0 +1,15 @@
+   FC = mpxlf            
+   FFLAGS = -O3 -qarch=pwr2
+   TARGET = mdp
+
+objects = cpu_risc.o forces.o input.o main.o mdstep.o mpi.o \
+          restart.o setup.o service.o tcf.o util.o
+
+default: $(objects) aver.o
+	$(FC) -o $(TARGET) $(objects) aver.o       
+   $(objects) : prcm.h
+   aver.o : aver.f prcm.h
+	$(FC) -c $(FFLAGS) -qcharlen=32756 aver.f
+
+clean: 
+	rm -f mdp *.o

@@ -1,0 +1,19 @@
+#   Makefile for Cray T3E
+
+ FC = f90            
+ FFLAGS =   -dp -O3,unroll2
+ TARGET = mdp
+       
+
+objects = aver.o cpu_linux.o inputl.o forces.o main.o mdstep.o \
+       restart.o mpi_cray.o service.o setup.o tcf.o util.o getcpucr.o 
+
+default: $(objects) 
+	$(FC) -o $(TARGET) $(objects)
+   $(objects) : prcm.h
+   inputl.o : inputl.f prcm.h
+   inputl.f : input.f input.patch
+	patch input.f input.patch -o inputl.f
+
+clean: 
+	rm -f $(TARGET) $(objects) inputl.f

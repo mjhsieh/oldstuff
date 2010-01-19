@@ -1,0 +1,108 @@
+#  Commentaries to the input file for mdee v 3.9 program
+#  The true input must be in NAMELIST format
+#  (this help file with commentaries can not be run as an input)
+#
+#  This is a sample for calculation of solvation free energy
+#  of CH4 (OPLS) in water (SPC)  
+#
+#  For more information (description of molecular files .mol etc)
+#  see manual to MDynaMix code
+#  http://www.fos.su.se/physical/sasha/md_prog.html
+#
+
+&SYSTEM
+#
+# General parameters:
+#
+ FNAME='ch4_h2o',     ! file name for restart file
+ LRST= .t.,           ! .t. - read restart file, .f. - new run
+ LDMP= .TRUE.,        ! .t. - dump restart file
+ LCHECK= .f.,         ! .f. - run simulations; .t. - only check results or
+                        check input
+ IPRINT=  5,          ! level of output (from 2 to 8)
+#
+#  Simulated system
+#
+ NTYPES=  2,          ! number of molecules types 
+ NSPEC=  255,1,0,0,   ! number of molecules of each types
+ IEE=1,0,             !  1 - for "normal" molecules; 0 - for molecules which 
+                         will be deleted/inserted
+ NAMOL= 'H2O','CH4',' ',' ',' ',     !  names of molecules
+                 files H2O.mmol, CH4.mmol must be present in directory PATHDB 
+ PATHDB='/home/sasha/md/moldb',   ! name of directory containing .mol files
+#
+#   MD Simulation parameters
+#
+ NSTEPS=270000,       ! number of MD steps
+ DT=2.d-15,           ! (long) time step
+ NFREQ=10,            ! short time steps in one long
+ NAVER=10000,         ! number of steps for intermediate averaging
+ IAVER=5,             ! output each IAVER step if IPRINT=5
+ ICHNB=10,            ! number of (long) steps between recalculation
+                        of the list of meighbours
+ NDUMP=5000,          ! dump restart file after  NDUMP steps
+ IHIST=3,             ! 
+ LNVT= .t.,           ! constant-temperature (Nose) MD
+ QT=  30.,            ! termostat relaxation time (fs)
+ LNPT=.t.,            ! constant pressure MD (LNVT must be also .true.)
+ QPR=700.,            ! barostat relaxation time 
+ TRTEMP=298.D0,       ! temperature (K)
+ TPRES=1.,            ! pressure (atm)
+ RHO=  1.D0,          ! density (if any of box sizes is zero)
+ BOXL=  0.D0,         ! box sizes
+ BOYL=  0.D0,
+ BOZL=  0.D0,
+ RCUT=  0.D0,         ! Cut-off(A), BOXL/2 if zero
+ SHORT=5.,            ! Cut-off of short-range forces, recalculated each 
+                        short time step
+ LCHP=.f.,            ! Change density at restart according to the input file
+                        (if .f. - take from the restart file)
+ LSHEJK= .f.,         ! SHAKE algorithm (constraint dynamics)
+                        otherwise - flexible models, double time step 
+ TOLER=1.d-4,         ! Tolerance parameter for SHAKE
+#
+#  Details of the force field (for each molecule type):
+#
+ C14EL=  0.0D0,0.0D0,0.0D0,0.,0.,   !  Scaling factors for 1-4 electrostatic 
+                                                     interactions
+ C14LJ=  0.0D0,0.0D0,0.0D0,0.,0.,   !  for Lennard-Jones interactions
+ IPOT=  2,0,0,0,0,                  !  Potential type: 0 - all cases
+                                        2 - flexible SPC water model
+ ITORS=  0,0,0,0,0,                 !  Torsion angle type: 
+                                        0 - AMBER type (default)
+                                        1 - MM3 type
+#
+#  Startup:
+#
+ ICHECK=1,            !  0 - read coordinates from input file *.inp 
+                         1 - Start from FCC lattice 
+#
+#  Expanded ensemble 
+#
+ L0AVS= .t.,        ! set accumulated averages to zero (except the
+                      probability distribution over subensembles)
+ LECH=.t.,          ! change EE parameters at restart 
+                        (otherwise, they will be taken from the restart file) 
+ NE=12,             ! number of subensembles
+ ME0=9,             ! start from this subensemble - at startup, if if the
+                      number of subensembles was changed
+ NCEE=5,            ! attempts to change subensemble are made after NCEE steps 
+ PLOW=0.001,        ! while calculating new biasing factors ita, 
+                      disregard probabilities below this 
+ $end               ! end of NAMELIST section of input
+#
+#  Expanded ensemble parameters ( read using free format )
+#
+#  alpha(m)  ita(m) 
+1.           2.8
+0.8          3.6
+0.6          4.
+0.4          4.6
+0.2          5.2
+0.1          5.8
+0.03         5.5
+0.01         4.4
+0.003        3.3
+0.001        2.6
+0.0001       1.2
+0.           0.

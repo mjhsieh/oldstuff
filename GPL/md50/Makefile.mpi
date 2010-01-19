@@ -1,0 +1,17 @@
+objects = aver.o cpu_mpi.o inputl.o forces.o main.o mdstep.o \
+       restart.o mpi.o service.o setup.o tcf.o util.o 
+
+   FC = mpif77
+   FFLAGS = -O3 
+   LDFLAGS = 
+   TARGET = mdp
+
+default: $(objects) 
+	$(FC) $(LDFLAGS) -o $(TARGET) $(objects)
+   $(objects) : dimpar.h prcm.h
+   inputl.o : inputl.f prcm.h
+   inputl.f : input.f input.patch
+	patch input.f input.patch -o inputl.f
+
+clean: 
+	rm -f $(TARGET) *.o

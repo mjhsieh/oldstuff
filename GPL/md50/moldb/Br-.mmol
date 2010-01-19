@@ -1,0 +1,24 @@
+#==================================================I
+#       Molecular Dynamics Data Base               I
+#       Configuration and interaction potential    I
+#==================================================I
+#           Ion Br-                                I
+#==================================================I 
+#       Number of sites
+ 1
+#       X        Y         Z         M          Q         sigma     epsilon
+Br-     0.        0.       0.      79.9        -1.        5.04        0.27
+#    Num. of strings for the reference
+4
+       Ion Br+
+       Parameters from:          
+       K.Heinzinger, 
+       Physica v.131B, pp.196-216 (1985)
+#   Num. of bonds
+ 0
+#   Num. of angles
+ 0
+#   Num of dihedrals
+ 0
+
+

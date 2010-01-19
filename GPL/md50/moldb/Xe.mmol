@@ -1,0 +1,21 @@
+#==================================================I
+#       Molecular Dynamics Data Base               I
+#       Configuration and interaction potential    I
+#==================================================I
+#             Xenon                                I
+#==================================================I 
+#       Number of sites
+ 1
+#       X        Y         Z         M          Q         sigma     epsilon
+Xe      0.        0.       0.      131.3       0.       3.924      0.512226
+#    Num. of strings for the reference
+3
+       Xenon
+       Parameters from:          
+        ...
+#   Num. of bonds
+ 0
+#   Num. of angles
+ 0
+#   Num of dihedrals
+ 0

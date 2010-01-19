@@ -1,0 +1,60 @@
+ &INPUT
+ FNAME='ch4_h2o',
+ LRST= .f.,      
+ LDMP= .TRUE.,   
+ LCHECK= .f.,    
+ IPRINT=  5,     
+ NTYPES=  2,     
+ NSPEC=  255,1,0,0,
+ IEE=1,0,   
+ NAMOL= 'H2O','CH4',' ',' ',' ',
+ PATHDB='moldb', 
+ NSTEPS=270000, 
+ DT=2.d-15,    
+ NFREQ=10,     
+ NAVER=10000,   
+ IAVER=5,      
+ ICHNB=10,      
+ NDUMP=5000,   
+ IHIST=3,      
+ LNVT= .t.,    
+ QT=  30.,     
+ LNPT=.f.,     
+ QPR=700.,     
+ TRTEMP=298.D0, 
+ TPRES=1.,     
+ RHO=  1.0D0,   
+ BOXL=  0.D0,  
+ BOYL=  0.D0,
+ BOZL=  0.D0,
+ RCUT=  0.D0,  
+ SHORT=5.,     
+ LCHP=.f.,     
+ LSHEJK= .f.,  
+ TOLER=1.d-4,  
+ C14EL=  0.0D0,0.0D0,0.0D0,0.,0.,
+ C14LJ=  0.0D0,0.0D0,0.0D0,0.,0.,
+ IPOT=  2,0,0,0,0, 
+ ITORS=  0,0,0,0,0,
+ ICHECK=1,   
+ L0AVS= .f., 
+ LECH=.f.,   
+ NE=12,       
+ ME0=9,      
+ NCEE=5,     
+ PLOW=0.001, 
+ LSCFT=.t.,
+ FTSCL=0.001
+ $end        
+1.          2.8
+0.8         3.6
+0.6         4.0
+0.4         4.6
+0.2         5.2
+0.1         5.8
+0.03        5.5
+0.01        4.4
+0.003       3.3
+0.001       2.6
+0.0001      1.2
+0.           0.

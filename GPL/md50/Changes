@@ -1,0 +1,175 @@
+v2.1
+NVT ensemble (v2.1)  
+Essential reorganisation of force calculations (v2.4)
+NPT ensemble (v3.0)            
+optimization of Ewald sum calculations (v3.3)
+complex DNA-like molecules (v3.5)                 
+non-cubic (rectangular) cell (v3.6)
+hydrogen bonds included (10-12 potential) (v3.7)
+first parallel version (v3.8)    
+universal code for sequential and parallel executions  (v3.9) 
+
+v4.0
+- fully parallelized code, including particle moving
+corrected small bug in calculations of type-type intermolecular energies.
+(there were different weight from the short and long forces) 
+
+v 4.1  
+- new format on the input file (free format with commentaries instead
+  of NAMELIST)
+- slightly changed format of .mol files 
+- readind of initial atom or molecular center of mass coordinates 
+  from a file included 
+- special LJ parameters for 1-4 intramolecular interactions   
+- Morse potential for arbitrary bonds       
+- Sum(cos(fi)**n) type of torsion potential (for hydrocarbon chains)
+- Improper dihedral angles potential 
+
+v.4.2
+
+- improved memory-saving algorithm. All two-dimensionl arrays A(NS,NS)
+where NS is the total number of different sites on molecules are removed 
+without noteciable increasing of computation time.
+
+- option for separate pressure control in each direction. 
+Components Pxx,Pyy,Pzz of the pressure tenzor are coupled to the 
+Nose-Hoover thermostat separately (non diagonal terms of the pressure 
+tensor are supposed to be 0). Do not use the option for isotropic systems
+in which nothing prevent the system to shrink the size in one direction and
+increase it in another while keeping the volume (and pressure) constant.
+
+- reaction field method for treatment of electrostatic interactions,
+including "generalised reaction field" method for non-zero ionic strength
+(I.G.Tironi, R.Sperb, P.E.Smith, W.F.van Gunsteren, 
+J.Chem.Phys.,102,5451(1995))
+
+- cell of truncated octahedron geometry:
+  |x| < L/2 ; |y| < L/2 ;  |z| < L/2 ; |x|+|y|+|z| < 0.75*L
+
+- cell oh hexagonal geometry
+
+- If Ewald method for electrostatic interactions is not used, the list
+of neighbours for atoms on small molecules (Natoms <= 5) is defined from
+the distance between molecular centre-of-mass, that is the whole molecules 
+occur within or out cut-off. In other cases, as before, list of neigbours
+for each atom is determined from distances between the atoms. 
+
+21.10.97  Bug in pressure calculations in the case of parallel implementation
+of constrain dynamics (SHAKE) is removed.  
+
+v.4.2 -> 4.3
+------------
+
+In v.4.3 most of the subroutines were essentially regrouped into new files
+See details in file README
+A lot of comments were inserted into the code.
+
+The MD algorithm for NVT or NPT ensemble was rewritten 
+according to "modular-invariant" version of the Nose-Hoover thermostat, see
+ 
+  of G.J.Martyna, D.J.Tobais and M.L.Klein,
+  J.Chem.Ohys., v.101(5), p.4177 (1994)
+  
+Some work has still to be done for the case of constrained dynamics 
+(it works now, but not in the complete correspondence to the paper 
+cited above)  
+
+
+04.03.98  Several small bugs were corrected:
+  in mpi.f procedure: addressing to NUMTASK (nonexistent) node which
+sometimes happened in SINHR subroutine is removed
+(this might cause crash of the program; otherwise it worked )
+  in supl.f, TESTCONF - did not catch before all bad configurations
+  "molecular" pressure in the double time step algorithm now calculated
+correctly.
+  Cray specific files were added  (mpi_cray.f, getcpucr.c and Makekefiles
+
+12.04.98 A new possibility to add options in the input file is introduced:
+  After lines defining unit vector (just before lines which defines RDFs)
+  one can write
+  
+ add <n>
+
+  where n is number of additional options. Then follows n lines defining
+  additional options
+  
+  Now following extra options difined:
+  
+ inputf   - read restart file in ASCII format 
+ outputf  - write restart file in ASCII format
+ 
+ no aver  - do not calculate averagre bond lenghts, angles and torsions. 
+            this may save a lot of memory while simulating large
+	    macromolecules
+	    
+More detailed description of additional options is in file Extra_param 
+
+
+11.01.99
+  Option "Cut large forces" (see "MD.input")  is now working
+  
+22.02.99
+  File prcm.h is divided into two parts:
+  
+  dimpar.h defines sizes of working arrays (may be customized)
+  prcm.h - the rest of old prcm.h file (should not be changed)
+
+26.04.99 
+  Utility "makemol" to generate .mol files from "simple molecule file"
+.smol and force field database is added. See Makemol.doc for details.
+
+22.06.99 
+  projections of time correlation functions may be now calculated both 
+  in the laboratory and in the molecular priuncipal coordinate systems
+  (flags 1 or 2 for corresponding tcf-s in the input file)
+  
+22.08.01
+  Kong combination rules for Lennard-Jones cross-interactions are introduced
+  (J. Kong, J.Chem.Phys., 59, 2464 (1973)). See ExtraParam file.
+  
+15.02.05
+  Option for reading start-up configuration has changed.
+  Value "0" now reads input coordinates in "XMOL" format while
+  value "-2" reads atom coordinates as three columnns X Y Z with
+  optional commentaries
+  
+
+v. 4.4    
+
+  Possibility of separate Nose thermostat for each molecular species.
+  Separate temperature control over species (Nose or velocity scaling) 
+  is now switched on by extra parameter  "T-sep" (see file Extra_param) 
+
+  Out-cutoff corrections for energy and pressure now correct.
+  They were too small (by factor between 2pi and 4pi) in older version
+
+  Thermostat/barostat algorithm with constraint dynamics - algorithm
+  rewritten. 
+
+  XMOL trajectory file includes now information on the box sizes
+  in the commentory lines
+  
+  Tranal:   now can read trajectories in MDynaMix binary format, XMOL format
+  (provided second line contains time in fs) and PDB trajectories from GROMACS
+  
+  2005-12-01
+  Expanded ensemble version of the program is updated (mdee). It now
+  implements most of the features of MDynaMix except parallelization
+  
+v. 5.0  2006-12-20
+
+  Completely new input:
+    - input file with keywords
+    - .mol files renamed to .mmol files
+    - information of 1-4 and some other features of force field in .mmol files
+    - extension for start-up configuration changed to .start
+  
+  Option for geometric combination rule for "Sigma"
+  
+  New tranal package
+  
+  New manual
+  
+v 5.0  2007-01-02  A bug in version frpm 2006-12-20 concerning definition 
+of 1-4 neighbours is corrected
+

@@ -1,0 +1,28 @@
+#==================================================I
+#       Molecular Dynamics Data Base               I
+#       Configuration and interaction potential    I
+#==================================================I
+#           TIP3P H2O model                        I
+#==================================================I 
+#       Number of sites
+ 3
+#         X	      Y         Z         M         Q       sigma     epsilon
+#					  (A)                                                   (kJ/M)
+O    0.000000    0.000000    0.000000   15.9994   -0.834      3.1507    0.6367
+H1   0.000000    0.756945   -0.585877    1.008     0.417      0.4       0.192
+H2   0.000000   -0.756945   -0.585877    1.008     0.417      0.4       0.192
+#    Num. of strings for the reference
+2    
+       TIPS3P water model 
+       CHARMM force fiels
+#   Num. of bonds (should be rigid in fact)
+ 3
+#ID(typ)    N1   N2         Reqv      Force        D        RHO (A**-1)    
+ 0           1    2         0.95719   1875.       0.      0.
+ 0           1    3         0.95719   1875.       0.      0.
+ 0           2    3         1.5139     600.       0.      0.
+#   Num. of angles
+ 0
+# 2   1    3            104.52     230.3
+#   Num of dihedrals
+ 0 

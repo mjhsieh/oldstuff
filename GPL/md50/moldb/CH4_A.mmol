@@ -1,0 +1,40 @@
+#==================================================I
+#       Molecular Dynamics Data Base               I
+#       Configuration and interaction potential    I
+#==================================================I
+#           Methane (CH4)                          I
+#==================================================I 
+#       Number of sites
+ 5
+#       X        Y         Z          M          Q         sigma     epsilon
+#               (A)                  (u)        (e)        (A)        (kJ/M)
+C       0.       0.      0.       12.011    -0.660      3.207       0.251
+H1    0.63      0.63     0.63      1.008     0.165      2.744      0.042
+H2   -0.63      0.63    -0.63      1.008     0.165      2.744      0.042
+H3    0.63     -0.63    -0.63      1.008     0.165      2.744      0.042
+H4   -0.63     -0.63     0.63      1.008     0.165      2.744      0.042
+#    Num. of strings for the reference
+4
+       Methane (CH4)   (5 site model)
+       Parameters from:
+       AMBER + (J.Am.Chem.Soc.,1992,v.114,6798)
+
+#   Num. of bonds
+ 4
+#ID(typ)    N1   N2   Reqv         Force          D        RHO (A**-1) 
+  0         1    2    1.09      1385.          0.       0.
+  0         1    3    1.09      1385.          0.       0.
+  0         1    4    1.09      1385.          0.       0.
+  0         1    5    1.09      1385.          0.       0.
+#   Num. of angles
+ 6     
+#    N1    N2     N3         Alpha(eqv)      Force 
+    2     1      3          109.5            151.
+    2     1      4          109.5            151.
+    2     1      5          109.5            151.
+    3     1      4          109.5            151.
+    3     1      5          109.5            151.
+    4     1      5          109.5            151.
+#   Num of dihedrals
+ 0
+

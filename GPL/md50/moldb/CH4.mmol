@@ -1,0 +1,25 @@
+#==================================================I
+#       Molecular Dynamics Data Base               I
+#       Configuration and interaction potential    I
+#==================================================I
+#           Methane (CH4)                          I
+#==================================================I 
+#       Number of sites
+ 1
+#       X        Y         Z         M          Q         sigma     epsilon
+#               (A)                 (u)        (e)        (A)        (kJ/M)
+CH4     0.       0.        0.      16.043      0.        3.73        1.2309
+#    Num. of strings for the reference
+4
+       Methane (CH4)   (1 site OPLS)
+       Parameters from:
+       JORGENSEN ET.AL (1984)
+       J.AM.CHEM.SOC., VOL 106, NO 22, P 6638-6646
+#   Num. of bonds
+ 0
+#   Num. of angles
+ 0
+#   Num of dihedrals
+ 0
+
+

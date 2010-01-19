@@ -1,0 +1,5 @@
+31c31,32
+< 	IO=5                 ! input channel (fortran standard input) 
+---
+> 	IO=4                 ! input channel (fortran standard input)
+> 	open(unit=4,file='md.input',status='old')

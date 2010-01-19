@@ -1,0 +1,193 @@
+#
+#    Generic force field parameters
+#
+#    This file may be used by utility "makemol" from MDynaMix package
+#    to generate molecule (.mol) files from simple molecular files
+#    (.smol).
+#
+#    The force field parameters are taken mostly from the CHARMM force field
+#    parameter files
+#
+#    Atom types definitions - see end of file
+#       
+#    This is only an example and very far from complete
+#
+BONDS
+#
+# V(bond) = Kb(b - b0)**2
+# 
+# Kb: kJ/mole/A**2
+# b0: Å
+# D, Rho - parameters for Morse potential (optional)
+#
+# atom_type Kb          b0            [   D    Rho ]
+#
+C     C      1.335    2512.
+C     CT1    1.49     1047.
+C     CT2    1.49     1047.
+C     CT3    1.49     1047.
+CA    CA     1.375    1277.  
+CA    CT2    1.49     963.
+CA    CT3    1.49     963.
+CA    HP     1.08     1423.
+CT1   CT1    1.50     944. 
+CT1   CT2    1.538    944. 
+CT1   CT3    1.538    944. 
+CT2   CT2    1.53     944. 
+CT2   CT3    1.528    944. 
+CT3   CT3    1.53     944. 
+CT1   HA     1.111    1294.
+CT2   HA     1.111    1294.
+CT3   HA     1.348    1294.
+CT1   NH3    1.48     837.4
+CT2   NH2    1.455    1005.
+CT2   NH3    1.48     837.4
+CT3   NH3    1.48     837.4
+CT2   NP     1.502    1340.
+NH2   HC     1.00     1926.
+NH3   HC     1.04     1687.
+NP    HC     1.006    1926.
+OH1   CT1    1.42     1792.
+OH1   CT2    1.42     1792.
+OH1   CT3    1.42     1792.
+OH1   H      0.9560   2284.3      376.35      2.44   # Morse pot for OH bond 
+#
+#   -- End of bonds --
+#
+ANGLES
+#
+# V(angle) = Ktheta(Theta - Theta0)**2
+#
+# V(Urey-Bradley) = Kub(S - S0)**2
+#
+# Ktheta: kJ/mole/rad**2
+# Theta0: degrees
+# Kub: kJ/mole/A**2 (Urey-Bradley term - optional)
+# S0: A
+#
+# atom_types   Theta0  Ktheta    [ S0     Kub ]
+#
+CA   CA   CA     120.   167.5   2.4162   146.5
+CA   CA   CT2    122.3  191.8
+HP   CA   CA     120.   125.6   2.152     92.11
+CT2  CT1  CT1    111.   223.4   2.561     33.5
+CT1  CT2  CT2    113.5  244.3   2.561     46.7
+CT2  CT2  CT2    113.6  244.3   2.561     46.7
+CT2  CT2  CT3    115.   242.8   2.561     33.5
+CT1  CT3  CT2    113.5  244.3   2.561     46.7
+HA   C    C      120.5  209.3       
+HA   CT1  C      109.5  138.1   2.163    125.6
+HA   CT1  CT1    110.1  144.5   2.179     94.3
+HA   CT1  CT2    110.1  144.5   2.179     94.3
+HA   CT1  CT3    110.1  144.5   2.179     94.3
+HA   CT2  C      109.5  138.1   2.163    125.6
+HA   CT2  CA     107.5  206.4
+HA   CT2  CT1    110.1  140.    2.179     94.3
+HA   CT2  CT2    110.1  111.    2.179     94.3
+HA   CT2  CT3    110.1  144.9   2.179     94.3
+HA   CT3  CT1    110.1  140.    2.179     94.3
+HA   CT3  CT2    110.1  144.9   2.179     94.3
+HA   CT3  CT3    110.1  157.    2.179     94.3
+HA   CT2  HA     109.   148.6   1.802     22.6
+HA   CT3  HA     108.4  148.6   1.802     22.6
+HP   CA   CT2    122.   125.
+NH2  CT2  CA     109.   184.
+NH2  CT2  HA     109.5  159.1
+NH3  CT1  C      110.   183.
+NH3  CT1  CT1    110.   283.5
+NH3  CT1  CT2    110.   283.5
+NH3  CT1  CT3    110.   283.5
+NH3  CT1  C      110.   183.
+NH3  CT2  CT2    110.   283.5
+NH3  CT2  HA     107.5  188.4   2.101   146.54 
+NH3  CT3  HA     107.5  188.4   2.101   146.54 
+NP   CT2  CT2    108.5  293.
+NP   CT2  HA     109.15 215.6
+CT2  NP   CT2    111.   418.7
+HC   NH2  CT2    111.   209.3
+HC   NH2  HC     120.   104.7
+HC   NH3  CT1    109.5  125.6   2.074    83.7
+HC   NH3  CT2    109.5  125.6   2.074    83.7
+HC   NH3  CT3    109.5  125.6   2.074    83.7
+HC   NH3  HC     109.5  184.2
+HC   NP   CT1    109.5  138.1   2.056    16.7
+HC   NP   CT2    109.5  138.1   2.056    16.7
+HC   NP   CT3    109.5  138.1   2.056    16.7
+HC   NP   HC     107.5  213.5
+H    OH1  CT2    106.0  240.75
+OH1  CT2  CT2    110.1  316.96
+OH1  CT2  HA     108.9  192.18
+#
+TORSIONS          (DIHEDRALS)
+#
+#  V(dihedral) = Kchi(1 + cos(n(chi) - delta))
+#
+#  Kchi: kJ/mole
+#  n: multiplicity
+#  delta: degrees
+#
+# atom_types            delta    Kchi    n   
+#  (vilcards "X" allowed)
+C    CT1  NH1  C      180.      0.837    1  
+C    CT2  NH1  C      180.      0.837    1  
+C    CT2  NP   CT2      0.      0.335    3
+CA   CA   CA   CA     180.      13.      2
+CA   CA   CA   CT2    180.      13.      2
+CA   CA   CA   CT3    180.      13.      2
+CA   CA   CT2  CT3    180.      0.963    2
+CA   CT2  CT1  C        0.      0.167    3
+CT2  CT2  NP   CT2      0.      0.335    3
+CT3  CT2  NP   CT2      0.      0.335    3
+CT3  CT2  CT2  CT2      0.      0.628    1
+CT3  CT2  CT2  CT3      0.      0.628    1
+H    CA   CA   CA     180.      14.65    2
+HA   CA   CA   HA     180.      10.47    2
+HA   CT2  NP   CT2      0.      0.335    3
+HA   CT1  CT2  CA       0.      0.167    3
+HA   CT2  CT2  CA       0.      0.167    3
+HA   CT3  CT2  CA       0.      0.167    3
+HC   NP   CT2  CT1      0.      0.335    3
+HC   NP   CT2  CT2      0.      0.335    3
+HC   NP   CT2  CT3      0.      0.335    3
+HC   NP   CT2  HA       0.      0.335    3
+HP   CA   CA   CA     180.      17.6     2
+HP   CA   CA   CT2    180.      17.6     2
+HP   CA   CA   CT3    180.      17.6     2
+HP   CA   CA   HP     180.      10.      2 
+NP   CT2  CT2  CT2      0.      1.256    1
+H    OH1  CT2  CT2      0.      5.44     1         ! ethanol  OH hf/6-31g* 
+H    OH1  CT2  CT2      0.      1.256    2
+H    OH1  CT2  CT2      0.      1.759    3
+X    C    C    X      180.     16.75     2
+X    CT2  CA   X        0.      0.       0
+X    CT1  CT1  X        0.      0.837    3
+X    CT1  CT2  X        0.      0.837    3
+X    CT1  CT3  X        0.      0.837    3
+X    CT2  CT2  X        0.      0.816    3
+X    CT2  CT3  X        0.      0.67     3
+X    CT2  NH2  X        0.      0.419    3
+X    CT2  NH3  X        0.      0.419    3
+X    CT2  OH1  X        0.      0.586    3
+NONBONDED
+#
+#   LJ parameters Eps (in kJ/mol) and sigma (Å) )
+#
+#   sigma14 and eps14 are used if atoms are "1-4" bound
+#
+# atom_type   sigma  eps    [ sigma14   eps14 ]        
+C         3.5636   0.46057                        #   -CO-
+CA        3.549    0.293                          #   >C=   -CH=
+CT1       4.0536   0.0837     3.3854    0.0418    #  >(CH)-
+CT2       3.8754   0.2302     3.3854    0.0418    #  -(CH2)-
+CT3       3.6705   0.335      3.3854    0.0418    #  -(CH3)
+NH1       3.2963   0.8374                         #  -(NH)-
+NH2       3.2963   0.8374                         #  -(NH2)
+NH3       3.2963   0.8374                         #  -(NH3+) 
+NP        3.2963   0.8374                         #  -(NH2+)-
+H         0.4      0.1926                         #   O-H 
+HA        2.352    0.0921                         #   C-H 
+HC        0.4      0.1926                         #   N-H+ 
+HP        2.42     0.126                          #   -CH= (e.g, benzen)
+O         3.029    0.5024                         #   O=C<
+OH1       3.154    0.6368                         #   C-O-H
+END

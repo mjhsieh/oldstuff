@@ -1,0 +1,64 @@
+Makemol - utility to make .mol files
+
+See more information in doc/MDX_manual.pdf
+
+1. Introduction.
+----------------
+
+Utility Makemol is intended to create file describing a molecule (.mmol) for 
+the MDynaMix program from the two files: simple molecule file and force 
+field file.
+
+Simple molecule file (.smol) contains information on all atom coordinates 
+in the molecule, atomic names, charges and connectivity (bond) list.
+Force field file contain information about force field parameters.
+The utility create lists of covalent angles and torsions; finds force
+field parameters for all covalent bonds, angles and torsion angles, as
+well as non-bonded interaction paramater, and create .mol file.
+
+2. Format of simple molecular file.
+-----------------------------------
+
+Lines beginning with "#" or "*" are commentaries. 
+
+First non-commentary line is the number of atoms.
+Then lines for each atom follows.
+Each line consists of 6 fields:
+1 - name of atom 
+2,3,4 - X,Y,Z coordinates in Å.
+5 - atom charge (note: atomic charges normally do not included in the 
+force field; they are normally calculated in a quantum-chemical program 
+like Gaussian)
+6 - Atom type in the force field file
+(more fields can be included, for example, 7-th column may describe atom 
+numbers)
+
+Next line is the number of covalent bonds followed by the corresponding 
+number of lines describing bond list (just two integers corresponding to atom 
+numbers). See spermin.smol file as an example (spermine molecule)
+
+The first part of the simple molecular file (before the bond list) may be
+also written in CHARMM format. This format uses 10 fields per atom. The
+first is atom number, 2 and 3 define "Seqment" and "residue" (not used here),
+4-th as atom name, 5,6,7 are X,Y,Z coordinates. Put atom force field type 
+into 8-th column and atom charge in th 10-th column (these fields may have 
+different sense in other applications). 9-th filed is not used but should be 
+filled by something.  
+
+3. Format of the force filed file.
+ 
+The structure of the force filed file is similar to the parameter file in the
+CHARMM package and is self-explanatory. However, CHARMM parameter file can 
+not be used directly, because: 1) units for the force constants are in kJ/M
+and not in kcal/M; 2) for non-bonded interactions, sigma parameter is used 
+and not the Rmin/2  3) Order of paramaters is different. See file
+generic.ff as an example
+
+4. Running the utility:
+
+Just start it and answer the questions.
+If the program does not find force field parameters, it puts exclamation
+mark in the corresponding lines of the output .mol file. Additional 
+information is logged into makemol.log file.
+   
+    

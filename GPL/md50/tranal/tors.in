@@ -1,0 +1,27 @@
+ &TRAJ
+ NFORM='DCDT',
+ FNAME='/s2/sasha/NAMD/test/hexa128',
+ PATHDB='/s2/sasha/mdp/md50/moldb',
+ NTYPES=1,
+ NAMOL='hexadecane',
+ NFBEG=2,
+ NFEND=10,
+ NSPEC=128,
+ IPRINT=5
+ &END
+# torsion distributions
+#  file name
+hexadec_tors.dat
+#
+# number of types & resolution
+2   72
+# angles of each type
+2  4  
+#  ends
+1  5  8  11
+38  41  44  47
+#  mitt
+11  14  17  20
+14  17  20  23
+17  20  23  26
+20  23  26  29

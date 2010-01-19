@@ -1,0 +1,47 @@
+# makefile for Digital Unix OSF/1
+TARGETS = display preproc 
+
+# I have never loaded or built GLUT on this platform
+# I simply have an account on an Alpha workstation
+# running this OS.  On this station, when I
+#
+#   make -f makefile.osf clean
+#   make -f makefile.osf
+#
+# preproc and mddisplay immediately.
+#
+# So, I recommend you try my "fingers-crossed" strategy first.
+#
+# If you get compiler errors about missing glut.h or linker errors
+# about the libglut.?? library, then you should explore
+# the GLUT X-windows source code available at:
+#
+# http://www.opengl.org/developers/documentation/glut/
+#
+# I also see GLUT for OSF mentioned on the SGI freeware page readmes:
+#
+#  http://freeware.sgi.com/index-by-alpha.html
+#
+# and scroll down to GLUT-3.7 and click on the Install button
+# to get the tardist file.
+#
+# These pages might also be helpful:
+#
+#  http://freeware.sgi.com/Installable/glut-3.7.html
+#  http://freeware.sgi.com/cd-2/relnotes/glut.html
+
+LLDLIBS = -lglut -lGLU -lGL -lXmu -lXext -lX11 -lm
+
+DISPLAY_OBJS = display.o displib.o dispui.o
+PREPROC_OBJS = preproc.o displib.o
+
+default : $(TARGETS)
+
+preproc : $(PREPROC_OBJS) 
+	$(CC) -o $@ $(PREPROC_OBJS) -lm
+
+display : $(DISPLAY_OBJS) 
+	$(CC) -o $@ $(DISPLAY_OBJS) $(LLDLIBS)
+   
+clean:
+   rm -f $(PREPROC_OBJS) $(DISPLAY_OBJS) $(TARGETS)

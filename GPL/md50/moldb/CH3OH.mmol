@@ -1,0 +1,56 @@
+#=========================================================I
+#             Flexible methanol model (all-atom)          I
+#             Gas phase geometry (microwave)              I
+#             Epsilons,sigmas (virtually TIPS)            I
+#             Morse potential OH                          I
+#             by P.A. Giguere, JCP 18, 88 (1950)          I
+#             Bonds/angles by Micke Odelius               I
+#             Torsions by Jorgensen JACS 105, 1407 (1982) I
+#             V(psi)=V0(1+cos(3*psi))/2                   I
+#             V0 = 1.07 kCal/mol (exp)                    I
+#=========================================================I
+#     Number of sites
+    6
+#         X          Y         Z          MASS        Q        S          E
+ O      .0285      .0000      .6948      15.9994    -.6000    3.0000     .6699
+ C      .0285      .0000     -.7322      12.0111    -.1000    3.8000     .1675
+ H     -.8760      .0000     1.0044       1.0080     .4000     .0000     .0000
+ HC    1.0595      .0000    -1.1022       1.0080     .1000    2.4000     .1675
+ HC    -.4870      .8929    -1.1022       1.0080     .1000    2.4000     .1675
+ HC    -.4870     -.8929    -1.1022       1.0080     .1000    2.4000     .1675
+#
+9
+             Flexible methanol model (all-atom)          
+             Gas phase geometry (microwave)              
+             Epsilons,sigmas (virtually TIPS)            
+             Morse potential OH                          
+             by P.A. Giguere, JCP 18, 88 (1950)          
+             Bonds/angles by Micke Odelius               
+             Torsions by Jorgensen JACS 105, 1407 (1982) 
+             V(psi)=V0(1+cos(3*psi))/2                   
+             V0 = 1.07 kCal/mol (exp)                    
+#     Number of bonds
+     5
+#ID    N1    N2      Reqv         FB             D            RHO (Å**-1)   
+ 1      1     3     .9560      2284.3181     376.3500       2.4400
+ 0      1     2    1.4270      1579.6796        .0000        .0000
+ 0      2     4    1.0954      1412.2076        .0000        .0000
+ 0      2     5    1.0954      1412.2076        .0000        .0000
+ 0      2     6    1.0954      1412.2076        .0000        .0000
+#     Number of angles 
+     7
+#    N1    N2    N3        Aeqv          FA
+     2     1     3       108.9000     195.3980
+     1     2     4       109.7418     113.0436
+     1     2     5       109.7418     113.0436
+     1     2     6       109.7418     113.0436
+     4     2     5       109.1993     154.9116
+     4     2     6       109.1993     154.9116
+     5     2     6       109.1993     154.9116
+#     Number of dihedrals
+     3
+      3     1     2     4          .0000       2.0934     3
+      3     1     2     5          .0000       2.0934     3
+      3     1     2     6          .0000       2.0934     3
+#
+

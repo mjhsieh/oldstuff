@@ -1,0 +1,33 @@
+==================================================================
+*         The molecular dynamics (MD) program                    *
+*               v.5.0 from 20 Dec. 2006                          * 
+==================================================================
+
+
+Authors:
+
+Alexander Lyubartsev     (sasha@physc.su.se)
+Aatto Laaksonen          (aatto@physc.su.se)
+
+Div. Physical Chemistry
+Arrhenius Laboratory
+Stockholm University
+S 106 91   Stockholm
+Sweden
+
+
+=====================================================================
+
+This program is a general purpose molecular dynamics code for simulations
+of mixtures  of either rigid or flexible molecules, interacting by
+AMBER-like force field in a periodic rectangular cell. In the case of 
+flexible molecules the double time step algorithm is used.
+Algotithms for NVE, NVT and NPT are employed, as well
+as optimized Ewald sum for treatment of the electrostatic interactions. 
+The program can be run both in sequential and parallel execution, in
+the latter case the MPI parallel environment is required.    
+
+=======================================================================
+
+See futher details in "doc" directory
+

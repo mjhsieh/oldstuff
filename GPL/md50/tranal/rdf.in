@@ -1,0 +1,42 @@
+ &TRAJ
+ NFORM='XMOL',
+ FNAME='/s2/sasha/na32h2o/CPMD/nah2o',
+ PATHDB='/s2/sasha/mdp/md50/moldb'
+ NTYPES=2
+ NAMOL='H2O','Na+',
+ NSPEC=32,1,
+ NFBEG=10,
+ NFEND=110,
+ ISTEP=1,
+ BOXL=9.9707577,
+ BOYL=9.9707577,
+ BOZL=9.9707577,
+ IPRINT=5
+ &END
+ &RDFIN
+ FOUTRDF='nah2o_rdf.dat',
+ RDFCUT=5.,
+ NA=100,
+ NAI=50.,
+ RMI=0.5,
+ RMAX=2.,
+ NRDF=5
+ &END
+#  List of RDFs
+#  O-O
+  1  1
+# O H
+&2
+  1  2
+  1  3
+#  H H
+&3 
+  2  2
+  2  3
+  3  3
+# Na
+  1  4
+&2
+  2  4
+  3  4
+  

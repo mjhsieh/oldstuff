@@ -1,0 +1,22 @@
+#==================================================I
+#       Molecular Dynamics Data Base               I
+#       Configuration and interaction potential    I
+#==================================================I
+#           Ion Rb+                                I
+#==================================================I 
+#       Number of sites
+ 1
+#       X        Y         Z         M          Q         sigma     epsilon
+Rb      0.        0.       0.      85.47      +1.        3.57        1.602
+#    Num. of strings for the reference
+4
+       Ion Rb+
+       Parameters from:          
+       K.Heinzinger, 
+       Physica v.131B, pp.196-216 (1985)
+#   Num. of bonds
+ 0
+#   Num. of angles
+ 0
+#   Num of dihedrals
+ 0

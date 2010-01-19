@@ -1,0 +1,49 @@
+#=========================================================I
+#             Flexible 6-site acetonitrile model          I
+#             Internal parameters - AMBER                 I
+#             Charges: MP2-6-311++G(3df,3p)ESP            I
+#             LJ parameters: fitting to density/evap.en   I
+#=========================================================I
+#     Number of sites
+    6
+#         X          Y         Z          MASS        Q        S          E
+ N     -0.0490639 1.4065 1.03261      14.007    -0.5126    3.0116     .5573
+ CY     -0.0490631 2.55032 1.03261    12.0111    0.4917    3.5462     .5615
+ CT    -0.0490617 3.99905 1.0326      12.0111   -0.5503    3.40       .458
+ HC     0.980592 4.3494 1.03261       1.0080     0.1904    2.6500     .0657
+ HC    -0.563884 4.3494 0.140894      1.0080     0.1904    2.6500     .0657
+ HC     -0.563892 4.3494 1.92431      1.0080     0.1904    2.6500     .0657
+#
+4
+             Flexible 6-site acetonitrile model          
+             Internal parameters - AMBER                 
+             Charges: MP2-6-311++G(3df,3p)ESP            
+             LJ parameters: fitting to density/evap.en   
+#     Number of bonds
+     5
+#ID    N1    N2      Reqv         FB          
+ 0      1     2    1.157       2512.
+ 0      2     3    1.458       1675.
+ 0      3     4    1.09        1424.      
+ 0      3     5    1.09        1424.      
+ 0      3     6    1.09        1424.      
+#     Number of angles 
+     7
+#    N1    N2    N3        Aeqv          FA
+     1     2     3       180.0000     335.
+     2     3     4       110.         146.5
+     2     3     5       110.         146.5
+     2     3     6       110.         146.5
+     4     3     5       109.5        146.5
+     4     3     6       109.5        146.5
+     5     3     6       109.5        146.5
+#     Number of dihedrals
+     3
+      1     2     3     4          .0000       0.     3
+      1     2     3     5          .0000       0.     3
+      1     2     3     6          .0000       0.     3
+#   1-4 scaling
+sel14 0.83
+slj14 0.5
+
+
