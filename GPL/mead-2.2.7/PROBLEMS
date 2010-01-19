@@ -1,0 +1,182 @@
+Makefile problems
+=================
+
+MEAD's makefiles are rather complex, and there may be versions
+of make that don't include features that these makefiles depend on,
+such as the "include" feature.  If you get errors from make
+like, "don't know how to make XXX" or "no rule for YYY", you
+could either try editing the Makefiles by hand to work around the
+problem, or switch to a more full featured make such as GNU make.
+
+Problems building the C++ library (libmead.a) and applications
+==============================================================
+
+Since the release of the C++ standard in November 1997, the MEAD C++
+code has been evolving towards full standards compliance and also
+towards expecting compilers to support more of standard C++.  Our goal
+has been that the same source code should compile on all supported
+platforms, and we should not fill the code with "ifdefs" to handle
+special cases.  This means that work-arounds that used to allow
+compilation with non-standards-conforming compilers have been
+disappearing from the code.  Also, when new language features have
+enabled better solutions, we've used them.  For example, the C++
+standard container templates have replaced the use of the old libgnu++
+pre-template containers; and run-time type identification has been
+used to solve multiple dispatch problems that were previously very awkward.
+
+Some modernizations have been made not so much to take advantage of
+new features as for portability across modern compilers.  In
+particular, standard library headers are now included by their
+standard names, e.g. "#include <iostream>", not "#include <iostream.h>"
+Namespace constructs, such as "using std::vector" appear in the code.
+(On the other hand, we have not yet taken full advantage of namespaces.
+Perhaps in the future "MEAD" will be it's own namespace.)
+
+If you have trouble compiling, you should check on whether your
+compiler supports the necessary standard C++ features.  Sometimes,
+a "backward compatability mode" that lacks features is turned on by
+default, and a special flag is needed to get standards compliance
+(e.g. -LANG:std on IRIX MipsPro compilers).  The ones we already
+know about are handled automatically in the current configure script
+We'd appreciate hearing about others.
+
+Templates and linking problems
+==============================
+
+If the compiler or linker complains that
+some_very_long_named_symbol_symbol_including_bizzare_character_strings_like_TR45__XX_Allocator_FIEVJKLL__LJFLALKE,
+is undefined or multiply defined, it is probably a template
+instantiation problem.
+
+Essentially, templates are instructions to the compiler to generate,
+on the fly, some new C++ function or class and compile it.  These
+newly generated classes and functions are called "instances" of
+templates.  However, in a program linked together from multiple object
+files and libraries which make use of many of the same templates, this
+can result in the redundant generation of template instances.
+
+Some compilers, like GNU's, just go ahead and generate the redundant
+instances and then clean up the situation at link time.  This wastes
+compile time, but usually avoids confusion.  Other compilers, like
+IRIX MipsPro or Sun's SunWsPro, create a repository of template
+instances and requests in the directory where compilation is
+happening, and delay much of template generation until the link step.
+This avoids redundant generation, but involves an implicit assumption
+that everything in the compilation directory is directed towards the
+production of a single executable or library file; and it can lead to
+confusion.
+
+All this implies two main things:  (1) Linking must be done by
+invoking the C++ compiler, perhaps with special link flags, since
+special link-time services are needed that are not supplied by
+traditional Unix linkers.  For the cases we know about, configure
+arranges for the compiler to be invoked in the proper way to do the
+link.  We'd appriciate reports about other cases.  (2) The source
+files for each library or application should go in their own
+directory.  MEAD's directory structure has been re-arranged to comply
+with this.
+
+Sometimes, template instantiation problems can be solved simply by
+re-compiling after cleaining up all .o files and deleting any template
+repository files/or subdirectories.
+
+------------- below this line is from 1998 and before --------------------
+
+KNOWN PROBLEMS IN BUILDING:
+
+Some versions of the HP C++ compiler will cause the functions in
+Pair.cc to give incorrect results if the optimization level is higher
+than +O1.  But the Makefile.hp in the current distribution takes
+account of this.  See "KNOWN PROBLEMS IN RUNNING", below.
+
+Some versions of the SGI CC compiler do not accept C++ source files
+having the .cc suffix even though the man page says it should.  
+The configure script tries to test for this and work around it,
+but if you see a message like,
+
+   FATAL 11: Object file format error (sav-driver.cc): unrecognizable format
+   CC ERROR:  /usr/lib64/cmplrs/ld64 returned non-zero status 1
+
+during the build, non-recognition of the .cc suffix is the likely problem.
+
+On SGI IRIX6.2 on 64-bit machines (e. g. R8000), MEAD can be compiled
+as a 64-bit program but may dump core or give incorrect results.
+The cause appears to be a bug in the 64-bit version of libc in IRIX 6.2.
+This has been reported to SGI.  The workaround is to compile with
+the -n32 flag (on the SGI CC compiler).  This is said to produce code
+that is usually just as fast as 64-bit code.  This workaround is
+incorporated in the configure script.
+
+A DEC C++ compiler version that we once had at Scripps running under
+OSF1 T3, had some strange bug in the strstream class of its I/O
+library.  Newer DEC C++ compilers don't have this problem.
+
+On some older DEC C++ compilers it is necessary to use the wasteful
+"-define_templates" flag on several of the source files to insure
+template instantiation.
+
+In building with the GNU compiler you might run into conflicts
+between the definition of "exception" in your system's math.h
+header and some of the exception-handling headers of the GNU
+C++ library.
+
+In building with the summer 1998 developmental versions of the
+Pentium-optimized version of the egcs compler (pgcc-2.91.47),
+internal compiler error occured on a few source files.  The
+work-around is to back off the optimization level for these files.
+This has been reported to the egcs bug list.
+
+Link errors and template instantiation:  
+
+   MEAD makes some use of both class templates and function templates.
+There is some flux in the C++ world about how compilers and linkers
+deal with the "instantiation" of templates, even between versions of
+the same vendor's compiler (SGI for example).  This should be settling
+down now that there is an essentially final draft of the standard for
+C++.  If you get a link error complaining that a symbol with a very
+long, complicated name is undefined, it s probably a template
+instantiation problem.  Fixing it may require adding a flag to the
+compiler line, moving a template definition from one file to another,
+etc.  Use a name de-mangler to find out what template instance is
+missing and consult the documentation of your C++ compiler.
+
+Compiling redti requires an ANSI C compiler, in particular, one that
+supports function prototypes.  Unfortunately there are still a lot of
+non-ANSI C compilers out there.  If your systems "cc" fails because it
+is one of these this you might already have an ANSI compiler under
+another name, such as acc (on Sun) or c89 (on HP); otherwise get GNU's
+gcc.
+
+
+
+KNOWN PROBLEMS IN RUNNING:
+
+BE CAREFUL ABOUT .st FILES VS. .pqr FILES.  Like the other MEAD
+programs, multiflex uses a .pqr file to get all coordinates and radii
+for the protein, and most of the protein charges also come from the
+.pqr file.  But for atoms that are part of titrating sites, multiflex
+gets charge information on the protonated and deprotonated forms from
+the .st files.  Atoms that are not mentioned in the .st files are
+considered as part of the non-titrating "background" whose effect
+shows up as "Delta pK_back".  You must be sure that the .st files and
+.pqr files work together in a sensible way.  A common mistake is to
+omit, say, the beta hydrogens of Asp from the .st while including the
+beta carbon.  This amounts to saying that the beta-carbon is part of
+the titrating site while the beta-hydrogens are not, and so a
+hydrogen--carbon interaction becomes part of Delta pK_back.
+
+When running MEAD programs, you may get warnings like, "WARNING:
+SAVanal_calc: vertex found with count = 2."  This can occur when a
+solvent probe touches more than three atoms at once.  See You and
+Bashford (1995b) for some discussion of this.  As far as we know, the
+situation is harmless.
+
+...However we have found that on HPUX 10.20 using the HP C++ compiler,
+if the file Pair.cc is compiled with optimization greater than +O1,
+there will be a huge number of these vertex count warnings and the
+results of multiflex will be numerically incorrect.  That is why
+Makefile.hp has a special target for Pair.o, using +O1.  By the way,
+optimization levels beyond +O2 don't seem to help performance much
+with this compiler.
+
+

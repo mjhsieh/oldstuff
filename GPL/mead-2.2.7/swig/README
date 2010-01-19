@@ -1,0 +1,188 @@
+[ID: $Id: README,v 1.11 2001/07/03 03:13:00 bergsma Exp $]
+
+This directory contains files pertaining to the "wrapping" of MEAD as
+a python module.  Unfortunately the classes and functions provided in
+the python interface are not yet documented.  Very briefly, we have
+wrapped enough of the upper level classes and their member functions
+to allow for python programming of typical molecular applications.
+To get an idea of how the python interface can be used, there are some
+sample applications in this directory, genpot.py (which demonstrates
+the interface to Numeric Python), and sol.py (a simple python
+re-implementation of the C++ main program ../apps/solvate/solvate.cc)
+
+The wrapping also provides graceful handling of errors in the MEAD
+library by turning C++ exceptions into Python exceptions, provided you
+have built MEAD with exceptions enabled (see ../INSTALLATION).
+Otherwise, errors in MEAD would result either in un-caught C++
+exceptions or calls from MEAD to the system functions, exit or abort,
+which would take down the python interpreter ... probably now what you
+want. 
+
+This file has three sections: Building, Programming and Internals.
+
+BUILDING
+-----
+
+For ordinary users:
+
+The first thing is that to enable python to properly load and
+initialize modules written in C++, it is often necessary to use a C++
+compiler to link python.  This can be done by seting the make variable
+LINKCC in the python Modules/Makefile to the name of your C++
+compiler.  Then you should probably build MEAD using the same C++
+compiler.  See ../INSTALLATION for a list of environments in which we
+have successfully built and used MEAD, including this Python wrapping:
+
+PROBLEM UNDER GCC (affects linux).  It seems that linking a main
+program with g++ does not necessarily pull in the code needed for
+exception handling in a library that is dynamically loaded later under
+program control.  (I think this is a bug in g++-2.95.2.)  As a
+workaround, python should be re-linked with g++ (or even with gcc)
+using the flag "-u __get_eh_info".  This can by done through the
+make varaible, LINKFORSHARED, in the python Modules/Makefile
+
+If you are building MEAD from a distribution (typically packaged as
+mead-*.tar.gz) the files MEAD_shadow.cc and MEAD.py should already
+exist in this directory.  All that needs to be done is to compile
+MEAD_shadow.cc and link it with libmead.a (which should already exist
+in the sister directory libmead) to form a dynamically loadable
+executable file MEADc.so.  Simply typing "make" or "make all" should
+do this, provided you configured with --enable-wrapping in the parent
+directory.  You can test the wrapped program in place by going into
+the directory where MEADc.so has been build, starting up python and
+typing "import MEAD" You will now have the MEAD module loaded into
+python.  Some sample python scripts like genpot.py and sol.py are
+provided.  If you type "make install" to the shell, the MEAD module
+will be installed into a directory named PyMead in the site-packages
+area of your local python installation provided you have the necessary
+permissions to install there.  In that case, the python import command
+needs to be "from PyMead import MEAD", and to run the test scripts you
+will need to change them accordingly.
+
+For developers and bleeding-edge users:
+
+MEAD_shadow.cc is a machine-generated file -- a fact which has
+consequences for some kinds of users and developers.
+
+If you want to do development work on the wrapping, such as adding
+wrappings for more MEAD classes and functions, you need to have the
+proper tool-chain working for the automatic generation of
+MEAD_shadow.cc.  You also need to generate MEAD_shadow.cc if you have
+obtained mead by checking it out from the bashford-group CVS
+repository, where we do not store a MEAD_shadow.cc.  Schematically, it
+goes like:
+
+                                          MEAD.j --+
+                                     meadtypes.i --+
+                                                   |
+                                                   +--> swig +-> MEAD_shadow.cc
+                                                   |         +-> MEAD.py
+ ../libmead/*.h  --> emacs swigpp.el -->  ./*.j ---+
+
+Working backwards, swig (see http://www.swig.org) is a program that
+takes "interface files" (here the *.j files) which are something like
+*.h containing declarations of the classes and functions needing to be
+wrapped, and generates C or C++ code to accomplish the wrapping of
+functions and class member functions. Swig can also generate a python
+shadow classes (here MEAD.py) which correspond to the original C++
+classes.
+
+The complexities of C++ can make interface files for C++ classes
+non-trivial to write, particularly if you want the python interfaces
+of your classes to mirror, as closely as possible, the C++ interface.
+Thus the next step back in our tool-chain, swigpp.el, an emacs lisp
+program that can be found in this file, to generate various *.j files
+from corresponding *.h files in ../libmead.
+
+Also in this chain are two Perl scripts, mkoperators.pl and mkoverloaded.pl
+that process the output of swigpp.el to handle operator overloading, function
+overloading, and multiply defined functions. A guide to preparing the
+header *.h files for processing using these scripps is located in the
+HOWTO-WRAPPING file.
+
+This means that to generate MEAD_shadow.cc you need emacs, perl, and swig.
+
+IMPORTANT NOTE: You must use swig-1.3a5, at least.  This is the
+maintenence release of swig from mid-September 2000.  Earlier
+maintenence versions of swig can't properly process the .j files and
+typemaps we use here.  I haven't tried it for developmental versions
+of swig.
+
+Programming
+-----------
+
+Files with extension .i define interfaces that are "wrapped".
+Files with extension .j define interfaces that are "shadowed".
+The .j files are generated and should never be edited.  The .jbyhand
+files, on the other hand...
+
+Shadowed classes are declared by adding them to the `J_FILES' Makefile
+variable in Makefile.in.  There are two ways to process a header (.h) file:
+annotation and literal text inclusion.  Both mechenisms are semantically
+transparent to the C++ compiler.
+
+Annotations are specific C++ "//" comments that serve as directives to the
+wrapping program.  Here is a comprehensive table:
+
+  directive	placement	meaning
+  ----------------------------------------------------------------------------
+  //!wrap!	line before	Consider class `Foo' for wrapping.  Omission
+		"class Foo"	means don't wrap `Foo' no matter what.
+
+  //!nowrap!	line before	If a class is to be wrapped, by default each
+		member "Bar"	public member is wrapped.  This directive
+		inside class	explicitly excludes `Bar', which can be either
+		decl		a function member or a data member.  Each use
+				of `//!nowrap!' applies to one member only.
+
+  //!nowrap!+	lines around	All class members textually between these
+  //!nowrap!-	one or more	directives are excluded from being wrapped.
+		members inside	The same effect can be accomplished using
+		class decl	multiple `//!nowrap!' directives.
+  ----------------------------------------------------------------------------
+
+A header file can also contain text to be directly included in the generated
+.j file by surrounding that text w/ the C preprocessor constructs:
+
+	#if SWIGPP_LITERAL_INCLUDE
+	#endif // SWIGPP_LITERAL_INCLUDE
+
+Note that the terminating `endif' must be followed by the C++ comment.  This
+is to fully disambiguate it from other possible `endif' instances.
+
+
+Internals
+---------
+
+The primary developer of swigpp.el is Thi Thien Nguyen.
+The primary developer of mkoperators.el and mkoverloaded.pl is John Bergsma.
+
+Here are some notes on swigpp.el internals.  More information is available as
+comments in the source code.
+
+- Where possible, processing is table-driven.  Grep for "here[.!]$" to see the
+  places where tables end (and new entries should be added).  Here is some
+  elisp that binds [f10] to do the search in emacs lisp mode:
+
+  (add-hook
+   'emacs-lisp-mode-hook
+   (lambda ()
+     (local-set-key
+      [f10]
+      (lambda ()
+        (interactive)
+        (let ((here-re "here[.!]$"))
+          (or (re-search-forward here-re (point-max) t)
+              (progn
+                (goto-char (point-min))
+                (or (progn
+                      (message "(Wrapped)")
+                      (re-search-forward here-re (point-max) t))
+                    (message "No `%s' tags found." here-re)))))))))
+
+- Generally, functions appear before their callers.  Thus, exported entry
+  points (e.g., `batch-swigpp-process-file') are last.  Each stage of
+  processing follows this scheme as well, and is marked by a comment.  The
+  stages are: textual ignorance, signature analysis, mapping, and output.
+
+[README ends here]

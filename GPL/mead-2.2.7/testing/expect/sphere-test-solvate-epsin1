@@ -1,0 +1,27 @@
+Starting ../../apps/solvate/solvate for molecule named sphere
+with interior dielectric constant = 1
+using the following physical conditions:
+Exterior dielectric constant, espext = 80
+Solvent probe radius, solrad = 1.4
+Ion exclusion layer thickness, sterln = 2
+Temperature, T = 300
+Ionic strength, ionicstr = 0
+Hueckel factor (epsext*kappasq) = 0
+ln(10) * kBolt * T = 0.00413391
+kBolt = 5.98444e-06
+conconv = 0.000602214
+econv = 331.842
+Bohr radius = 0.529177
+Proton Charge = 1
+and vacuum dielectric constant = 1
+No blab level set (so no blabbing)
+Using finite difference method with lattice levels:
+                   Centering Style   grid dimension    spacing
+Coarsest level: ON_ORIGIN resolved to (0, 0, 0)) 41 1
+Finest level:   ON_ORIGIN resolved to (0, 0, 0)) 41 0.25
+prod_sol = 12.2066
+prod_vac = 12.7034
+
+
+SOLVATION ENERGY = -82.4292
+(probably in kcal/mole)

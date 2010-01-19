@@ -1,0 +1,35 @@
+# mead/apps Makefile
+
+real_app_dirs = potential sav-driver solvate solinprot multiflex redti \
+                mulsidecomp potscan pair_interactions
+
+dirs_to_clean  = $(real_app_dirs) libmso
+
+default: real_apps
+
+real_apps:
+	for name in $(real_app_dirs) ; \
+           do ( cd $$name; $(MAKE) $$name ) ; done
+
+.PHONY : default real_apps clean distclean install uninstall
+
+
+clean:
+	for name in $(dirs_to_clean) ; \
+           do ( cd $$name; $(MAKE) clean ) ; done
+
+distclean:
+	for name in  $(dirs_to_clean) ; \
+           do ( cd $$name; $(MAKE) distclean ) ; done
+	-$(RM) Makefile Makefile.common
+
+install:
+	for name in $(real_app_dirs) ; \
+	   do ( cd $$name ; $(MAKE) install ) ; done
+
+uninstall:
+	for name in $(real_app_dirs) ; \
+	   do ( cd $$name ; $(MAKE) uninstall ) ; done
+
+
+# Makefile ends here

@@ -1,0 +1,141 @@
+# libmead Makefile
+
+SHELL		= /bin/sh
+INSTALL		= @INSTALL@
+
+srcdir		= @srcdir@
+VPATH		= @srcdir@
+
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+libdir		= @libdir@
+
+includedir = @includedir@
+
+MEAD_OBJECTS =					\
+	AnalyMaker.o				\
+	AnalySlab.o				\
+	AnalySphere.o				\
+	Angle.o					\
+	Atom.o					\
+	AtomChargeSet.o				\
+	AtomID.o				\
+	AtomSet.o				\
+	AvsSF_read_header.o			\
+	AvsScalarField.o			\
+	AvsScalarField_input.o			\
+	Bigmem.o				\
+	CLShell.o				\
+	ChargeCubeRep.o				\
+	ChargeDist.o				\
+	CubeLatSpec.o				\
+	Debye.o					\
+	DielByAtoms.o				\
+	DielCubeRep.o				\
+	DielMembAtoms.o				\
+	DielectricEnvironment.o			\
+	DielectricSlab.o			\
+	DielectricSphere.o			\
+	ElectrolyteByAtoms.o			\
+	ElectrolyteEnvironment.o		\
+	ElstatMaker.o				\
+	ElstatPot.o				\
+	ElstatPotCombination.o			\
+	Elstat_list_init.o			\
+	ElySphere.o				\
+	FDChargeIterator.o			\
+	FDElstatMaker.o				\
+	FDGridLevel.o				\
+	FinDiffElstatPot.o			\
+	FinDiffMethod.o				\
+	ManyPointCharge.o			\
+	MomentAnalysis.o                        \
+	OnePointCharge.o			\
+	Pair.o					\
+	PairGenBorn.o				\
+	PhysCond.o				\
+	Polynomial.o				\
+	Potat.o					\
+	SAVanal_calc.o				\
+	SAVcalc_cuberep.o			\
+	SAVtag_points.o				\
+	Sausage.o				\
+	SphericalHarmonic.o                     \
+	Shell.o					\
+	SolvAccVol.o				\
+	TPShell.o				\
+	UniformDielectric.o			\
+	UniformElectrolyte.o			\
+	globals.o				\
+	multPotxCharge.o			\
+	sor.o
+
+CXX_OPTFLAGS	= @CXX_OPTFLAGS@
+CXX_DEBUGFLAGS	= @CXX_DEBUGFLAGS@
+CXX_SHAREDFLAGS = @CXX_SHAREDFLAGS@
+# In Makefile.in the CC_*FLAGS are taken from the CXX_*FLAGS
+# configuration output varables.  Don't see any reason they should differ.
+CC_OPTFLAGS	= @CXX_OPTFLAGS@
+CC_DEBUGFLAGS	= @CXX_DEBUGFLAGS@
+
+CXX		= @CXX@
+CC		= @CC@
+CPPFLAGS	= @CPPFLAGS@
+CXX_DEFS	= @CXX_DEFS@
+
+CXX_AR_CMD      = @CXX_AR_CMD@
+RANLIB          = @RANLIB@
+
+REGEX_LIB	= @REGEX_LIB@
+REGEX_CPP	= @REGEX_CPP@
+LIBS		= @LIBS@ -lm
+
+top_srcdir	= @top_srcdir@
+
+SWIG		= @SWIG@
+PYTHONLIB	= @PYTHONLIB@
+PYTHONINC	= @PYTHONINC@
+
+INCLUDES	= -I$(top_srcdir)
+
+ALL_CPPFLAGS	= $(INCLUDES) $(CPPFLAGS) $(REGEX_CPP) $(CXX_DEFS)
+ALL_CXXFLAGS	= $(CXX_OPTFLAGS) $(CXX_DEBUGFLAGS) $(CXX_SHAREDFLAGS)
+ALL_CFLAGS	= $(CC_DEBUGFLAGS) $(CC_OPTFLAGS)
+
+
+
+.PHONY: all clean distclean
+
+all: libmead.a
+
+libmead.a: $(MEAD_OBJECTS)
+	rm -f t$@
+	$(CXX_AR_CMD) t$@ $(MEAD_OBJECTS) @REPO_FILES_IF_NEEDED@
+	$(RANLIB) t$@
+	rm -f $@ && mv t$@ $@
+
+clean:
+	-$(RM) libmead.a tlibmead.a *.o
+
+distclean: clean
+	-$(RM) Makefile
+
+install: libmead.a
+	$(top_srcdir)/mkinstalldirs $(libdir)
+	$(INSTALL) libmead.a $(libdir)
+	$(top_srcdir)/mkinstalldirs $(includedir)/MEAD
+	for f in $(top_srcdir)/MEAD/*.h; do \
+            $(INSTALL) $$f $(includedir)/MEAD; done
+
+uninstall:
+	$(RM) $(libdir)/libmead.a
+	$(RM) $(includedir)/MEAD/*
+	rmdir $(includedir)/MEAD/*
+
+.SUFFIXES:
+.SUFFIXES: .cc .o
+
+# The rule for making .o files from C++ source files:
+@CXX_O_RULE@
+
+# Makefile ends here

@@ -1,0 +1,15 @@
+This directory has data files for use with solvate (or selfenergy) to
+calculate the Born solvation energy of a monovalent monatomic ion with
+a two Angstrom radius.  This problem can also be solved analytically
+using the Born formula:
+
+  Delta G Born = -331.8 * 1 / (2*2) * (1 - 1/80) = -81.9 kcal/mole
+
+To use the solvate program to calculate this type,
+
+  ../solvate -epsin 1.0 born
+
+I get -82.37 kcal/mole.  Better accuracy can be obtained by
+adding a finer grid level in the sphere.ogm file.
+
+

@@ -1,0 +1,84 @@
+SCALLOP - Parallel Fast Poisson Solver
+
+Author: Greg Balls UCSD/SDSC (gballs@sdsc.edu)
+Version: 0.9
+Release Date: 6 February 2002
+
+
+-------------------------------------------------------------------------
+
+Copyright (c) 2002 by The Regents of the University of California.
+All rights reserved.
+
+This software is offered on an `AS IS' basis.  The copyright
+holder(s) provide no warranty, expressed or implied, that the
+software will function properly or that it will be free of bugs.
+This software may be freely copied and distributed for research
+and educational purposes only, provided that the above copyright
+notice appear in all copies.  A license is needed for commercial
+sale, in whole or in part, from The Regents of the University
+of California.  Users of the software agree to acknowledge the authors.
+The development of the software  was supported in part by
+the federal government and they may have certain rights to it.
+
+-------------------------------------------------------------------------
+
+This is a scalable fast poisson solver intended to reduce the costs
+of global communcation.
+
+
+LIMITATIONS:
+
+This version should be reasonably fast, but it is not accurate. 
+The work scales as O(N^3), but the error does not scale anywhere close
+to O(h^2).
+
+This release has been tested with mpich on linux and solaris and  it
+should build and run on both platforms.  I've tried to check it out on
+SDSC's Blue Horizon as well, but I need to add some autoconf magic to
+get before it will build and run with the default KeLP installation
+out of the box. Let me know if you are interested in using Scallop on
+Blue Horizon.
+
+Configuring and making should be fairly straightforward.  You may have
+to specify the location of mpi and KeLP on your machine.  (I probably
+haven't guessed all the possible locations.)
+
+
+PROGRAMMING INTERFACE:
+Most of the solver routines you would need are in src/poisson.C.
+
+
+TEST PROGRAM:
+test/test_poisson is a sample code which calls the Poisson solver.
+
+test_poisson can be run with your favorite mpirun command.
+Options to test_poisson include
+-longdim <N>  dimension of the problem (the problem will be NxNxN)
+-npatches <N> number of patches in each direction (i.e. NxNxN patches)
+-nref <N>     refinement ratio
+
+These should all work, as long as the total number of patches is
+greater than the number of processors and the refinement ratio is not
+so large that a patch would be coarsened (according to nref) to
+something less than a single coarse cell.
+
+-------------------------------------------------------------------------
+
+Bugs or problems?  Not in our code!
+
+We welcome your comments and suggests. Please send email to 
+kelp@cs.ucsd.edu
+
+-------------------------------------------------------------------------
+
+Acknowledgements
+
+The development of this software was supported in part by 
+NSF contract ACI-9619020, "National Partnership for Advanced
+Computational Infrastructure"
+
+The views of the authors do not necessarily reflect the views of
+the the U.S. Government.
+
+--------------------------------------------------------------------------

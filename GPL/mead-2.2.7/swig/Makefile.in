@@ -1,0 +1,142 @@
+# Makefile for swig wrapping
+# ID: $Id: Makefile.in,v 1.71 2007/11/27 21:57:17 bashford Exp $
+# SOURCE: $Source: /cvs-repository/bashford/cvsroot/mead/swig/Makefile.in,v $
+# Author: John Bergsma
+
+J_FILES =	AnalySlab.j			\
+		AnalySphere.j			\
+		Atom.j				\
+		AtomChargeSet.j			\
+		AtomID.j			\
+		AtomSet.j			\
+		ChargeDist.j			\
+		Coord.j				\
+		CubeLatSpec.j			\
+		Debye.j				\
+		DielByAtoms.j			\
+		DielMembAtoms.j			\
+		DielectricEnvironment.j		\
+		DielectricSlab.j		\
+		DielectricSphere.j		\
+		ElectrolyteByAtoms.j		\
+		ElectrolyteEnvironment.j	\
+		ElySphere.j			\
+		ElstatPot.j			\
+		ElstatPotCombination.j		\
+		FinDiffElstatPot.j		\
+		FinDiffMethod.j			\
+		ManyPointCharge.j		\
+		MomentAnalysis.j		\
+		OnePointCharge.j		\
+		PhysCond.j			\
+		PointCharge.j			\
+		SphericalHarmonic.j		\
+		SolvAccVol.j			\
+		UniformDielectric.j		\
+		UniformElectrolyte.j
+
+CXX		= @CXX@
+CC		= @CC@
+CPPFLAGS	= @CPPFLAGS@
+CXX_DEFS	= @CXX_DEFS@
+
+CXX_AR_CMD      = @CXX_AR_CMD@
+
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+
+PYTHON_INCLUDES = -I@PYTHONINC@
+
+SWIG		= @SWIG@
+SWIG_OPTS	= -verbose $(PYTHON_INCLUDES) -I$(srcdir)
+
+PERL		= @PERL@
+
+PATCH		= @PATCH@
+
+CPP_FLAGS	= -DSWIG @CPPFLAGS@
+CXX_FLAGS	= @CXX_NOOPTFLAGS@ @CXX_DEBUGFLAGS@ @CXX_SHAREDFLAGS@
+CXX_DYNLIB_FLAGS = @CXX_DYNLIB_FLAGS@
+
+ALL_CXXFLAGS	= $(CPP_FLAGS) $(CXX_FLAGS)
+
+MEADINC		= -I$(top_srcdir) -I$(srcdir)
+MEADLIBS	= -L../libmead -lmead
+
+VPATH		= .:$(srcdir):$(top_srcdir)/libmead
+
+mkinstalldirs	= $(top_srcdir)/mkinstalldirs
+INSTALL		= @INSTALL@
+INSTALL_PROGRAM	= @INSTALL_PROGRAM@
+INSTALL_SCRIPT	= @INSTALL_SCRIPT@
+PYSITEPKGDIR	= @PYSITEPKGDIR@
+mead_inst_dir	= $(PYSITEPKGDIR)/PyMead
+
+make-pj	= emacs -batch -l $(srcdir)/swigpp.el -f batch-swigpp-process-file
+make-oj = $(srcdir)/mkoperators.pl
+make-ooj = $(srcdir)/mkoverloaded.pl
+rmdefs = $(srcdir)/removedefs.pl
+
+
+all: MEADc.so MEAD.py
+
+MEADc.so: MEADc.o
+	$(CXX) $(ALL_CXXFLAGS) -o $@ MEADc.o $(MEADLIBS) \
+          $(CXX_DYNLIB_FLAGS)
+
+MEADc.o: MEAD_shadow.cc
+	$(CXX) -c $(ALL_CXXFLAGS) -o $@ $< $(MEADINC) $(PYTHON_INCLUDES)
+
+@MEAD_SHADOW_RULE@
+
+
+clean:
+	$(RM) *.so *.o *.doc *.pyc *.pj *.oj *.ooj *_overloaded.py *_defs.defs *~ .*~
+	$(RM) $(J_FILES)
+	for f in $(J_FILES) ; do $(RM) `basename $$f .j`.cc ; done
+	$(RM) *.head *.ii *.init *.wrap .swigpp-*
+
+maintclean: clean
+	$(RM) MEAD_shadow.cc MEAD.py
+
+distclean: clean
+	$(RM) MEAD_shadow.cc MEAD.py
+	$(RM) Makefile
+
+.SUFFIXES: .j .h .pj .oj .ooj
+
+.h.pj:
+	test -n "$(SWIG)" && $(make-pj) $< $@ $*
+
+.pj.oj:
+	test -n "$(PERL)" && $(make-oj) $< > $@
+
+.oj.ooj:
+	$(make-ooj) $< MEAD > $@
+
+.ooj.j:
+	mv $< $@
+
+.SECONDARY:    # this supresses deletion of any intermediates.
+
+distclean: clean
+
+install:
+	$(mkinstalldirs) $(mead_inst_dir)
+	test -r MEADc.so && $(INSTALL) MEADc.so $(mead_inst_dir)
+	$(INSTALL_SCRIPT) MEAD.py $(mead_inst_dir)
+	echo "from MEAD import *" >  $(mead_inst_dir)/__init__.py
+
+uninstall:
+	$(RM) $(mead_inst_dir)/MEADc.so
+	$(RM) $(mead_inst_dir)/MEAD.py
+	$(RM) $(mead_inst_dir)/MEAD.pyc
+	$(RM) $(mead_inst_dir)/__init__.py
+	$(RM) $(mead_inst_dir)/__init__.pyc
+
+
+.PRECIOUS: %_wrap.cc %_shadow.cc %.so %.j %.o
+
+.INTERMEDIATE: $(J_FILES)
+
+# Makefile ends here

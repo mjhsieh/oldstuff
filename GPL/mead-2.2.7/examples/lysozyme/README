@@ -1,0 +1,28 @@
+This directory contains the data and parameter files needed to
+reproduce the results for the triclinic structure of lysozyme reported
+in D. Bashford & M. Karplus (1990) Biochemistry vol. 29, pp. 10219-25.
+In my computing environment, there are 0.1 to 0.2 pK unit differences
+between the results calculated using this version of MEAD and those in
+the paper.  This is because the results in the paper were obtained
+with a completely different program (in Fortran) and were run on a
+Cray-2.  On equivalent machines, MEAD is roughly ten times faster that
+the old program, making it possible to do useful work on the
+SparcStation.
+
+To do the electrostatic calculations run the command,
+
+   ../multiflex -blab1 -epsin 4.0 -epsave_oldway -ionicstr 0.1 tric > big.output.file
+
+This will take about 7 hours on a SparcStation 2 or an hour or so
+an HP 9000/735.  The intrisic pK's will be in tric.pkint and site-site
+interactions (the W matrix) will be in tric.g.  Details on self
+energy, background contribution and so on can be found in the big
+output file.  Leaving out the "-epsave_oldway" flag will increase
+the accuracy of the Poisson-Boltzmann solver and give results that
+differ from the paper by a few tenths of a pK unit.
+
+To do the titration curves, run
+
+   redti tric
+
+This takes only a few seconds.  The pKhalfs will be in tric.pkout

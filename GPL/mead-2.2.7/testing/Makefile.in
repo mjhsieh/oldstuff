@@ -1,0 +1,96 @@
+# Makefile for testing MEAD
+
+VPATH		= @srcdir@
+
+top_srcdir	= @top_srcdir@
+srcdir          = @srcdir@
+testing_srcdir = $(top_srcdir)/testing
+
+check: short
+
+# BINDIR is relative to the rundir below here!
+BINDIR		= ../../apps
+solinprot	= $(BINDIR)/solinprot/solinprot
+solvate		= $(BINDIR)/solvate/solvate
+multiflex	= $(BINDIR)/multiflex/multiflex
+
+EXTRA_MULTIFLEX_FLAGS=
+
+.PHONY: clean distclean short
+
+short : sphere-test-solvate sphere-test-solinprot multiflex-lyso-glu7-test
+
+rundir: data
+	mkdir rundir; for i in $(srcdir)/data/*; do \
+            [ -f $$i ] && cp $$i rundir; done
+
+# SOLINPROT
+
+sphere-test-solinprot : expect/sphere-test-solinprot rundir/sphere-test-solinprot.out
+	-diff $^
+
+solinprot-data = rundir/sphere.pqr rundir/bigsphere.pqr rundir/sphere.ogm
+$(solinprot-data) : rundir
+
+rundir/sphere-test-solinprot.out: $(solinprot-data)
+	cd rundir; $(solinprot) -epsin1 1.0 -epsin2 4.0 sphere bigsphere \
+          > sphere-test-solinprot.out
+
+
+# SOLVATE
+
+sphere-test-solvate: sphere-test-solvate-epsin1 sphere-test-solvate-epsin4
+
+sphere-test-solvate-epsin1: expect/sphere-test-solvate-epsin1 \
+				rundir/sphere-test-solvate-epsin1.out
+	-diff $^
+
+sphere-test-solvate-epsin4: expect/sphere-test-solvate-epsin4 \
+				rundir/sphere-test-solvate-epsin4.out
+	-diff $^
+
+solvate-data = rundir/sphere.pqr rundir/sphere.ogm
+$(solvate-data) : rundir
+
+rundir/sphere-test-solvate-epsin1.out : $(solvate-data)
+	cd rundir; $(solvate) -epsin 1.0 sphere \
+           > sphere-test-solvate-epsin1.out
+
+rundir/sphere-test-solvate-epsin4.out : $(solvate-data)
+	cd rundir; $(solvate) -epsin 4.0 sphere \
+           > sphere-test-solvate-epsin4.out
+
+
+# MULTIFLEX
+
+multiflex-lyso-glu7-test: rundir/multiflex-lyso-glu7-test.out \
+                          rundir/lyso-glu7.g \
+                          rundir/lyso-glu7.pkint rundir/lyso-glu7.summ \
+                          expect/multiflex-lyso-glu7-test \
+                          expect/lyso-glu7.g expect/lyso-glu7.pkint \
+                          expect/lyso-glu7.summ
+	-diff $(testing_srcdir)/expect/multiflex-lyso-glu7-test \
+              rundir/multiflex-lyso-glu7-test.out
+	-diff $(testing_srcdir)/expect/lyso-glu7.g rundir/lyso-glu7.g
+	-diff $(testing_srcdir)/expect/lyso-glu7.pkint rundir/lyso-glu7.pkint
+	-diff $(testing_srcdir)/expect/lyso-glu7.summ rundir/lyso-glu7.summ
+
+rundir/multiflex-lyso-glu7-test.out rundir/lyso-glu7.g \
+  rundir/lyso-glu7.pkint rundir/lyso-glu7.summ : \
+		rundir/lyso.ogm rundir/lyso.ogm rundir/lyso.sites \
+                rundir/GLUsgl.st
+	cd rundir; $(multiflex) -epsin 4.0 -ionicstr 0.1 -site 3 \
+          $(EXTRA_MULTIFLEX_FLAGS) lyso  > multiflex-lyso-glu7-test.out ; \
+	          mv lyso.g lyso-glu7.g ; \
+		  mv lyso.pkint lyso-glu7.pkint ; \
+		  mv lyso.summ lyso-glu7.summ
+
+
+# CLEANING
+
+clean: 
+	$(RM) -rf rundir
+distclean: clean
+	$(RM) Makefile
+
+# Makefile ends here

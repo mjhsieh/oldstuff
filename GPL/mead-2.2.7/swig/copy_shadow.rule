@@ -1,0 +1,5 @@
+MEAD_shadow.cc : premade_MEAD_shadow.cc
+	cp -f $< MEAD_shadow.cc
+
+MEAD.py : premade_MEAD.py
+	cp -f $< MEAD.py

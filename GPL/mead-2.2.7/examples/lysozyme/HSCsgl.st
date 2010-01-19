@@ -1,0 +1,9 @@
+6.3
+HSC NE2   1.0  0.0
+HSC CB    0.0  0.0
+HSC CG    0.0  0.0
+HSC CD2   0.0  0.0
+HSC ND1   0.0  0.0
+HSC HD1   0.0  0.0
+HSC CE1   0.0  0.0
+HSC HE2   0.0  0.0

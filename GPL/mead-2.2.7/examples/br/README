@@ -1,0 +1,44 @@
+This directory contains the data and parameter files needed to
+reproduce some of the results reported in D. Bashford & K. Gerwert
+"Electrostatic Calculations of the pKa Values of Ionizable groups in
+Bacteriorhodopsin" J. Mol. Biol. vol. 224 pp. 473-486 (1992).
+
+To do the electrostatic calculations for the Henderson structure (HE)
+run the commands,
+
+   ../multiflex -epsave_oldway -blab1 -epsin 4.0 -membz -23.8 21.2 -membhole 10.0 HE > HE.big.output.file
+
+This will take about eight hours on a SparcStation 2, or 45 minutes on
+a Cray Y-MP.  The intrisic pK's and the site-site couplings will be
+written to HE.pkint and HE.g, repectively.  Details on self energy,
+background contribution and so on can be found in the big output file.
+Leaving out the "-epsave_oldway" flag will increase the accuracy of
+the Poisson-Boltzmann solver and give .pkint and .g file results that
+differ from the paper by a few tenths of a pK unit.  Edit the
+resulting HE.pkint file to change the intrinsic pK for the Schiff base
+( LYR-216) to 40.0.  The paper explains why we do this.
+
+To do the titration curves, run
+
+   redti HE
+
+This takes only a few minutes.  The pKhalfs will be in HE.pkout
+The resulting HE.pkout file should match the "HE" results of our
+paper.  If you omitted the "-epsave_oldway" flag from the multiflex
+run, you may get substantial differences because small changes in
+pkint and site-site coupling values can lead to larger changes in
+calculated pKhalf values.  This sensitivity is discussed in
+our papers on bacteriorhodopsin and myoglobin.
+
+To do the same calculations for the "arginine up" structure (RU)
+repeat the above with HE --> RU, except that the Schiff base pKint
+should be set by hand to -0.8.
+
+NOTE:  The calculated pkint for LYR-216 may not come out the same
+as what we report in the paper.  This is caused by the fact that
+the LYR model compound is so large that part of it falls outside
+of the finest grid box (61 points per side, 0.25 Ang spacing).
+Something more like the result in the paper can be obtained by using
+a 81 points per side, but the distinction is unimportant since we
+must set the LYR pkint by hand anyway.
+

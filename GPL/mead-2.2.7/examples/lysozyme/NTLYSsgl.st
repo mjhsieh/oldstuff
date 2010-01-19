@@ -1,0 +1,11 @@
+7.5
+LYS N    1.0  0.0
+LYS HT1  0.0  0.0
+LYS HT2  0.0  0.0
+LYS HT3  0.0  0.0
+LYS CA   0.0  0.0
+LYS CE   0.0  0.0
+LYS NZ   0.0  0.0
+LYS HZ1  0.0  0.0
+LYS HZ2  0.0  0.0
+LYS HZ3  0.0  0.0

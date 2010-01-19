@@ -1,0 +1,404 @@
+bplist00�_WebMainResource�	
+^WebResourceURL_WebResourceTextEncodingName_WebResourceMIMEType_WebResourceData_WebResourceFrameName_Hhttp://stein.bioch.dundee.ac.uk/~charlie/software/pdb-mode/pdb-mode.htmlUUTF-8Ytext/htmlO0s<html><head><style>
+<!--
+BODY { font-family:Arial,Helvetica;background-color: #FFFFFF;color:#000000}
+TABLE {border:0;margin: 3px;padding:3px;background-color:#FFFFCC;} 
+TD {font-family:Arial,Helvetica;vertical-align:top}
+A {text-decoration: none; font-size: 20px;font-weight:bold}
+.CONTENT TABLE .TITLE {font-size:30px; background-color:#FFCC33;}
+.CONTENT TABLE .SUBTABLE {background-color:#FFFF99;}
+.CONTENT TABLE .SUBTITLE {text-decoration: none;font-size:16px;;background-color:#FFCC33;font-weight:bold;}
+--></style></head><head>
+<title>PDB Mode for (X)emacs</title>
+</head><body>
+<a href="">[Back to Charlie's software]</a><a href="pdb-mode-may2001.html">[Older version of PDB-mode]</a> 
+<div class="CONTENT">
+<table>
+<tbody><tr class="TITLE"><td>PDB mode for Xemacs - Version: April 2002</td></tr>
+<tr class="SUBTITLE"><td>Description</td></tr>
+<tr><td><p>
+pdb-mode is an emacs-lisp minor mode for Emacs to perform a number of
+useful editing functions on <a href="http://www.rcsb.org/">Protein DataBank
+(PDB)</a> formatted files. <a href="http://www.xemacs.org/">XEmacs</a> and/or <a href="http://www.gnu.org/software/emacs/">GNU Emacs</a> are available for most computing platforms. A full description of the PDB format can be
+found <a href="http://www.rcsb.org/pdb/docs/format/pdbguide2.2/guide2.2_frame.html">here</a>.</p>
+<p>pdb-mode is known to work with XEmacs versions 20.4 and 21.1 and Emacs 20.4.</p>
+<p>(c) 1997, 2000-2002 Charlie Bond  <a href="mailto:C.S.Bond@dundee.ac.uk">C.S.Bond@dundee.ac.uk</a>
+<br>(c) 2000 David Love</p>
+<p>If you have any good ideas for improvements, or spot any bugs, let me
+know and I will try to implement/fix them. If you have any customisations
+which could be included, let me know.</p>
+<p>Thanks to Dave Love for sorting out some of the old code and providing some new code, particularly in making things work in GNU Emacs and demonstrating how lisp ought to be written.</p></td></tr>
+<tr class="SUBTITLE"><td>Disclaimer</td></tr>
+<tr><td>
+I am not a programmer and this elisp code is certainly not bug proof. It
+is provided in good faith but with no warranties whatsoever. If, for any
+reason, you feel that you cannot take responsibility for any damage the
+use of this code might cause to your hardware, software, data or sanity,
+then do not install it. See the top of <a href="pdb-mode.el">pdb-mode.el</a> for GNU General Public License terms.</td></tr>
+<tr class="SUBTITLE"><td>Installation</td></tr>
+<tr><td>To use pdb-mode.el,  <a href="pdb-mode.el">download</a> it
+and put it somewhere. Add the following lines to your <tt>~/.emacs</tt>
+file (or get your sysadmin to add it to the <tt>site-start.el</tt>), fire up (x)emacs and visit a PDB file (with suffix .pdb).
+<p><tt>   (load-file "/{path-to}/pdb-mode.el")</tt>
+<br><tt>   (setq auto-mode-alist</tt>
+<br><tt>       (cons (cons "pdb$" 'pdb-mode)</tt>
+<br><tt>             
+auto-mode-alist ) )</tt>
+<br><tt>   (autoload 'pdb-mode "PDB")</tt></p></td></tr>
+<tr class="SUBTITLE"><td>Usage</td></tr>
+<tr><td>
+<p>The PDB mode functions are accessible from the PDB menu on the menu bar
+and also the right-mouse-click menu (CTRL-right-mouse in GNU Emacs).</p>
+<p>For keystroke-fans, type <tt>M-x hyper-apropos RET pdb RET </tt>to get
+a list of the function names and descriptions..</p>
+<p>Most functions require a region to be selected in which the function
+will operate..</p>
+<p>To use the <tt>pdb-view</tt> function, rasmol must be installed and
+in the user's path..</p>
+<p>If rasmol is not found by typing 'rasmol' in a shell, you must set the pdb-rasmol-name variable with its location/name in your .emacs (or site-start.el) (e.g. on a windows machine):.</p>
+<br><tt>(setq pdb-rasmol-name "\"c:/Program Files/Rasmol/rw32b2a.exe\"")</tt>
+<p>Fontification can be turned on from the menu. This highlights columns to make editing ATOM/HETATM records easier. As this is accompanied by a performance hit, you probably want to turn it off when scooting quickly through a file.</p>
+<p>Tab stops are set up to match the PDB specification. Use CTRL-Tab to jump to next column start.</p>
+<table class="SUBTABLE">
+<tbody><tr class="subtitle"><td>Function name</td>
+<td>Action</td>
+<td>Required input</td>
+</tr>
+<tr>
+<td class="subtitle" colspan="3">Select ...</td>
+</tr>
+<tr>
+<td><tt>pdb-select-chain</tt></td>
+<td>Select a set of atoms based on chain ID. </td>
+<td>Chain ID
+*NOTE CTRL-middlemouse performs this function*</td>
+</tr>
+
+<tr>
+<td><tt>pdb-select-residue</tt></td>
+<td>Select the current residue.</td>
+<td>*NOTE CTRL-Meta-middlemouse performs this function*</td>
+</tr>
+
+<tr>
+<td><tt>pdb-select-zone</tt></td>
+<td>Select a zone of residues</td>
+<td>Start and end residues (and chain if necessary)</td>
+</tr>
+
+<tr class="subtitle"><td colspan="3">Navigate</td>
+</tr>
+
+<tr>
+<td><tt>pdb-forward-residue</tt></td>
+<td>Jump to start of next residue.</td>
+<td>*NOTE CTRL-pagedown performs this function.*</td>
+</tr>
+
+<tr>
+<td><tt>pdb-back-residue</tt></td>
+<td>Jump to start of previous residue.</td>
+<td>*NOTE CTRL-pageup performs this function.*</td>
+</tr>
+
+<tr>
+<td><tt>pdb-forward-chain</tt></td>
+<td>Jump to start of next chain.</td>
+<td>*NOTE CTRL-Meta-pagedown performs this function.*</td>
+</tr>
+
+<tr>
+<td><tt>pdb-back-chain</tt></td>
+<td>Jump to start of previous chain.</td>
+<td>*NOTE CTRL-Meta-pageup performs this function.*</td>
+</tr>
+
+<tr class="subtitle"><td colspan="3">Change value</td>
+</tr>
+
+<tr>
+<td><tt>pdb-change-alternate</tt></td>
+<td>Change the alternate conformer character</td>
+<td>New conformer letter</td>
+</tr>
+
+<tr>
+<td><tt>pdb-change-bfactor</tt></td>
+<td>Change the B-factor</td>
+<td>New B-factor</td>
+</tr>
+
+<tr>
+<td><tt>pdb-change-chain</tt></td>
+<td>Change the chain ID</td>
+<td>New chain ID</td>
+</tr>
+
+<tr>
+<td><tt>pdb-change-frac2orth</tt></td>
+<td>Convert coordinates from fractional to orthogonal (standard orthogonalisation only)</td>
+<td>If CRYST1 card present, then the values from this are used, otherwise cell prompted for</td>
+</tr>
+
+<tr>
+<td><tt>pdb-change-mutate</tt></td>
+<td>Mutate the current residue to new type (standard conformer from protin dictionary)</td>
+<td>New residue type</td>
+</tr>
+
+<tr>
+<td><tt>pdb-change-occu</tt></td>
+<td>Change the occupancy</td>
+<td>New occupancy</td>
+</tr>
+
+<tr>
+<td><tt>pdb-change-orth2frac</tt></td>
+<td>Convert coordinates from orthogonal to fractional (standard orthogonalisation only)</td>
+<td>If CRYST1 card present, then the values from this are used, otherwise cell prompted for</td>
+</tr>
+
+<tr>
+<td><tt>pdb-change-residue</tt></td>
+<td>Change the residue number</td>
+<td>New residue number</td>
+</tr>
+
+<tr>
+<td><tt>pdb-change-segid</tt></td>
+<td>Change the SEGID</td>
+<td>New SEGID</td>
+</tr>
+
+<tr>
+<td><tt>pdb-change-type</tt></td>
+<td>Change the residue type</td>
+<td>New residue type</td>
+</tr>
+
+<tr class="subtitle"><td colspan="3">Increment values</td>
+</tr>
+
+<tr>
+<td><tt>pdb-increment-bfactor</tt></td>
+<td>Add a number to the B-factor</td>
+<td>Number to be added (-ve to subtract)</td>
+</tr>
+
+<tr>
+<td><tt>pdb-increment-centroid</tt></td>
+<td>Move coordinates to a new centroid</td>
+<td>x, y and z of new centroid</td>
+</tr>
+
+<tr>
+<td><tt>pdb-increment-euler</tt></td>
+<td>Rotate molecule by given Euler triplet (CCP4 convention)</td>
+<td>Alpha, beta &amp; gamma</td>
+</tr>
+
+<tr>
+<td><tt>pdb-increment-matrix</tt></td>
+<td>Rotate molecule by given 3x3 matrix</td>
+<td>9 matrix elements (reading across matrix)</td>
+</tr>
+
+<tr>
+<td><tt>pdb-increment-residue</tt></td>
+<td>Add a number to residue number</td>
+<td>Number to be added (-ve to subtract)</td>
+</tr>
+
+<tr>
+<td><tt>pdb-increment-xyz</tt></td>
+<td>Add a vector to the coordinates</td>
+<td>Three numbers, space delimited</td>
+</tr>
+
+<tr>
+<td><tt>pdb-scale-bfactor</tt></td>
+<td>Multiply B-factor by given factor</td>
+<td>Scale factor</td>
+</tr>
+
+<tr>
+<td><tt>pdb-scale-xyz</tt></td>
+<td>Multiply x,y,z by given factor(s)</td>
+<td>One or three numbers (x*f1, y*f1, z*f1 or x*f1, y*f2, z*f3)</td>
+</tr>
+
+
+<tr class="subtitle"><td colspan="3">Renumber</td>
+</tr>
+
+<tr>
+<td><tt>pdb-renumber-atoms</tt></td>
+<td>Renumber selected atoms with consecutive numbers</td>
+<td>Start number</td>
+</tr>
+
+<tr>
+<td><tt>pdb-renumber-waters</tt></td>
+<td>Renumber selected atoms with consecutive residue numbers</td>
+<td>Start number</td>
+</tr>
+
+<tr class="subtitle"><td colspan="3">Tidy Up</td>
+</tr>
+
+<tr>
+<td><tt>pdb-tidy-alter</tt></td>
+<td>Remove all alternate conformers except the one labelled A</td>
+<td>-</td>
+</tr>
+
+
+<tr>
+<td><tt>pdb-tidy-amino</tt></td>
+<td>Remove all non-protein atoms</td>
+<td>-</td>
+</tr>
+
+
+<tr><td><tt>pdb-tidy-atom2hetatm</tt></td>
+<td>Replace ATOM with HETATM</td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><tt>pdb-tidy-ca</tt></td>
+<td>Remove all but CA records</td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><tt>pdb-tidy-dehydrogenate</tt></td>
+<td>Remove all hydrogens</td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><tt>pdb-tidy-end</tt></td>
+<td>Add END after last coordinate record</td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><tt>pdb-tidy-hetatm2atom</tt></td>
+<td>Replace HETATM with ATOM</td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><tt>pdb-tidy-polyalanine</tt></td>
+<td>Reduce to polyALA</td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><tt>pdb-tidy-xyz</tt></td>
+<td>Delete all not ATOM/HETAM records</td>
+<td>-</td>
+</tr>
+
+<tr class="subtitle"><td colspan="3">New ...</td>
+</tr>
+
+<tr>
+<td><tt>pdb-new-base</tt></td>
+<td>Insert new DNA base. Positioned with P at the origin, and geometry from the protin dictionary.</td>
+<td>Single letter sequence</td>
+</tr>
+
+<tr>
+<td><tt>pdb-new-dnaseq</tt></td>
+<td>Insert new sequence of DNA bases. All bases are positioned with P at the origin, and geometry from the protin dictionary.</td>
+<td>Starting residue number and single letter sequence.</td>
+</tr>
+
+<tr>
+<td><tt>pdb-new-hicup</tt></td>
+<td>Insert new HETGROUP from HICUP. This requires net connection and knowledge (estimate?) of the necessary 3-letter residue code. A number of common examples can be found in the PDB-mode menu.</td>
+<td>Three letter code.</td>
+</tr>
+
+<tr>
+<td><tt>pdb-new-pdb</tt></td>
+<td>Open PDB entry in new buffer. This requires net connection to oca.ebi.ac.uk.</td>
+<td>PDB code (e.g. 1HH1).</td>
+</tr>
+
+<tr>
+<td><tt>pdb-new-prodrg</tt></td>
+<td>Submit highlighted atoms to PRODRG server to get a variety of topology/coordinate files in a new buffer.</td>
+<td>Highlighted region.</td>
+</tr>
+
+<tr>
+<td><tt>pdb-new-residue</tt></td>
+<td>Insert new residue. Positioned with CA at the origin, and geometry from the protin dictionary.</td>
+<td>Single letter aminoacid code.</td>
+</tr>
+
+<tr>
+<td><tt>pdb-new-sequence</tt></td>
+<td>Insert new residues. All residues are positioned with CA at the origin, and geometry from the protin dictionary.</td>
+<td>Starting residue number and single letter sequence.</td>
+</tr>
+
+<tr class="subtitle"><td colspan="3">Miscellaneous</td>
+</tr>
+
+<tr>
+<td><tt>pdb-view</tt></td>
+<td>Open selection in <tt>rasmol</tt></td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><tt>pdb-data-cell</tt></td>
+<td>Set unit cell. This will change the CRYST1 card in the file to reflect the new values</td>
+<td>Three cell lengths and three angles</td>
+</tr>
+
+<tr>
+<td><tt>pdb-data-spacegroup</tt></td>
+<td>Set space group. When pdb-data-cell is next invoked, the space group in the CRYST1 card is set to new value.</td>
+<td>New space group (this is not checked against a list of valid values, so be careful).</td>
+</tr>
+
+<tr class="subtitle"><td colspan="3">Subroutines and other stuff the user doesn't need to know about.</td>
+</tr>
+
+<tr>
+<td>pdb-ebi-sentinel<br>
+pdb-hicup-sentinel<br>
+pdb-prodrg-sentinel<br>
+pdb-view-sentinel<br>
+</td>
+<td>Sentinels for external processes</td>
+<td>-</td>
+</tr>
+
+<tr>
+<td>pdb-sub-angle, pdb-sub-anglerad, pdb-sub-cross, pdb-sub-dihedral, pdb-sub-dot, pdb-sub-frac2orth, pdb-sub-len, pdb-sub-matxmat, pdb-sub-orth2frac, pdb-sub-rot2mat, pdb-sub-vecxmat</td>
+<td>Some maths functions</td>
+<td>-</td>
+
+</tr><tr>
+<td>pdb-sub-change, pdb-sub-change2, pdb-sub-defineregion, pdb-sub-markregion, pdb-sub-selectlocal, pdb-sub-pad</td>
+<td>Some formatting, value-changing functions</td>
+<td>-</td>
+
+</tr><tr><td>pdb-sub-mouse-cmmouse2, pdb-sub-mouse-cmouse2, pdb-sub-geturl, pdb-sub-posturl
+</td>
+<td>Mouse bindings and net connection functions.</td>
+<td>-</td>
+</tr>
+
+<tr class="SUBTITLE"><td colspan="3">Copyright (C)  2002 Charlie Bond C.S.Bond@dundee.ac.uk</td></tr>
+</tbody></table>
+</td></tr></tbody></table></div>
+
+
+</body></html>P    ( 7 U k } � � � �1f                           1g

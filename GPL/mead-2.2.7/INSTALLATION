@@ -1,0 +1,393 @@
+Quick Start
+===========
+
+This MEAD distribution is set up for compilation on Unix-like systems.
+(See end of file for some info about MEAD on Windows.)  You will need
+a reasonably up-to-date C++ and C compilers, including support for
+templates, namespaces, run-type type identification, and the C++
+standard libraries, including containers.  You will also need a
+standard Unix "make" program.  You should then be able to build the
+MEAD programs with just two commands:
+
+	./configure
+        [this tests for compilers etc., and generates makefiles]
+	make
+        [this compiles and links]
+        make check
+        [runs some simple test cases.  Diffs should be in small decimals.]
+        make install
+        [installs in /usr/local, or some specified place (see below).]
+
+On a Mac, if configure complains about being unable to guess the build
+type, give it "--build=powerpc" on the command line.
+
+If you're going to build mead for more than one architecture, or if
+you think you may want to tinker with the source code, it's a good
+idea to build in a separate directory from the sources.  This can be
+done if you have a make program that supports the VPATH feature.  If
+the current directory is the mead top-level source directory,
+mead-2.2.0:
+
+   mkdir ../build
+   cd ../build
+   ../mead-2.2.0/configure
+   [this generates makefiles in the build directory]
+   make
+   [this will work because the makefiles know how to look in source dir]   
+    
+
+If you want to use different C++ and C compilers than what configure
+comes up with, you can set the CXX and CC environment variables,
+respectively, before running configure, for example:
+
+   ../mead-2.2.0/configure CXX=KCC CC=acc 
+
+Configure can also be invoked with flags to control whether the
+Python interface is generated, where installed files go, etc. (see below).
+
+You should end up with libmead.a in subdirectory libmead and executables
+in the apps subdirectory (each app has its own subdirectory):
+
+	potential
+	sav-driver
+	solvate
+	solinprot
+	multiflex
+	redti
+	mulsidecomp
+	potscan
+
+At this point, you may wish to do "make check" which will run
+a few of the apps on sample data and compare the output with expected
+results using diff.  Don't too be alarmed if diff reports some
+differences.  Close examination of them should show that it's just in
+the last digit or two of floating point precision.
+
+To install the libraries and executables, use the command:
+
+	make install
+
+This will copy libmead.a into /usr/local/lib, MEAD header files (.h
+files) into /usr/local/include/MEAD, and the executables into
+/usr/local/bin.  docmutented below.  If you've built the python
+interface (see --with-python, below) "make install" will try to
+install it in your python site-packages directory.  You can specify
+different installation directories using the configure flags
+documented below.  Of course, installation will fail if you don't have
+the permissions to write in the appropriate directories.
+
+Supported Platforms
+===================
+
+With this release, MEADs use of C++ is more standards compliant but
+also depends more on compiler's to fully implement the standard.  This
+may cause problems with older compilers.
+
+So far, MEAD, including the Python wrapping mentioned below has been
+sucessfully built and run on Red Hat and Fedora Linux systems
+(i.e. Linux2 kernels) using gcc-3.1 or better.  I think other Linux2
+systems with the same compiler should do as well.
+
+MEAD without the Python system has been compiled and tested successfully
+on Mac OS X 10.2.  I didn't do the Python because I couldn't get NumPy
+to build on my Mac.
+
+If you have an older compiler, you may wish to try an older version.
+Older versions were more extensively tested on SGI, Sun, Dec Alpha,
+and other non-Linux Unix systems.
+
+
+
+MEAD-Specific Configuration Options
+===================================
+
+MEAD configuration of can be customized by using command-line options to
+the ./configure script.  Type "./configure --help" to list the full set.
+In addition to the usual options such as `--prefix' and `--bindir' (see
+"generic installation instructions" below), MEAD supports the following:
+
+* --with-python   (Default: disabled)
+  Look for a suitable Python installation and enable building and
+  installation of a dynamically shared library so that MEAD functions
+  can be called from Python scripts.  A "suitable" Python means that the
+  python interpreter has the Numeric extension built in, headers and
+  library files are available to compile and link against.
+  See swig/README for more.
+  IMPORTANT NOTE: Python extensions written in C++ typically only work
+  if Python itself was compiled with a C++ compiler, and if the
+  extension (MEAD in this case) is compiled with the same C++ compiler
+  as Python.
+ 
+
+* --with-py-site-packages-dir=DIRECTORY
+  When `--with-python' is specified, the ./configure may fail if it
+  cannot determine Python's "site-packages" directory.  If this happens,
+  use `--with-py-site-packages-dir' to specify DIRECTORY manually.
+
+* --with-swig  Don't use this, it's broken!
+
+* --disable-exceptions  (Default: enabled)
+  If an error is detected inside the MEAD library, a MEAD-supplied error
+  function is called (see libmead/globals.cc) which prints out an
+  error message and then either calls exit with an error condition, or
+  throws an exception according to whether this option is enabled.
+  If mead is being run as a python module, the python wrapping of
+  mead should catch the exception and turn it into a python error.
+  However, if exceptions are disabled and MEAD calls exit, then
+  the python interpreter will have an unexpected forced exit.
+  You should only disable this option if your compiler and linker
+  system can't deal with C++ exceptions.
+
+Troubleshooting
+===============
+
+Trouble?  Maybe the configure script gave up because it couldn't find
+a C++ compiler, or maybe it found the wrong one (such as the GNU
+compiler when you wanted your system's native compiler).  To force the
+use of the compiler of your choice see the section, "Compilers and
+Options," below.  The relevant environment variables are CXX and
+CXXFLAGS for controlling C++ compilation.
+
+If that doesn't work you should probably read the "generic installation
+instructions" below, but first I'll explain a bit about this "configure"
+stuff.
+
+The configure program used with MEAD accomplishes two things: creation
+of a Makefile suitable for building MEAD on your system, and setting
+up a few files and symbolic links that might be necessary.  You probably
+do not need to tell configure what kind of system you have, what
+features of C or C++ are supported or not, and so on.  Configure is
+supposed to figure this stuff out for it self by sniffing around on
+your system, trying to compile little tests, and so on.  The Makefile
+generated by configure is based on the file, Makefile.in, which looks
+pretty much like an ordinary Makefile except that it contains
+constructs like "@THING@," for which configure makes substitutions in
+the Makefile, depending on what it determines about your system.
+
+The main system-dependencies that MEAD's configure file must deal with
+pertain to the C++ compiler's characteristics and the availability
+certain C++ library classes and functions.  In particular, MEAD uses
+the bool built-in variable type which is now part of the standard.  If
+it is still unsupported by your compiler, it can be usually be "faked"
+well enough be preprocessor defines.  Configure also tries to come up
+with optimization and code generation option flags that will give good
+performance, but this is limited by my (Bashford's) experience on
+local machines.  This is an area where you may well wish to tinker.
+
+C++ is not the only source of trouble.  MEAD uses regular expressions
+which are part of the C library on most Unix systems, but are not part
+of either the standard C library or POSIX 1.  As with String,
+configure checks to see if your system has regex, uses it if found,
+but otherwise compiles and uses a GNU regex supplied here with MEAD.
+(NOTE: The 64-bit version of SGI's IRIX 6.2 regex has a bug.
+This is why MEAD's configure forces the CC "-n32" option on SGI).
+
+Configure sounds like a pretty hairy program doesn't it?  Don't worry,
+I didn't write it myself.  It is a Unix shell script generated
+semi-automatically by the GNU project's program, autoconf, which takes
+a much simpler file which I did write, configure.in, and performs
+elaborate macro substitutions to generate configure.  As you can see,
+MEAD owes a great deal to the Free Software Foundation's GNU project.
+
+-Donald Bashford
+bashford@scripps.edu
+
+----------------- generic installation instructions --------------
+
+Basic Installation
+==================
+
+   These are generic installation instructions.
+
+   The `configure' shell script attempts to guess correct values for
+various system-dependent variables used during compilation.  It uses
+those values to create a `Makefile' in each directory of the package.
+It may also create one or more `.h' files containing system-dependent
+definitions.  Finally, it creates a shell script `config.status' that
+you can run in the future to recreate the current configuration, a file
+`config.cache' that saves the results of its tests to speed up
+reconfiguring, and a file `config.log' containing compiler output
+(useful mainly for debugging `configure').
+
+   If you need to do unusual things to compile the package, please try
+to figure out how `configure' could check whether to do them, and mail
+diffs or instructions to the address given in the `README' so they can
+be considered for the next release.  If at some point `config.cache'
+contains results you don't want to keep, you may remove or edit it.
+
+   The file `configure.in' is used to create `configure' by a program
+called `autoconf'.  You only need `configure.in' if you want to change
+it or regenerate `configure' using a newer version of `autoconf'.
+
+The simplest way to compile this package is:
+
+  1. `cd' to the directory containing the package's source code and type
+     `./configure' to configure the package for your system.  If you're
+     using `csh' on an old version of System V, you might need to type
+     `sh ./configure' instead to prevent `csh' from trying to execute
+     `configure' itself.
+
+     Running `configure' takes awhile.  While running, it prints some
+     messages telling which features it is checking for.
+
+  2. Type `make' to compile the package.
+
+  3. Optionally, type `make check' to run any self-tests that come with
+     the package.
+
+  4. Type `make install' to install the programs and any data files and
+     documentation.
+
+  5. You can remove the program binaries and object files from the
+     source code directory by typing `make clean'.  To also remove the
+     files that `configure' created (so you can compile the package for
+     a different kind of computer), type `make distclean'.  There is
+     also a `make maintainer-clean' target, but that is intended mainly
+     for the package's developers.  If you use it, you may have to get
+     all sorts of other programs in order to regenerate files that came
+     with the distribution.
+
+Compilers and Options
+=====================
+
+   Some systems require unusual options for compilation or linking that
+the `configure' script does not know about.  You can give `configure'
+initial values for variables by setting them in the environment.  Using
+a Bourne-compatible shell, you can do that on the command line like
+this:
+     CC=c89 CFLAGS=-O2 LIBS=-lposix ./configure
+
+Or on systems that have the `env' program, you can do it like this:
+     env CPPFLAGS=-I/usr/local/include LDFLAGS=-s ./configure
+
+Compiling For Multiple Architectures
+====================================
+
+   You can compile the package for more than one kind of computer at the
+same time, by placing the object files for each architecture in their
+own directory.  To do this, you must use a version of `make' that
+supports the `VPATH' variable, such as GNU `make'.  `cd' to the
+directory where you want the object files and executables to go and run
+the `configure' script.  `configure' automatically checks for the
+source code in the directory that `configure' is in and in `..'.
+
+   If you have to use a `make' that does not supports the `VPATH'
+variable, you have to compile the package for one architecture at a time
+in the source code directory.  After you have installed the package for
+one architecture, use `make distclean' before reconfiguring for another
+architecture.
+
+Installation Names
+==================
+
+   By default, `make install' will install the package's files in
+`/usr/local/bin', `/usr/local/man', etc.  You can specify an
+installation prefix other than `/usr/local' by giving `configure' the
+option `--prefix=PATH'.
+
+   You can specify separate installation prefixes for
+architecture-specific files and architecture-independent files.  If you
+give `configure' the option `--exec-prefix=PATH', the package will use
+PATH as the prefix for installing programs and libraries.
+Documentation and other data files will still use the regular prefix.
+
+   In addition, if you use an unusual directory layout you can give
+options like `--bindir=PATH' to specify different values for particular
+kinds of files.  Run `configure --help' for a list of the directories
+you can set and what kinds of files go in them.
+
+   If the package supports it, you can cause programs to be installed
+with an extra prefix or suffix on their names by giving `configure' the
+option `--program-prefix=PREFIX' or `--program-suffix=SUFFIX'.
+
+Optional Features
+=================
+
+   Some packages pay attention to `--enable-FEATURE' options to
+`configure', where FEATURE indicates an optional part of the package.
+They may also pay attention to `--with-PACKAGE' options, where PACKAGE
+is something like `gnu-as' or `x' (for the X Window System).  The
+`README' should mention any `--enable-' and `--with-' options that the
+package recognizes.
+
+   For packages that use the X Window System, `configure' can usually
+find the X include and library files automatically, but if it doesn't,
+you can use the `configure' options `--x-includes=DIR' and
+`--x-libraries=DIR' to specify their locations.
+
+Specifying the System Type
+==========================
+
+   There may be some features `configure' can not figure out
+automatically, but needs to determine by the type of host the package
+will run on.  Usually `configure' can figure that out, but if it prints
+a message saying it can not guess the host type, give it the
+`--host=TYPE' option.  TYPE can either be a short name for the system
+type, such as `sun4', or a canonical name with three fields:
+     CPU-COMPANY-SYSTEM
+
+See the file `config.sub' for the possible values of each field.  If
+`config.sub' isn't included in this package, then this package doesn't
+need to know the host type.
+
+   If you are building compiler tools for cross-compiling, you can also
+use the `--target=TYPE' option to select the type of system they will
+produce code for and the `--build=TYPE' option to select the type of
+system on which you are compiling the package.
+
+Sharing Defaults
+================
+
+   If you want to set default values for `configure' scripts to share,
+you can create a site shell script called `config.site' that gives
+default values for variables like `CC', `cache_file', and `prefix'.
+`configure' looks for `PREFIX/share/config.site' if it exists, then
+`PREFIX/etc/config.site' if it exists.  Or, you can set the
+`CONFIG_SITE' environment variable to the location of the site script.
+A warning: not all `configure' scripts look for a site script.
+
+Operation Controls
+==================
+
+   `configure' recognizes the following options to control how it
+operates.
+
+`--cache-file=FILE'
+     Use and save the results of the tests in FILE instead of
+     `./config.cache'.  Set FILE to `/dev/null' to disable caching, for
+     debugging `configure'.
+
+`--help'
+     Print a summary of the options to `configure', and exit.
+
+`--quiet'
+`--silent'
+`-q'
+     Do not print messages saying which checks are being made.  To
+     suppress all normal output, redirect it to `/dev/null' (any error
+     messages will still be shown).
+
+`--srcdir=DIR'
+     Look for the package's source code in directory DIR.  Usually
+     `configure' can determine that directory automatically.
+
+`--version'
+     Print the version of Autoconf used to generate the `configure'
+     script, and exit.
+
+`configure' also accepts some other, not widely useful, options.
+
+
+Windows
+========
+I (Don Bashford) don't have a Windows machine, or know much about
+them.  But my colleague, Michel Sanner has built the MEAD library and
+the python interface using MS Visual C++.  For Windows, the whole
+configuration and Makefile machinery described here is apparently not
+meaningful, but Visual C++ can somehow help you turn the MEAD or
+libmead directory and the swig directory into "projects", which do the
+job of Makefiles.  Some Michel needed some twiddling with project
+parameters, but no changes to the source code.
+
+
+[INSTALLATION ends here]

@@ -1,0 +1,29 @@
+# apps/redti Makefile
+
+VPATH		= @srcdir@
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+
+INSTALL		= @INSTALL@
+INSTALL_PROGRAM	= @INSTALL_PROGRAM@
+
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+bindir		= @bindir@
+
+mkinstalldirs	= $(top_srcdir)/mkinstalldirs
+INSTALL		= @INSTALL@
+INSTALL_PROGRAM	= @INSTALL_PROGRAM@
+
+CC	= @CC@
+CFLAGS	= @CFLAGS@
+
+redti_objs = redti.o rfixpro.o rfixprosee.o pfix.o tc.o
+
+redti : $(redti_objs)
+	$(CC) $(CFLAGS) $(redti_objs) -lm -o redti
+
+appname = redti
+include ../Makefile.common
+
+# Makefile ends here

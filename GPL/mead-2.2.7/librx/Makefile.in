@@ -1,0 +1,36 @@
+SHELL = /bin/sh
+VPATH = @srcdir@
+CC = @CC@
+CPPFLAGS = @CPPFLAGS@
+DEFS = @DEFS@
+# In Makefile.in the CC_*FLAGS are taken from the CXX_*FLAGS
+# configuration output varables.  Don't see any reason they should differ
+CC_OPTFLAGS = @CXX_OPTFLAGS@
+CC_DEBUGFLAGS = @CXX_DEBUGFLAGS@
+
+ALL_CPPFLAGS = $(CPPFLAGS) $(DEFS)
+ALL_CFLAGS = $(CC_DEBUGFLAGS) $(CC_OPTFLAGS)
+
+AR = ar
+AR_FLAGS = rc
+
+.SUFFIXES:
+.SUFFIXES: .c .o
+
+.c.o:
+	$(CC) -c $(ALL_CPPFLAGS) $(ALL_CFLAGS) $<
+
+librx.a : rx.o
+	-rm -f t$@
+	$(AR) $(AR_FLAGS) t$@ rx.o
+	mv t$@ $@
+
+rx.o: rx.c rx.h
+
+clean:
+	-$(RM) rx.o librx.a
+
+distclean: clean
+	-$(RM) Makefile
+
+.PHONY: clean distclean

@@ -1,0 +1,348 @@
+This is alpha-test version 0.2.2 of MEAD, Macroscopic Electrostatics
+with Atomic Detail.  Copyright (c) 1990, 1993 Donald Bashford, The Scripps
+Research Institute.
+
+Please send me an email message at bashford@scripps.edu if you intend
+to use MEAD.  I would like to collect names and start an electronic
+mailing list or discussion group for MEAD if there is enough interest.
+
+MEAD is a set of software objects for the purpose of modelling the
+electrostatics of molecules using a semi-macroscopic picture in
+which the solvent and the molecular interior have different dielectric
+constants, the boundary between the different dielectric regions is
+dependent on the detailed atomic structure of the molecule, and
+the electrostatic potential is determined by the Poisson-Boltzmann
+equation.  This version of MEAD includes modelling of a membrane
+as a low dielectric slab, possibly with a water-filled channel
+through a protein in the membrane.
+
+MEAD is written in C++, which is a significant departure from
+most molecular software, which is more commonly written in Fortran
+or (recently) C.  My purpose in choosing C++ was to explore
+the object-oriented programming style that C++ facilitates
+and to make a software system that other people could borrow
+pieces from and make extensions to in a convenient way.
+
+MEAD is free software.  You can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 1, or (at your option) any later
+version.  For information about your rights to obtain, copy, modify
+and redistribute MEAD, see the files, COPYING.DB and COPYING.GNU which
+should be included along with this.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+See the INSTALLATION file for a list of machines MEAD is known
+to run on and instructions on compiling MEAD.
+
+MEAD uses several objects from the GNU C++ library, libg++ version
+2.0, including container classes prototypes implemented through
+the genclass program.  This means that MEAD source code includes a
+substantial amount of GNU source code.  
+
+This distribution of MEAD has the programs, data files and parameter
+files needed to reproduce the results for the triclinic structure of
+lysozyme reported in D. Bashford & M. Karplus (1990) Biochemistry vol.
+29, pp. 10219-25, and some of the results reported in D. Bashford & K.
+Gerwert (1992) "Electrostatic Calculations of the pKa Values of
+Ionizable Groups in Bacteriorhodopsin" J. Mol. Biol. vol. 224 pp.
+473-486.  The methods are explained in the papers.  The data and
+parameter files are in the subdirectories, lysozyme and br.
+
+The only documentation for MEAD is this README file.  I hope to write
+more soon.  I'll give info on running the programs here.  A bit more
+info about the objects in MEAD can be found in the *.h files.  I
+suggest looking at them in the order: OneSiteMolecule.h, PBEquation.h,
+ModelCompound.h and MultiSiteMolecule.h.  Use the source, Luke!
+
+This distribution includes three programs implemented using the
+MEAD object library: solvate, selfenergy and multimead.
+
+SOLVATE
+
+Solvate calculates the Born solvation energy of a molecule -- that is,
+the difference in the electrostatic work required to bring its atom
+charges from zero to their full values in solvent versus vacuum.
+Solvate requires a MolName.pqr file and a MolName.ogm file (see below)
+as inputs.  The Born solvation energy is written to standard output in
+kcal/mole.  Physical conditions and units for I/O can be set by flags
+on the command line (see below).  By default solvate assumes we are
+going from vacuum (eps=1) to water (eps=80).  Note that solvate uses
+the -epssol and -epsvac flags rather than the -epsext flag to control
+solvent conditions.  SOLVATE IS NEW IN THIS RELEASE AND HAS NOT BEEN
+WELL TESTED, but you can try at out on a sphere to check agreement
+with the Born formula.  See the born subdirectory.
+
+For the "typical applications" of the program selfenergy, (see below)
+solvate is a more convenient replacement since it does the two
+selfenergy calculations, the subtraction and division by two and the
+conversion to kcal/mole internally.
+
+SELFENERGY
+
+Selfenergy has been largely replaced by solvate in this release.  It
+calculates the electrostatic self energy of an entire molecule by
+calculating the field due to all charges and calculating the quantity.
+
+    sum from i to N   Q sub i    phi ( r sub i )
+
+It is generally necessary to divide this quantity by two because we is
+interested in an integral of electrostatic work over a charging
+process; and to subtract this calculation from another one to cancel
+out an artifactual "grid self energy" (Bashford & Gerwert, 1992, Eqns.
+7-9).  A typical application is to calculate solvation energies by
+first running selfenergy with the exterior dielectric constant,
+epsext, set to the solvent's value, then run with epsext = 1 (vacuum),
+subtract the difference and divide by two.  Selfenergy requires a
+MolName.pqr file and a MolName.ogm file (see below) as inputs and
+physical conditions can be set by flags on the command lines (see
+below).  The energy written to standard output has units of charge
+squared per length, where "charge" and "length" are the units you used
+in the input.  By default this is protons squared per angstrom.  To
+get kcal/mole, multiply by 332.  See the born subdirctory for an
+example.
+
+MULTIMEAD
+
+Multimead does the electrostatic part of a titration calculation for a
+multi-site titrating molecule by the procedure of Bashford & Karplus
+(1990).  Multimead takes MolName.pqr, MolName.ogm, MolName.mgm,
+MolName.sites and MolName.st files as inputs (see below) and as its
+main outputs, produces a MolName.pkint file, which contains the
+calculated intrinsic pK's and a MolName.g file, which contains
+site-site interactions in units of charge squared per length.  The
+molname.pkint file and the Molname.g file can be used directly as
+input to redti, the program for calculating titration curves.  As with
+selfenergy and solvate, parameters representing physical conditions
+and units can be set using command line flags.
+
+THE COMMAND LINE:
+
+Solvate, selfenergy and multimead have the command line syntax,
+
+program_name [flag value] [flag value] ... MolName
+
+where MolName is the base name for various I/O files.  That is,
+"selfenergy foo" will expect to find files named foo.pqr and foo.ogm
+and will create foo.potat.  The flags are used to set values
+pertaining to the physical conditions being modelled and the units
+used in the input files and the other flags.  The default assumptions
+regarding units are that all inputs with dimension of length
+(coordinates, grid spacing) are in Angstroms, all inputs with
+dimensions of charge are in protons, concentrations are in moles/liter
+and temperature is in Kelvins.
+
+The flags and their default values are:
+
+     -epsin 	 4.0	Dielectric constant of molecular interior
+
+     -epsext 	 80.0	Exterior dielectric constant (multimead and
+                        selfenergy)
+
+     -epssol     80.0   The dielectric constant of one of the
+                        external media in the solvate program,
+                        presumably the solvent.  (solvate only)
+
+     -epsvac      1.0   The dielectric constant of the other
+                        external media in the solvate program,
+                        presumably the vacuum.  (solvate only)
+
+     -solrad 	 1.4	Solvent probe radius used in rolling ball
+			procedure to determine contact surface
+			which is taken as the boundary between
+			epsin and epsext.  (Ansgtroms, by default)
+
+     -sterln 	 2.0	Ion exclusion layer thickness which is added
+			to atomic radii to determine region inaccessible
+			to salt so that kappa term in PB equation
+			is zero.  (Ansgtroms, by default)
+
+     -ionicstr 	 0.0	Ionic strength (moles/liter, by default).
+
+     -T 	 300.0	Temperature (Kelvins by default)
+
+     -kBolt 	 5.984e-6 (protons squared)/(Angstrom * Kelvin)
+			The Boltzmann constant in units of charge unit
+			squared per length unit per temperature unit.
+			You must adjust this if you don't use the
+			default units of length, charge and temperature
+
+     -econv      331.842  (kcal/mole)/(protons squared/Angstrom)
+                        Conversion factor for going from energy units
+                        of (charge units squared)/(length unit) to
+                        to whatever energy units you want for your output.
+                        You must adjust this if you don't use the
+			default units of length and charge, or if you
+			want output in different units.  At present,
+			only solvate uses this.
+
+     -conconv 	 6.022214e-4 ((particles/cubic Angstrom)/(moles/liter))
+			Conversion factor for going from concentration
+			units used for ionic strength to units of
+			particles per cubic length unit.  You must adjust
+			this if you don't use the default units of length
+			and concentration.
+
+FLAGS FOR MEMBRANES
+
+The following flags cause a membrane to be modelled as a dielectric
+slab with epsilon = epsin (selfenergy and multimead only) The
+initialization of phi on the outer boundary of the coarsest grid box
+will be done by a series method of images solution of the Poisson
+equation for the potential of a charge in the presence of a dielectric
+slab.  However, method of images does not work for solving the
+Poisson-Boltzmann equation, so membranes cannot be used with non-zero
+ionic strength.
+
+     -membz zlo zhi     Where zlo and zhi are floating point numbers.
+                        The membrane will lie between the planes,
+                        z = zlow and z = zhi.  zlo < zhi required.
+                        The volume between the planes, as well as the
+                        volume inside the protein contact surface,
+                        is assigned epsilon = epsin
+                        
+
+     -membhole rad      Where rad is a floating point number.  This
+                        provides a crude way of modelling membrane
+                        channel proteins by creating a cylindrical
+                        "hole" through the membrane.  The volume
+                        between the planes specified with the -membz
+                        flag but *outside* the hole, as well as the
+                        volume inside the protein contact surface, is
+                        assigned epsilon = epsin
+
+FILE FORMATS
+
+MolName.pqr :
+
+	Atomic coordinate file like a PDB (Protein Data Bank) file but
+	with atomic charge and radii in the occupancy and B-factor
+	columns, respectively.
+
+MolName.ogm, molname.mgm :
+
+	Specification for the grid method.  Each line specifies a
+	level of a focussed set of grid calculations, starting with
+	the coarsest and going to the finest.  Lines have the format,
+
+        centering_style  grid_dimension  grid_spacing
+
+        where grid_dimension is an odd integer greater than 1
+	specifying the number of points along the edge of the grid,
+	grid_spacing is a positive floating point number specifying
+	the spacing between grid points and centering_style is one of
+	ON_ORIGIN, ON_GEOM_CENT or ON_CENT_OF_INTR, according to
+	whether the grid is to be centered on the origin of the
+	coordinate system, the geometric center or the "center of
+	interest" which, for multimead is on one of the titrating
+	charges in the site being calculated (see .st files, below)
+	and for selfenergy is on the origin (so ON_CENT_OF_INTR not
+	much use with selfenergy).  Selfenegry needs only the .ogm file.
+	Multimead needs the .ogm file to specify the grid method for
+	the macromolecule and the .mgm file to specify the grid
+	method for the model compound.  For proper cancellation of
+	grid effects, the finest levels for the model compound
+	and the macromolecule must use the same grid spacing and
+	centering style.
+
+MolName.sites (multimead only):
+
+	This file specifies which sites in a macromolecule are titrating
+	and what kind they are.  For each site it contains a line of the
+	form,
+
+	resnum  site_type
+
+	where resnum is the residue number of the site and will be
+        matched to the residue number field of the atoms in the 
+        MolName.pqr file and site_type refers to site_type.st files.
+	Usually, site_type will be similar to a residue type name.
+
+site_type.st: (multimead only)
+
+	Multimead expects a file of the name site_type.st to specify
+	details concerning each site_type that appears in the
+	MolName.sites file.  The first line contains one floating
+	point number which is the model compound pK for that type of
+	site.  All successive lines are of the form,
+
+	resname atomname prot_charge deprot_charge
+
+	where resname and atomname, along with the resnums given in
+	the .sites file match an atom in the .pqr file that is part of
+	a titrating site, prot_charge is that charge of this atom in
+	the protonated state and deprot_charge is its charge in the
+	deprotonated state.  It is expected that the sum of all
+	prot_charge subtracted from the sum of all deprot_charge
+	will equal one.
+
+molname.site_type-resnum.{p,u,mp,mu}.potat : (output)
+
+	This is a binary output file produced by multimead.  It
+	contains the potential at each atom of MolName (or a model
+	compound) generated by the charges of site, site_type-resnum
+	in the protonated state of the macromolecule (p), the
+	unprotonated state of the macromolecule (u) or the
+	corresponding states of the model compound (mp or mu).  Atomic
+	coordinates and radii and the generating charges are also
+	included for the sake of consistency checking.  These files
+	allow multimead to avoid recalculating a lot of sites when all
+	you want to do is add or alter some site, but you must be
+	careful about site names, which .potat files you leave sitting
+	around, and so on.
+	
+MolName.potat: (output)
+
+	The simpler-named .potat file produced by selfenergy.  Sometimes
+	you need to delete it.  For example, to calculate the solvation
+	energy of foo,
+
+        selfenergy foo
+        rm foo.potat
+        selfenergy -epsext 1.0 foo
+
+	The rm is needed since the second selfenergy would otherwise
+	pick up foo.potat rather than redo the calculation with
+	epsext=1.  This is a bug.  Really OneSiteMolecule and the
+	.potat file format should have a more thorough consistency
+	check that includes physical conditions.
+
+MolName.pkint, MolName.g : (multimead)
+
+	Described in the multimead summary above.
+
+
+REDTI:
+
+Redti solves the multiple site titration curve problem given a set of
+intrinsic pK's (MolName.pkint) and a site-site interaction matrix
+(MolName.g) using the Reduced Site method described by Bashford &
+Karplus (1991) J. Phys. Chem. vol. 95, pp. 9556-61.  Its command line
+syntax is:
+
+redti [-cutoff val] [-pHrange val val] [-dry] MolName
+
+where the "val" are numbers giving the protonation fraction cutoff for
+the reduced site method, the bottom of the pH range to be covered and
+the top of the range, respectively.  The defaults are 0.05, -20.0 and
+30.1, respectively.  (Yes, that's an extreme pH range).  The -dry flag
+causes redti to do a "dry run" in which it prints the number of sites
+to be included in the reduced site calculation at each pH point.  This
+is useful for checking whether a calculation will require a prohibitive
+amount of CPU time since CPU time will go exponentially in the reduced
+site number.
+
+Redti is written in C rather than C++.
+
+
+AUTHOR:
+       Donald Bashford
+       bashford@scripps.edu 
+
+       Department of Molecular Biology
+       The Scripps Research Institute
+       10666 North Torrey Pines Road
+       La Jolla, California  92037

@@ -1,0 +1,16 @@
+2002-12-02  Greg Balls  <gballs@cairn>
+
+	* scallop.prj: configure.ac: Fixed order of kelp libraries
+
+2002-05-10  Greg Balls  <gballs@sdsc.edu>
+
+        This project was placed under prcs control some time ago.  I
+	noticed today that prcs.el was modifying this file automatically
+	and making things ugly.  So I turned that option off.  Full change
+	logs are still available through prcs.  This file will contain only
+	public-release level changelogs from now on, though.
+	
+2002-02-06  Greg Balls  <gballs@sdsc.edu>
+
+	This is the first distribution of the code.  Not much in the way
+	of a changelog yet.

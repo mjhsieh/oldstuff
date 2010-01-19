@@ -1,0 +1,221 @@
+This directory contains several utilities that may be useful for
+preparing input to and examining output from the MEAD programs.  They
+are mostly Perl scripts, so you must have Perl (preferably version 5)
+installed to use them. 
+
+PREPARING .PQR FILES
+
+The MEAD programs need ".pqr" files which are like PDB files with
+atomic charge and radius in the occupancy and B-factor columns.  In
+the past, I have been reluctant to supply any way of generating these
+files since doing so involves specifying the charge and radius
+parameters to be used, and I don't wish to recommend one
+parameterization over another.  However, the lack of such tools
+inconveniences users, so I have decided to put some previously "in
+house" tools in the MEAD release as of MEAD 1.1.8.  Two such tools are
+provided, assign_parse_radch.pl and assign_charmm_radch.pl.
+
+Automated parameter assignment, particularly charge assignment, is not
+easy to do correctly, because one cannot always tell what parameter to
+use simply by looking at the residue and atom name of each atom in
+isolation.  If a Cys is cross-linked or an Asp is protonated, or if
+any residue is at a chain terminus, the charges of some of its atoms
+will be different than otherwise.  Neither of the two programs here
+provides a complete solution to this problem.  Assign_parse_radch.pl
+uses a simple residue and atom-name lookup scheme, and relies on the
+user to put special residue names into the input PDB file to resolve
+the above ambiguities.  Assign_charmm_radch.pl relies on the CHARMM
+molecular mechanics program to resolve these issues.
+
+Assign_parse_radch.pl is intended for assigning parameters according
+the the PARSE parameterization scheme (Sitkoff, Sharp and Honig, 1994,
+J. Phys. Chem. 98:1978--1988).  The files, parse_charges and
+parse_radii, in this directory, contain the actual mappings between
+atom/residue names and the PARSE parameters.  You can change the
+parameterization by suppling your own mapping files instead.  See the
+text at the top of assign_parse_radch.pl for details on how to run
+this program and specify the mapping files to be used.  To get the
+program to run successfully, some hacking with atom and residue names,
+either in your input PDB file or in the "nametrans" associative arrays
+of the Perl script may be needed so that all lookups succeed.  You
+should also be careful about the N- and C-terminal groups, protonation
+states of ionizable residues, and Cys cross-links, all of which are
+represented by assigning special residue names in your input PDB file
+(see the parse_charge file).  Special consideration may also be needed
+if your PDB file has CHAINID info just before the residue number,
+and/or, you want to get CHAINID info into the .pqr file (It's
+optional, but sometimes needed for distinguishing atoms when
+atname:resnum isn't enough.)  In this case, take care because the PDB
+format allows that there might not be any space between chainid and
+resnum for some atoms, esp. with 4-digit residue numbers.  This messes
+up this sort of perl scripting which depends on spaces to split
+fields.  Another option if you need something like a chainid, is to
+use the segID field of the PDB format, which might be easier to parse
+out.  Either way, some perl hacking might be needed.  Someday, I should
+make this a subsidiary of pybabel!
+
+Have fun with assign_parse_radch.pl.  My thanks to Doree Sitkoff
+and Barry Honig for making it possible to include the parse_charges
+and parse_radii files, which originated in the Honig group at Columbia
+University, in the MEAD distribution.  If you use these parameters
+with MEAD in calculations for publication, please cite the above PARSE
+paper, as well as MEAD.
+
+Assign_charmm_radch.pl is intended for (guess what?) assigning CHARMM
+radii and charges in a .pqr file; but to use it, you must have the
+CHARMM program at your site.  This script is based on the file formats
+of the "academic" CHARMM rather than the commercial CHARMm from MSI.
+I don't know whether they are compatible.  Before running
+assign_charmm_radch.pl, you must have: 1) a CHARMM topology file; 2) a
+CHARMM parameter file; and 3) a CHARMM protein structure file (PSF),
+which is generated for your specific molecule by running CHARMM; and
+4) a PDB file whose atomic data is fully consistent with the PSF
+(hint: use CHARMM to generate this).  All these files must be in text,
+rather than binary format.  In principle, assign_charmm_radch.pl is
+more rigorous than assign_parse_radch.pl because it uses CHARMM to
+enforce consistency as to chain connectivity, cross-linking,
+termination, etc.  CHARMM can do this more effectively than a look-up
+scheme based on individual atom and residue names.  One possible
+problem with using modern molecular mechanics parameters for MEAD-type
+calculations is that the very small hydrogen radii that are sometimes
+used can lead to hydrogen point charges that are unreasonably close to
+the dielectric boundary.  Therefore, assign_charmm_radch.pl provides
+an escape hatch, the -hminrad flag, to specify a minimum hydrogen
+radius that overrides the CHARMM parameters.  The command syntax is,
+
+  assign_charmm_radch.pl -pdb pbd_file -psf psf_file -par par_file \
+                         -top top_file [-hminrad f] 
+
+Note that the -pdb, -psf, -par and  -top flags are all mandatory;
+only -hminrad is optional.
+
+Sanity.pl does a "sanity check" on .pqr files.  It checks whether radii
+are in a sensible range, and calculates the total charge of each
+residue (which you probably think should be an integer or close to
+one).  It is a good idea to run sanity.pl on any .pqr file before using
+it in a MEAD calculation.  Usage is just to send the .pqr file to
+standard input and examine the report given on standard output.
+
+The provision of the parameter assigning scripts in the MEAD
+distribution is only for the convenience of users and does not
+constitute an endorsement, or a statement of preference for one
+parameter set over another.
+
+DISPLAY AND ANALYSIS OF MULTIFLEX AND REDTI RESULTS
+
+The multiflex program of the MEAD suite produces a complicated
+output consisting of intrinsic pK's for each titrating site, and a
+matrix of interactions between the sites.  Subsequently, redti
+produces protonation fractions for each residue at various pH points
+and a pKhalf value for each residue derived from the site-specific
+titration curves.
+
+Comparing the results of two multiflex runs
+
+If you have run multiflex on the same molecule using the same set of
+sites, but with some difference in inputs, such as changes in
+conformation, parameters, or dielectric constants, you may want to see
+which pKint values and site--site couplings actually change, and by
+how much.  The Perl script, compare-multiflex-results.pl does this.
+For details, either run the script without arguments to get an
+explanation, or see the text at the top of the script.  This script
+needs perl version 5; it fails with version 4.
+
+Analysis of Protonation State Energetics using relto_with.pl
+
+Strong couplings between titrating groups can lead to complex and
+sometimes surprising titration behavior.  For example, if two Asp
+residues with nearly the same intrinsic pK are strongly coupled, there
+will be a two-step titration of the pair with the pK's of the steps
+separated by amount approximately equal to the coupling (in pK units).
+This may occur in the form of one or the other Asp titrating almost
+completely before the other begins, or it may involve a state in which
+the two Asp's share a proton almost equally.  Small changes in the
+intrinsic pK's or interactions with third groups can alter the proton
+sharing ratio or reverse the order of titration of the two coupled
+groups, leading to surprising changes in the appearance of
+individual-site titration curves and large changes in the pKhalf
+values derived from those curves.  For further discussion, see,
+Bashford and Gerwert (1992) J. Mol. Biol. vol. 224 pp. 473-486.
+
+The perl script, relto_with.pl, is intended to help sort out such
+situations.  It allows you to ask the question, "What is the energy
+of one set protonation states of a small subset of sites, relative to
+another set of protonation states of that same subset, with all other
+sites fixed in such-and-such protonation states?"  Its use is best
+illustrated with an example.  In this directory are the files
+test.pkint and test.g which give ASP-1 and ASP-2 with intrinsic pK
+values of 4 and a coupling of about 6 pK units between them.  It also
+includes a third residue, ASP-10, with weaker couplings to the two ASPs.
+Typing,
+
+  relto_with.pl test -of -p ASP-1 -relto -u ASP-1 -with -p ASP-2
+
+requests an analysis of the free energy of the state with ASP-1
+protonated (the -p flag indicates the protonated state) relative to
+the state with ASP-1 unprotonated (as indicated by the -u flag) with
+ASP-2 remaining in the protonated state.  Since ASP-10's state is not
+specified it is assumed to be in its neutral state.  The resulting
+output tells you that the free energy of the change is "-4 + pH * (1)"
+in pK units; so that with pH=4, the free energy is zero.  In other
+words, the pK of ASP-1 is just the intrinsic pK, 4.  Typing,
+
+  relto_with.pl test -of -p ASP-1 -relto -u ASP-1 -with -u ASP-2
+
+in which the protonation flag on ASP-2 is changed from -p to -u gives
+the energy change, "-10.04755 + pH * (1)".  In other words, if ASP-2
+is protonated, the pK of ASP-1 goes up by six units to 10.  To find the
+energy of exchanging a proton between ASP-1 and ASP-2, we can type,
+
+  relto_with.pl test -of -p ASP-1 -u ASP-2  -relto -u ASP-1 -p ASP-2 
+
+which gives zero, as expected since the intrinsic pK is zero.  This
+means that without any third residue's intervention, the two sites would
+share a proton equally in the intermediate pH range between 4 and 10.
+With the influence of the ASP-10:
+
+  relto_with.pl test -of -p ASP-1 -u ASP-2  -relto -u ASP-1 -p ASP-2 \
+     -with -u ASP-10
+
+gives a free energy change of -0.48 pK units.  In other words, the
+balance of proton sharing has been tipped in favor of ASP-1.  This
+relatively small change in energetics can lead to a change on the
+order of 6 pK units in the pKhalf value calculated from the curve,
+since the ASP-1 curve's intermediate plateau (between 4 and 6) will
+now lie above the 0.5 protonation, and ASP-2's plateau will lie below
+it.
+
+As a convenience for dealing with large numbers of "with" sites,
+a with site name can be specified as an extended regular expression
+(see the egrep man page on a Unix system).  This means that you can
+say things like, -with -p 'LYS.*', to indicate that all lysines should
+be protonated, rather than having to put a -p command for each lysine
+in your protein.  The quotes are necessary to avoid expansion of the
+'*' by the shell.  The regular expression for the site name is treated
+as being sandwiched between '^' and '$' so that for example, 'ASP-1'
+does not match both ASP-1 and ASP-10.   Regular expression expansion
+is NOT applied to site names in the -of or -relto lists.
+
+Also see the text at the top of relto_with.pl itself.
+
+Plotting Individual-Site Titration Curves with tiplot.pl
+
+The redti program gives its results in a ".pkout" file.  The first
+part of this file is simply a table of site names, pKint and pKhalf
+values.  This is followed by data points for individual-site titration
+curves for each of the titratable sites.
+
+The tiplot.pl program displays plots of these data, and optionally
+writes them to a postscript file for printing.  It uses the program,
+gnuplot, as its plotting engine, so you must have gnuplot installed to
+use it.  (Gnuplot is free software, see ftp.dartmouth.edu.)
+
+To use it type "tiplot.pl molname", where molname is the same as
+the one given to multiflex or redti.  It will display the titration
+curves to you, one after the other, and query as to whether you want
+to print them.  The last curve is the full titration curve of the
+protein.  Plots requested for printing end up in "curves.ps".
+
+As an illustration of the coupled-ASP test case discussed above, you
+may wish to run redti, and then tiplot on the "test" molname for which
+test.pkint and test.g files are given here.

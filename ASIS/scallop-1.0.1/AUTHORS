@@ -1,0 +1,5 @@
+This code is almost all the work of Greg Balls.  
+
+The kAPI immitates the KeLP sample API, and the the Bootstrap file and
+a good deal of autoconf tricks were taken from the Titanium
+(www.cs.berkeley.edu/projects/titanium) source tree.

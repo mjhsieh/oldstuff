@@ -1,0 +1,11 @@
+MEAD_shadow.cc MEAD.py : $(J_FILES) meadtypes.i MEAD.j
+	$(SWIG) $(SWIG_OPTS) -python -shadow -c++ -o MEAD_shadow.cc MEAD.j; \
+	( test -n "$(PATCH)" && $(PATCH) < $(srcdir)/MEAD_shadow.pat ) || true ; \
+	$(RM) _defs.defs ;					\
+	for f in `ls *_defs.defs` ; do			\
+	  cat $$f >> _defs.defs ;				\
+	done ;						\
+	if test -s "_defs.defs" ; then				\
+	  $(rmdefs) MEAD.py _defs.defs > MEAD_rmdefs.py ;	\
+	  mv MEAD_rmdefs.py MEAD.py ;				\
+	fi

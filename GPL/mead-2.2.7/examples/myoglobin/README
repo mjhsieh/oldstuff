@@ -1,0 +1,70 @@
+This directory contains data files and scripts that should enable you
+to reproduce some of the results in our paper, "Electrostatic
+Calculations of Side-chain pKa Values in Myoglobin and Comparison with
+NMR Data for Histidines" by Donald Bashford, David A. Case, Claudio
+Dalvit, Linda Tennant and Peter E. Wright (1993) Biochemistry vol. 23,
+pp. 8045--8056.
+
+To do the electrostatic calculations, you will need the multimead
+program from the MEAD suite, and I shall assume here that you have
+read the main MEAD README file.  To get results that match the paper,
+multimead should be compiled with the EPSAVE_OLDWAY macro defined
+(this is the default in the makefile supplied with MEAD).  To complete
+the titration calculation you will need some sort of program for
+solving the multi-site titration problem given a set of intrinsic pK
+values and site-site interactions.  I recommend the Monte-Carlo method
+as described by P. Beroza, D. R. Fredkin, M. Y. Okamura, & G. Feher
+(1991) Proc. Natl. Acad. Sci. U.S.A. 88, 5804.  This method is
+implemented in a Fortran program, mcti, by P. Beroza
+(beroza@scripps.edu).  That program is not supplied here.
+
+This directory includes ".pqr", ".st", ".ogm", ".mgm", and ".sites"
+files suitable for calculation of the COx-AmberBondi
+structure-parameter combination, which is one of the nine
+structure-parameter combinations for which calculations are reported
+in our paper cited above.  It also contains some scripts relating to
+the re-definition of pKint and site-site interaction values in order
+to accommodate the calculation of tautomerism within a
+two-state-per-site formulation of the multi-site titration problem.
+
+The basic steps required are shown in the Bourne-shell script,
+master.sh.  The scripts assume that multimead and mcti are executables
+in the current directory.  You will need about 30 Mb of disk space.
+
+First, run_mol_multimead.sh is run which runs multimead with .sites
+files corresponding to various tautomers of histidines.  Only the
+first two multimead runs take a lot of computer time (about 6 hours
+on an HP 9000/735).  The next 11 runs use data stored in the many
+.potat files to avoid calculating potentials on grids.  After this
+stage, you should have a set of .pkint files with values that match
+the information given in the supplemental tables to our paper.  The
+delta delta G sub Born and delta delta G sub back values can be found
+in the .el.out files.
+
+Next to run is make-globals.pl which is a perl script (perl is
+described in "Programming Perl" by Larry Wall and Randal L Schwartz,
+O'Reilly & Assoc., Sebastapol, 1990, and is available at most anonymous
+ftp sites that carry GNU software) that munges the output of the
+various multimead runs into global .pkint and .g files for the sake of
+the tautomerism problem.  See above and see the comments in
+make-globals.pl.
+
+The next step, runmcti.sh, won't work unless you have the Beroza
+program mcti (see above).  The previous script, make-globals.pl,
+produces output that mcti can read, except that I have made a minor
+modification to my own copy of mcti to allow longer residue names which
+incorporate the residue number information.  This step takes about an
+hour on the HP 9000/735.
+
+Collect-curves.pl rearranges the output of mcti and de-munges the
+protonation populations of histidines so as to produce titration
+curves, pkhalf and Hill plot information on all sites and tautomerism
+curves for the histidines.
+
+Finally a grep over the curve file collects the pkhalf information
+into pkhalf.out.  The numbers here should match the numbers for
+COx-AmberBondi given in Tables IV and V of our paper.
+
+Have fun,
+Don Bashford
+bashford@scripps.edu

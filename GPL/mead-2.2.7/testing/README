@@ -1,0 +1,26 @@
+[$Id: README,v 1.1 2000/11/01 07:19:32 ttnttn Exp $]
+
+This directory implements a few simple tests for MEAD.  These
+are called "short" because they are by no means comprehensive,
+but they are pretty quick.
+
+Running "make check" runs the tests and diffs the results against
+files in subdir "expect".  The diffs should be only in file names and
+least significant one or two digits of floats.  The "expect" files
+were generated on i686 running Linux 2.2 and compiling MEAD [VERSION]
+with gcc-2.95.2.  The numbers are consistent with results produced by
+MEAD-0.2.3.  [Is this still true?]
+
+
+At the moment the following tests are here:
+
+* Solvate is run for a sphere of radius 2.0 and and unit charnge and
+epsin values of both 1.0 and 4.0.  (The analytic value is -81.923 for
+any epsin)
+
+* Solinprot is run for a "molecule" consisting of a single charge in a 2
+Angstrom sphere of eps=1 and a "protein" that has a 5 A radius and a
+charge of -1 located 4 A from the origin and eps=4.  (The analytical
+result is -75.08.)
+
+* Multiflex is run for Glu7 of lysozyme, single conformation.

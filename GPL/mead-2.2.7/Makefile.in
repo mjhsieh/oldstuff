@@ -1,0 +1,53 @@
+# mead Makefile
+
+PACKAGE_VERSION	= @PACKAGE_VERSION@
+PACKAGE_TARNAME	= @PACKAGE_TARNAME@
+
+SHELL		= /bin/sh
+
+srcdir		= @srcdir@
+VPATH		= @srcdir@
+
+top_srcdir	= @top_srcdir@
+
+PYTHONINC	= @PYTHONINC@
+MEADVERSION     = @MEADVERSION@
+subdirs		= libmead apps
+
+
+all:
+	for dir in $(subdirs) ; do ( cd $$dir; $(MAKE) -f Makefile ) ; done
+	test -z "$(PYTHONINC)" || ( cd swig; $(MAKE) )
+
+check:
+	cd testing ; $(MAKE) check
+
+.PHONY: clean distclean force all
+force:
+clean:
+	-cd libmead ; $(MAKE) clean
+	-cd librx ; $(MAKE) -f Makefile clean
+	-cd apps ; $(MAKE) clean
+	-cd testing ; $(MAKE) clean
+	-test -z "$(PYTHONINC)" || ( cd swig; $(MAKE) clean )
+	-test -d libdevel && (cd libdevel ; $(MAKE) clean)
+
+distclean:
+	-cd libmead ; $(MAKE) distclean
+	-cd librx ; $(MAKE) -f Makefile distclean
+	-cd apps ; $(MAKE) distclean
+	-cd testing ; $(MAKE) distclean
+	-test -z "$(PYTHONINC)" || ( cd swig ; $(MAKE) distclean )
+	-test -d libdevel && (cd libdevel ; $(MAKE) distclean)
+	-rm Makefile config.status config.log config.cache MEAD
+
+install: all
+	for d in libmead apps ; do ( cd $$d ; $(MAKE) install ) ; done
+	test -z "$(PYTHONINC)" || ( cd swig ; $(MAKE) install )
+
+uninstall:
+	for d in libmead apps ; do ( cd $$d ; $(MAKE) uninstall ) ; done
+	test -z "$(PYTHONINC)" || ( cd swig ; $(MAKE) uninstall )
+
+
+# Makefile ends here

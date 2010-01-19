@@ -1,0 +1,588 @@
+A Guide to Wrapping C++ classes and methods for Python
+------------------------------------------------------
+
+John Bergsma
+June 30, 2001
+
+Introduction
+------------
+
+The goal is to prepare an interface definition file for SWIG (Simplified
+Wrapper and Interface Generator) which creates Python "shadow" classes
+providing an interface to the C++ objects through the Python Extension API.
+
+The emacs list program swigpp.el extracts all the class and function
+definitions that you want to wrap, while the mkoperator.pl and mkoverloaded.pl
+Perl scripps deal with operator overloading, function overloading, and
+multiply defined functions. The result is a SWIG interface file suitable for
+processing by SWIG to produce the wrapped module.
+
+Much of the process of wrapping is automated, and you can wrap just about
+anything you want, but there are certain guidelines to follow to ensure that
+the wrapping is successful.
+
+If you run into problems consult this guide, because chances are
+there is a particular way to specify what you want. In addition, the
+SWIG Reference Manual is a valuable resource that you should be
+familiar with to understand some of the more advanced features of
+wrapping C++ code for Python.
+
+Preprocessing Using Swigpp.el
+-----------------------------
+
+The first step in the wrapping process is to insert directives into the
+C++ header file to indicate classes, methods, and attributes that are
+to be wrapped.
+
+Annotations are specific C++ "//" comments that serve as directives to the
+wrapping program.  Here is a comprehensive table:
+
+  directive     placement       meaning
+  ----------------------------------------------------------------------------
+  //!wrap!      line before     Consider class `Foo' for wrapping.  Omission
+                "class Foo"     means don't wrap `Foo' no matter what.
+
+  //!nowrap!    line before     If a class is to be wrapped, by default each
+                member "Bar"    public member is wrapped.  This directive
+                inside class    explicitly excludes `Bar', which can be either
+                decl            a function member or a data member.  Each use
+                                of `//!nowrap!' applies to one member only.
+
+  //!nowrap!+   lines around    All class members textually between these
+  //!nowrap!-   one or more     directives are excluded from being wrapped.
+                members inside  The same effect can be accomplished using
+                class decl      multiple `//!nowrap!' directives.
+  ----------------------------------------------------------------------------
+
+A header file can also contain text to be directly included in the generated
+SWIG interface file by surrounding that text w/ the C preprocessor constructs:
+
+        #if SWIGPP_LITERAL_INCLUDE
+        #endif // SWIGPP_LITERAL_INCLUDE
+
+Note that the terminating `endif' must be followed by the C++ comment.  This
+is to fully disambiguate it from other possible `endif' instances.
+
+Swigpp.el Special Notes
+-----------------------
+
+Templates:
+
+If you want template types to pass swigpp.el they must be typedef'ed.
+For example, say you want to wrap the following class:
+
+//!wrap!
+class ManyPointCharge : public ChargeDist_lett, public list<PointCharge> {
+public:
+  ManyPointCharge();
+  ManyPointCharge(const list<PointCharge>& lpc);
+  .
+  .
+  .
+};
+
+Must be typedef'ed so that swigpp.el will include it in the base class
+definition.
+
+Also note that it is passed as an argument to one of the
+constructors, and will require a typemap definition to convert between
+a C++ list object and a Python list object (see the section on typemaps).
+
+Thus, it should be defined as follows:
+
+typedef std::list<PointCharge> list_PointCharge;
+
+//!wrap!
+class ManyPointCharge : public ChargeDist_lett, public list_PointCharge {
+public:
+  ManyPointCharge();
+  ManyPointCharge(const list_PointCharge& lpc);
+  .
+  .
+  .
+};
+
+Default Arguments:
+
+Default argument values are removed by swigpp.el. If you want the Python
+shadow class to have them, then the function needs to be specially defined
+using %addmethods and %wrapper.
+
+For example, this constructor takes a default argument, maxterm:
+
+#define ANALYSPHERE_MAXTERM 50
+
+//!wrap!
+class AnalySphere : public AnalyticEP {
+public:
+  //!nowrap!
+  AnalySphere(DielectricSphere*, ChargeDist_lett*, ElySphere*,
+        int maxterm=ANALYSPHERE_MAXTERM);  // No. of polynomial terms
+  .
+  .
+  .
+};
+
+We have specified not to wrap this here, but we will specially define it later
+in the %addmethods and %wrapper sections.
+
+Here are the specially defined constructors that can be called from Python
+either with or without the optional maxterm arguments. If called without,
+the default value is supplied.
+
+#if SWIGPP_LITERAL_INCLUDE
+
+%addmethods AnalySphere {
+//
+// swigpp.el strips the default value of the maxterm argument in the
+// above constructor. So, wrap this constructor with the default
+// argument both present and removed.
+  AnalySphere(DielectricSphere*, ChargeDist_lett*, ElySphere*, int);
+  AnalySphere(DielectricSphere*, ChargeDist_lett*, ElySphere*);
+};
+
+%wrapper %{
+
+BEGIN_CPLUSPLUS_SECTION
+
+// Provide the wrapped constructors.
+AnalySphere * new_AnalySphere(DielectricSphere* ds, ChargeDist_lett* cd, ElySphere* esp, int l){
+  return new AnalySphere(ds, cd, esp, l);
+}
+AnalySphere * new_AnalySphere(DielectricSphere* ds, ChargeDist_lett* cd, ElySphere* esp){
+  return new AnalySphere(ds, cd, esp, ANALYSPHERE_MAXTERM);
+}
+
+END_CPLUSPLUS_SECTION
+
+%}
+
+#endif // SWIGPP_LITERAL_INCLUDE
+
+Note the use of the BEGIN_CPLUSPLUS_SECTION/END_CPLUSPLUS_SECTION macros
+which are required to indicate this is a C++ section in the wrapping module.
+The special constructors have new_ prepended to their name because this is
+the name that the internal SWIG wrapper functions expect for constructors.
+
+
+Swigpp Ignores:
+
+Swigpp ignores private members and all non-member functions. You have to
+wrap these specially.
+
+
+Operator Overloading
+--------------------
+
+Just about any C++ operator can be overloaded for Python. Although C++
+operators can be member or non-member functions, Python operators must
+all be member functions. The Perl script mkoperators.pl knows how to
+handle this.
+
+The C++ operator op (a, b) is converted to the Python form a.__op__(b).
+Generally, you will specify the former when wrapping C++ operators,
+but you can define them using the Python form too!
+
+Member Operators:
+
+First consider the usual case of wrapping member operators. For example:
+
+//!wrap!
+class Coord {
+public:
+  Coord ();
+  ~Coord () {}
+  //!nowrap!
+  Coord& operator= (const Coord& c);
+  Coord& operator+= (const Coord& a);
+  Coord& operator-= (const Coord& a);
+  Coord& operator*= (float a);
+  Coord& operator/= (float a);
+  Coord operator- () const;
+  int operator> (const Coord& a) const;
+  int operator< (const Coord& a) const;
+  .
+  .
+  .
+};
+
+These will wrap automatically, although wrapping operator= is not supported.
+Internally these become calls to self.__op__(a), where self is the C++
+equivalent of the this pointer.
+
+Non-member Operators:
+
+Non-member operators can be wrapped too. They need to go into the %addmethods
+section. For example, the non-member operators of Coord can be wrapped as
+member operators for Python as follows:
+
+#if SWIGPP_LITERAL_INCLUDE
+
+// Wrap these as member functions for Python
+%addmethods Coord {
+  Coord operator+ (const Coord& a, const Coord& b);
+  Coord operator- (const Coord& a, const Coord& b);
+  Coord operator* (const Coord& a, float b);
+  Coord operator* (float b, const Coord& a);
+  float operator* (const Coord& a, const Coord& b);
+  Coord operator/ (const Coord& a, float b);
+  bool operator == (const Coord& a, const Coord& b);
+  bool operator != (const Coord& a, const Coord& b);
+};
+
+#endif // SWIGPP_LITERAL_INCLUDE
+
+So, for example, operator+ (a, b) becomes a.__add__(b).
+Note that the reverse operator is recognized. For example, there are
+two operator* for multiplying a Coord by a float, which can appear as
+the first argument or the second:
+
+operator* (const Coord& a, float b) becomes a.__mul__(b), while
+operator* (float b, const Coord& a) becomes a.__rmul__(b)
+
+Wrapping Python operators:
+
+You can define the Python special operator methods directly if you
+have a special implementation of an operator that you would like
+Python to use, but not C++.
+
+For example, there is a C++ function called addChargeDist for adding two charge
+distribution objects, but no C++ operator exists for this. Simply provide
+the declarations in the %addmethods sections, and the definitions in the
+%wrapper definition as follows.
+
+#if SWIGPP_LITERAL_INCLUDE
+
+%addmethods ManyPointCharge {
+// The ways of adding a ManyPointCharge with all other ChargeDist's.
+// No __radd__ is needed since Python sees all these as InstanceType's
+//
+  ManyPointCharge* __add__ (const AtomChargeSet& acs);
+  ManyPointCharge* __add__ (const ManyPointCharge& mpc);
+  ManyPointCharge* __add__ (const OnePointCharge& opc);
+};
+
+%wrapper %{
+
+BEGIN_CPLUSPLUS_SECTION
+
+// Define our special __add__ functions here
+ManyPointCharge * ManyPointCharge___add__ (const ManyPointCharge *mpc, const AtomChargeSet& acs)
+{ return ::addChargeDist(acs, *mpc); }
+ManyPointCharge * ManyPointCharge___add__ (const ManyPointCharge *mpc1, const ManyPointCharge& mpc2)
+{ return ::addChargeDist(*mpc1, mpc2); }
+ManyPointCharge * ManyPointCharge___add__ (const ManyPointCharge *mpc, const OnePointCharge& opc)
+{ return ::addChargeDist(*mpc, opc); }
+
+END_CPLUSPLUS_SECTION
+
+%}
+
+#endif // SWIGPP_LITERAL_INCLUDE
+
+
+Automatically Defined Operators:
+
+Certain operators will be generated automatically.
+
+If operator- is defined, then the complementary __pos__ operator will
+be generated.
+
+If operator==, operator<, and operator> are defined, then the __cmp__
+operator will be automatically generated using these operators.
+
+If operator[] is defined then both the __getitem__ and __setitem__
+functions will be generated.
+
+Operator Limitations:
+
+Certain restrictions are imposed on operator overloading.
+
+Operator= is not supported.
+
+Operator[] is restricted to one argument and cannot be multiply defined. It
+assigns by value and returns by reference.
+
+Operator() is restricted to a maximum of 2 arguments, but it can be multiply
+defined.
+
+
+Function Overloading
+--------------------
+
+Like operator overloading most cases are handled automatically, but there
+occassionally arises some special needs that can be dealt with.
+
+Some general rules to follow when wrapping and overloading functions:
+
+1) Don't wrap methods that return references to class objects because the
+   __del__ (destructor) will be called on them twice! The exceptions are
+   operators which are OK to return references.
+
+2) Mulitply defined functions to be wrapped must have only the declaration
+   appear and must be all on one line. Their definitions must be elsewhere.
+
+For example, the following multiply defined methods need to be wrapped
+as follows:
+
+//!wrap!
+class Foo {
+  .
+  .
+  .
+public:
+  myMethod(int arg1) {
+    // do somthing
+    return;
+  }
+  myMethod(float arg1);
+  myMethod(char *arg1);
+  .
+  .
+  .
+};
+
+Foo::myMethod(float arg1) {
+  // do something
+  return;
+}
+
+Foo::myMethod(char *arg1) {
+  // do something
+  return;
+}
+
+While it is OK for the first function to be fully defined, the multiply defined
+versions must have only their definition appear in the class declaration in
+order to be wrapped properly.
+
+This rule also applies if you put these in %addmethods. Thus, the following
+would be correct:
+
+#if SWIGPP_LITERAL_INCLUDE
+
+%addmethods Foo {
+  myMethod(int arg1) {
+    // do somthing
+    return;
+  }
+  myMethod(float arg1);
+  myMethod(char *arg1);
+};
+
+// Note that you could have defined the methods in the %wrapper section
+// if they were not in the C++ sources. Thus, you would have the following:
+
+%wrapper %{
+
+BEGIN_CPLUSPLUS_SECTION
+
+Foo_myMethod(float arg1) {
+  // do something
+  return;
+}
+
+Foo_myMethod(char *arg1) {
+  // do something
+  return;
+}
+
+END_CPLUSPLUS_SECTION
+
+%}
+
+#endif // SWIGPP_LITERAL_INCLUDE
+
+
+Re-Wrapping:
+
+Sometime you want to wrap a method but it is in a form that is not suitable.
+In this case you would re-wrap the function and provide the appropriate
+behavior using the self variable to refer to the class object.
+
+For example, consider a function that writes to an ostream.
+
+//!wrap!
+class Foo {
+public:
+  Foo();
+  ~Foo() {}
+  //!nowrap!
+  ostream& print(ostream& ost);
+};
+
+You could wrap this as follows to print to the standard out.
+(Note change of name from print to write, since Python already has
+a built-in print function):
+
+#if SWIGPP_LITERAL_INCLUDE
+
+%addmethods Foo {
+  void write() { self->print(cout); }
+};
+
+#endif // SWIGPP_LITERAL_INCLUDE
+
+
+Constructors:
+
+Constructors can be multiply defined like any other function. There are a
+few special rules for wrapping constructors that need to be followed:
+
+1) You MUST have a destructor if you wrap any constructors. This is because
+   Python manages the construction and destruction of objects using new/delete
+   and a destructor must be wrapped in order to tell Python that the object
+   can be delete. A simple empty destructor will do:
+
+   class Foo {
+   public:
+      Foo();
+      ~Foo() {}
+   };
+
+2) Don't inline the constructor definition in the class. It must be defined
+   external to the class declaration.
+
+3) Otherwise, follow the rules for function overloading.
+
+Special Notes for constructors:
+
+If you wrap your own constructor definitions as in the AnalySphere example
+above, use new_ in front of the name for the %wrapper definition and return
+a pointer to the class object.
+
+If you define a copy constructor then the __deepcopy__ Python method will
+automatically be defined.
+
+
+Non-Member functions:
+
+Since swigpp.el does not recognize non-member functions, you must define them
+using SWIG directives.
+
+For example, to wrap the following non-member function use the following:
+
+#if SWIGPP_LITERAL_INCLUDE
+
+%{
+myFunction(char *arg1) {
+  // do something
+  return;
+}
+%}
+
+#endif // SWIGPP_LITERAL_INCLUDE
+
+Warning, do not use %inline to wrap functions due to a bug in SWIG that
+causes multiply defined functions to be missed.
+
+
+Typemaps
+--------
+
+Typemaps are a way for SWIG wrapped functions to marshall data objects between
+C++ and Python. Most of the typemaps are for mapping between C++ standard
+template library (stl) objects (vector, list, dict) and python objects
+(list, dict). These typmaps are defined as macros, which are easily applied
+to new data types.
+
+For example, to map a vector<MyType> to a Python list in a function call
+
+myFunction(vector<MyType>* v);
+
+you would define a new typemap in meadtypes.i as follows:
+
+%{
+typedef std::vector<MyType> vector_MyType;
+%}
+shadowClassPtr(MyType)
+VECTOR_PTR_IN(MyType)
+VECTOR_ARGOUT(MyType)
+
+To make this work properly, if myFunction is a non-member function you
+need to wrap it in it's own method so that the typemap gets applied as follows:
+
+#if SWIGPP_LITERAL_INCLUDE
+
+%{
+int callFunction(vector_MyType * v) {
+  myFunction(v);
+  return 1;
+}
+%}
+
+callFunction(vector_MyType * v);
+
+#endif // SWIGPP_LITERAL_INCLUDE
+
+Warning, do not use %inline to wrap functions due to a bug in SWIG that
+causes multiply defined functions to be missed.
+
+
+Python_funcs.h
+--------------
+
+To make a wrapped class take on the properties of a Python list or dict
+use the template functions defined in Python_funcs.h and the typemaps
+define in meadtypes.i.
+
+For example, add these methods to MyClass to emulate a Python list:
+
+class MyClass : public list<MyType> {
+public:
+  .
+  .
+  .
+};
+
+#if SWIGPP_LITERAL_INCLUDE
+
+%addmethods MyClass {
+//
+// Methods to emulate a Python list
+//
+// Append an item
+  void append(const MyType& i) { list_append(self, i); }
+// Length of list
+  int __len__ () { return list___len__(self); }
+// Add all items to end of list
+  void extend (const MyClass& mc) { list_extend(self, mc); }
+// Number of occurrences of item in list
+  int count (const MyType& i) { return list_count(self, i); }
+// Index of first occurrence of item
+  int index (const MyType& i) { return list_index(self, i); }
+// Insert item at index.
+  void insert (int index, const MyType& i) { list_insert(self, index, i); }
+// Remove first occurrence of item
+  void remove (const MyType& i) { list_remove(self, i); }
+// Get item at index
+  MyType __getitem__ (int index) { return list___getitem__(self, index); }
+// Set item at index to value
+  void __setitem__ (int index, const MyType& value) { list___setitem__(self, index, value); }
+// Delete item at index
+  void __delitem__ (int index) { list___delitem__(self, index); }
+};
+
+#endif // SWIGPP_LITERAL_INCLUDE
+
+and these typemaps to meadtypes.i
+
+%{
+typedef std::list<MyType> list_MyType
+%}
+shadowClassPtr(MyType)
+LIST_IN(MyType)
+
+
+Similar methods are available for Python dict emulation.
+
+Note that typemaps can be somewhat tricky to create, especially if you
+need to pass references to list and dict items. For that purpose a few
+special typemaps exists that pass lists of pointers between C++ and
+python. For example:
+
+VECTOR_PTR_IN
+LIST_PTR_OUT
+
+The LIST_PTR_OUT typemap is used in the dict emulation functions so that
+the values() method of a Python dict returns references to the dict elements.

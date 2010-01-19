@@ -1,0 +1,67 @@
+# apps/libmso Makefile
+
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+bindir		= @bindir@
+
+mkinstalldirs	= ../$(top_srcdir)/mkinstalldirs
+PYSITEPKGDIR	= @PYSITEPKGDIR@
+mead_inst_dir	= $(PYSITEPKGDIR)/MEAD
+
+LOCALINCS	= -I$(top_srcdir) -I$(srcdir)
+
+LOCALLIBS	= -L../../libmead -lmead $(LIBDEVEL)
+
+CXX_OPTFLAGS	= @CXX_OPTFLAGS@
+CXX_DEBUGFLAGS	= @CXX_DEBUGFLAGS@
+# In Makefile.in the CC_*FLAGS are taken from the CXX_*FLAGS
+# configuration output varables.  Don't see any reason they should differ.
+CC_OPTFLAGS	= @CXX_OPTFLAGS@
+CC_DEBUGFLAGS	= @CXX_DEBUGFLAGS@
+
+CXX		= @CXX@
+CC		= @CC@
+CPPFLAGS	= @CPPFLAGS@
+CXX_DEFS	= @CXX_DEFS@
+
+CXX_AR_CMD      = @CXX_AR_CMD@
+RANLIB          = @RANLIB@
+
+VPATH		= @srcdir@
+INSTALL		= @INSTALL@
+INSTALL_PROGRAM	= @INSTALL_PROGRAM@
+
+ALL_CPPFLAGS	= -I. $(LOCALINCS) $(CPPFLAGS) $(REGEX_CPP) $(CXX_DEFS)
+ALL_CXXFLAGS	= $(CXX_OPTFLAGS) $(CXX_DEBUGFLAGS)
+ALL_CFLAGS	= $(CC_DEBUGFLAGS) $(CC_OPTFLAGS)
+
+.SUFFIXES:
+.SUFFIXES: .cc .o
+
+# The rule for making .o files from C++ source files:
+@CXX_O_RULE@
+
+default: libmso.a
+
+multisite_objs = MultiFlexiSiteMol.o FlexiSite.o\
+    MultiSiteMolecule.o SiteInMulti.o AtomRegex.o SiteUtil.o
+
+
+libmso.a: $(multisite_objs)
+	rm -f t$@
+	$(CXX_AR_CMD) t$@ $(multisite_objs) @REPO_FILES_IF_NEEDED@
+	$(RANLIB) t$@
+	rm -f $@ && mv t$@ $@
+
+clean:
+	-$(RM) *.o *.a
+
+distclean: clean
+	-$(RM) Makefile
+
+
+
+# Makefile ends here

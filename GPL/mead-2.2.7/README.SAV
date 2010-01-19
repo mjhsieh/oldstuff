@@ -1,0 +1,93 @@
+MEAD includes a class SolvAccVol for dealing with the problem of
+designating points on a lattice as either being inside or outside the
+"solvent accessible volume", which we define as the volume bounded by
+the "molecular surface" as defined by Connolly.  For details see, You
+and Bashford (1995b), J. Comp. Chem. vol. 16, pp. 743-757.
+
+This file documents sav-driver, which is a demonstration program for
+the SAV facility and which was used to generate the results reported
+in the paper cited above.
+
+RUNNING sav-driver
+
+   The simplest way to run the program to cd to the solvacc directory
+and do, "../sav-driver trna".
+The program will first read the file, trna.pqr, which contains
+atomic coordinates and radii for tRNA in a PDB-like format,
+and store it internally in an AtomSet object.  This AtomSet
+is then used to initialize a SolvAccVol object.  Next the program
+will attempt to read an analytical description of the solvent
+accessible volume from a binary file with a name such as,
+trna_Rprob_1.4_anal_SolvAccVol.dat.  Failing that it will look for an
+ASCII file such as, trna_Rprob_1.4_anal_SolvAccVol.txt; and failing
+that it will calculate the analytical description of the SolvAccVol
+from the initial AtomSet data by invoking the SolvAccVol member
+function, anal_calc.  In the latter case, CPU timings will be reported
+for the invocation of anal_calc, and a binary file containing the
+analytical representation will be written to the disk so that it can
+be found by the program next time.  Once the analytical representation
+has been obtained, sav-driver will invoke the calc_cuberep member
+function of SolvAccVol to calculate the accessibility of points on a
+41x41x41 lattice with one Angstrom spacing centered on the geometric
+center of the tRNA molecule.  The lattice parameters can be altered by
+command-line options (see below).  Timings for the calc_cuberep
+invocation will be reported, but the lattice will not be written to
+disk by default unless specifically requested by command-line options
+(see below).
+
+   Here is a more detailed description, including command line
+options:
+
+   sav-driver [options] molname
+
+   The program will look for a file, molname.pqr, from which to read
+atomic coordinates and radii.  It must be in the .pqr format as
+described in the main README file of MEAD.
+
+Here is the list of valid options.  In what follows, ``i'' denotes an
+integer and ``f'' a float.
+
+   -dimension i       The lattice calculated by calc_cuberep will 
+                      be i cubed.  The default is 41
+
+   -spacing f         The lattice will have a spacing of f.  Default
+                      is 1.0.
+
+   -center "f f f"    The center of the lattice will be the point,
+                      (f, f, f).   The three floats must be surrounded
+                      by single or double quotes.  The forms, "f, f, f"
+                      or "(f, f, f)" are also OK.  Default is to center
+                      on the geometric center of the molecule.
+
+   -solrad f          The solvent probe radius is set to f.  The default
+                      is 1.4.
+   
+   -OutputLattice filename  Write a list of inaccessible lattice points
+                            to the file, filename.  Default is to have
+                            no output of lattice.
+
+   -ascii             Write the analytical representation of the accessible
+                      volume as a human-readable ASCII file.  The default
+                      is to produce a binary file.  Note that a file
+                      is produced only if invocation anal_calc is
+                      necessitated by absence of file data.  So it
+                      may be necessary to remove existing SolvAccVol
+                      files to get a new one.
+
+   -blab[123]         Be more verbose with -blab3 being the most verbose.
+                      Default is to report not much more than timings.
+
+
+  [There are also some options pertaining to backwards compatibility
+   with earlier in-house versions.  See the sav-driver.cc source.]
+
+The file sav-test.sh contains a set of sav-driver invocations
+that will reproduce the results of our paper for tRNA.
+
+PLEASE NOTE:
+We have found that the CPU timings obtained can vary considerably
+depending on system software configuration, OS version, compiler
+version, other programs running, and so on.  So the results you
+get will probably not be the same as our paper, but should be
+consistent with the general trends reported.
+

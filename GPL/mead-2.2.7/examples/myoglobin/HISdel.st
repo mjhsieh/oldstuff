@@ -1,0 +1,12 @@
+7.00
+HIS NE2   -.058    -.502
+HIS HB2   .086    .038
+HIS HB3   .086    .038
+HIS CG   .058   -.032
+HIS ND1   -.058    -.146
+HIS HND   .306    .228
+HIS CE1   .114    .241
+HIS HE   .158    .036
+HIS HNE   .306    .000
+HIS CD2   -.037     .195
+HIS HD   .153    .018

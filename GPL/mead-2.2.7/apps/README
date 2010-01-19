@@ -1,0 +1,3 @@
+This directory contains applications of the MEAD library.
+Each app is in its own subdirectory.  If you add or delete
+a directory, update the `AC_OUTPUT' form in ../configure.in.

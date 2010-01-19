@@ -1,0 +1,268 @@
+dnl configure.in for MEAD				-*- m4 -*-
+
+AC_REVISION($Revision: 1.54 $)
+AC_INIT(MEAD, 2.2.7, Don.Bashford@stjude.org, mead)
+AC_CONFIG_SRCDIR(libmead/globals.cc)
+
+dnl This is the definitive MEAD version.
+MEADVERSION=2.2.7
+AC_SUBST(MEADVERSION)
+
+PYTHONINC=
+
+AC_ARG_WITH(python,
+  [  --with-python   Build Python interface.  Requires NumPy.],
+  [if test x$with_python != xno; then
+     AC_PYTHON_NUMPY
+   fi])
+
+MEAD_SHADOW_RULE=$srcdir/swig/copy_shadow.rule
+
+
+#BUGS: makefile rule/commands get reset whether or not SWIG et al. are found
+AC_ARG_WITH(swig,
+  [  --with-swig   Generate Python wrapping using swig  ],
+  [if test x$with_swig != xno; then
+     if test x$with_python = x; then
+       AC_PYTHON_NUMPY
+     fi
+     if test x$ac_python_numpy_p = xyes; then
+       AC_PROG_SWIG
+       AC_PROG_PERL
+       AC_PROG_PATCH
+       MEAD_SHADOW_RULE=$srcdir/swig/swig_shadow.rule
+     else 
+       AC_MSG_WARN([--with-swig fails. Since no python API, no wrapping either.])
+     fi
+   else
+     AC_MSG_WARN([Can't turn on --with-swig while turning off --with-python.])
+     AC_MSG_WARN([No swig wrapping will be done.])
+   fi
+])
+
+
+dnl checks for programs
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_RANLIB
+AC_PROG_INSTALL
+
+AC_LANG_CPLUSPLUS
+
+dnl echo "LIBS = $LIBS"
+
+dnl Checks for header files.
+
+dnl Some stuff for rx
+AC_LANG_SAVE
+CXX_DEFS_SAVED=$DEFS
+DEFS=""
+AC_LANG_C
+AC_HEADER_STDC
+AC_CHECK_HEADERS(malloc.h strings.h)
+AC_TYPE_SIZE_T
+AC_LANG_RESTORE
+C_DEFS=$DEFS
+DEFS=CXX_DEFS_SAVED
+
+dnl Checks for compiler characteristics
+
+
+cxx_suffix=.cc
+AC_MSG_CHECKING(whether C++ compiler supports $cxx_suffix suffix)
+CXX_O_RULE=cxxorule.in
+rm -f $CXX_O_RULE
+echo ${cxx_suffix}.o: >$CXX_O_RULE
+cat >conftest$cxx_suffix <<EOF
+main() {return(0);}
+EOF
+echo "Now the C++ compilation to test support of $cxx_suffix suffix" 1>&5
+if $CXX -c $CXXFLAGS $CPPFLAGS conftest$cxx_suffix 2>&5 \
+  && test -f conftest.o; then
+     AC_MSG_RESULT(yes)
+     echo '	$(CXX) -c $(ALL_CPPFLAGS) $(ALL_CXXFLAGS) $<' >>$CXX_O_RULE
+else
+  AC_MSG_RESULT(no)
+     echo '	ln -s $< $*.C ; \' >>$CXX_O_RULE
+     echo '   $(CXX) -c $(ALL_CPPFLAGS) $(ALL_CXXFLAGS) $*.C ; \' >>$CXX_O_RULE
+     echo '   rm $*.C' >>$CXX_O_RULE
+  AC_MSG_WARN([C++ compiler, $CXX, does not seem to recognize the $cxx_suffix
+     suffix.  A workaround will be provided in the Makefile, but I do not know
+     if it will work])
+fi
+rm -f conftest*
+AC_SUBST_FILE(CXX_O_RULE)
+dnl AC_OUTPUT_COMMANDS([rm -f cxxorule.in])
+
+
+dnl Test compiler support for bool.  Some SGI compilers don't support it
+dnl natively, but use a header file, stl_config.h, so bool doesn't break
+dnl their standard library headers.
+AC_CHECK_HEADERS(stl_config.h, [stl_config='#include <stl_config.h>'],
+                               [stl_config=''])
+AC_MSG_CHECKING(whether C++ compiler has built-in booleans)
+AC_TRY_COMPILE($stl_config , bool x=true; if (x==false) return 1,
+               AC_MSG_RESULT(yes),
+               [CXX_DEFS="$CXX_DEFS -Dbool=int -Dtrue=1 -Dfalse=0"]
+               AC_MSG_RESULT(no)
+               AC_MSG_WARN(Faking booleans with preprecessor defines.  Risky.))
+
+dnl Process the --[enable|disable]-exceptions flag (default is enabled)
+
+AC_ARG_ENABLE(exceptions,
+   [ --[enable|disable]-exceptions    use exceptions? (default: yes)],
+   if test "$enableval" = y || test "$enableval" = yes ; then
+      use_exceptions=true; 
+   else
+      use_exceptions=false;
+   fi,
+   use_exceptions=true)
+
+if test "$use_exceptions" = true; then
+  EXTRA_CPPFLAGS="$EXTRA_CPPFLAGS -DUSE_EXCEPTIONS"
+fi
+
+   
+dnl Checks for library functions
+
+AC_CANONICAL_HOST
+dnl Some compilers mess up Pair.cc compilation at higher level optimiziation
+
+CXX_AR_CMD="ar rc"
+CXX_NOOPTFLAGS=""		# when we want to supress optimization
+if test x$GXX = xyes; then
+  CXX_OPTFLAGS=-O2
+  CXX_NOOPTFLAGS=-O0
+  CXX_DEBUGFLAGS=-g
+  CXX_SHAREDFLAGS="-fpic -shared"
+elif test x$CXX = xKCC; then
+  CXX_OPTFLAGS=-O2
+  CXX_DEBUGFLAGS="-g"
+  CXX_SHAREDFLAGS="ERROR-FIXME"
+  EXTRA_CPPFLAGS="$EXTRA_CPPFLAGS"
+else					# vendor's compiler
+  CXX_DEBUGFLAGS="-g"
+  REPO_FILES_IF_NEEDED=''
+  echo "host_os = $host_os"
+  case $host_os in
+     hpux*) CXX_OPTFLAGS=+O2
+            CXX_SHAREDFLAGS=ERROR-FIXME
+            ;;
+     irix5*) CXX_OPTFLAGS=-O2
+	     CXX_NOOPTFLAGS=-O0
+             CXX_SHAREDFLAGS=ERROR-FIXME
+             ;;
+     irix6*) echo "this is an irix6"
+	     cpu_type=`/sbin/hinv -t cpu | head -1 | awk '{print $3}'`
+             echo "CPU type: $cpu_type"
+	     CXX_ARCHFLAGS=""
+             case $cpu_type in
+               R5???|R8???|R10???) echo "this is mips4 (but use mips3 flag)"; CXX_ARCHFLAGS="-n32 -mips3" ;;
+               R4???) echo "this is mips3"; CXX_ARCHFLAGS="-mips3" ;;
+               *)     echo "don't know arch, will take compiler defualts" ;;
+             esac
+	     CXX_OPTFLAGS="-O2 $CXX_ARCHFLAGS -LANG:std"
+	     CXX_NOOPTFLAGS="-O0 $CXX_ARCHFLAGS -LANG:std"
+             CXX_AR_CMD='$(CXX) -ar -o'
+	     CXX_SHAREDFLAGS="-shared"
+             ;;
+     osf4*) REPO_FILES_IF_NEEDED='cxx_repository/*.o'
+            CXX_OPTFLAGS=-O2
+            CXX_SHAREDFLAGS=ERROR-FIXME
+            ;;
+     solaris2*) if test x`uname -m` = xsun4u; then
+                   CXX_OPTFLAGS="-O3 -xtarget=ultra"
+                else
+                   CXX_OPTFLAGS=-O3
+                fi
+                CXX_AR_CMD='$(CXX) -xar -o'
+                CXX_SHAREDFLAGS="-Kpic -G"
+		CXX_DYNLIB_FLAGS="-lCrun -lCstd"
+		;;
+  esac
+fi
+# echo "CXX_OPTFLAGS = $CXX_OPTFLAGS"
+# echo "CXX_SHAREDFLAGS = $CXX_SHAREDFLAGS"
+# echo "REPO_FILES_IF_NEEDED = $REPO_FILES_IF_NEEDED"
+# echo "CXX_AR_CMD = $CXX_AR_CMD"
+
+dnl Get don't set CXX_SHAREDFLAGS unless using python.
+
+if test x$PYTHONINC = x; then
+  CXX_SHAREDFLAGS=
+fi
+
+AC_SUBST(CXX_DEBUGFLAGS)
+AC_SUBST(CXX_OPTFLAGS)
+AC_SUBST(CXX_NOOPTFLAGS)
+AC_SUBST(REPO_FILES_IF_NEEDED)
+AC_SUBST(CXX_AR_CMD)
+AC_SUBST(CXX_SHAREDFLAGS)
+AC_SUBST(CXX_DYNLIB_FLAGS)
+
+dnl for the sake of regex only
+AC_LANG_SAVE
+CXX_DEFS_SAVED=$DEFS
+DEFS=""
+AC_LANG_C
+AC_FUNC_ALLOCA
+AC_CHECK_FUNC(regexec, ,  REGEX_LIB="librx/librx.a"; REGEX_CPP='-I$(srcdir)/librx')
+AC_SUBST(REGEX_LIB)
+AC_SUBST(REGEX_CPP)
+AC_LANG_RESTORE
+C_DEFS=$DEFS
+DEFS=CXX_DEFS_SAVED
+
+AC_SUBST(CXX_DEFS)
+
+CPPFLAGS="$CPPFLAGS $EXTRA_CPPFLAGS"
+
+
+AC_SUBST_FILE(MEAD_SHADOW_RULE)
+
+# AC_SWIG_WRAPPING
+
+if test "$use_exceptions" = false && "$look_for_swig" = true; then
+  AC_MSG_WARN([WARNING: using MEAD with exceptions disabled under python 
+               will cause python to be terminated in the event of
+               an error within MEAD])
+fi
+
+dnl NOTE! In the `AC_OUTPUT' form, make sure the last generated file is
+dnl Makefile from the root directory.  This ensures that var `top_srcdir'
+dnl is correct.  (This usage of `top_srcdir' is not officially supported
+dnl by autoconf -- this is a kludge.)  --ttn, 2000/06/12 22:00:29
+
+dnl in the AC_OUTPUT command below MUST be kept one to a line.  This allows
+dnl a kludge in the main Makefile to strip out the ones pertaining to 
+dnl non-distributed apps.  -- Don 2001/05/09
+
+AC_CONFIG_FILES(apps/Makefile
+	  apps/Makefile.common
+	  apps/mulsidecomp/Makefile
+	  apps/multiflex/Makefile
+	  apps/pair_interactions/Makefile
+	  apps/potential/Makefile
+	  apps/potscan/Makefile
+	  apps/redti/Makefile
+	  apps/sav-driver/Makefile
+	  apps/solinprot/Makefile
+	  apps/sphericalHarmonic_test/Makefile
+	  apps/solvate/Makefile
+	  apps/libmso/Makefile
+	  libmead/Makefile
+	  librx/Makefile
+	  testing/Makefile
+	  swig/Makefile
+	  Makefile)
+AC_CONFIG_COMMANDS([symlinks],
+	  [rm -f MEAD
+	   ln -s ${srcdir}/libmead MEAD
+	   (cd ${srcdir} ; test -h MEAD || ln -s libmead MEAD)
+	   (cd ${srcdir}/testing ;
+	    test -h data || ln -s ../examples/data data)
+	   ])
+
+AC_OUTPUT
+
+dnl configure.in ends here

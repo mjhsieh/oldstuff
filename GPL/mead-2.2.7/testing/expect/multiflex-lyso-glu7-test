@@ -1,0 +1,28 @@
+Starting ../../apps/multiflex/multiflex for molecule named lyso
+using the following physical conditions:
+Exterior dielectric constant, espext = 80
+Solvent probe radius, solrad = 1.4
+Ion exclusion layer thickness, sterln = 2
+Temperature, T = 300
+Ionic strength, ionicstr = 0.1
+Hueckel factor (epsext*kappasq) = 0.843035
+Debye length 1/kappa = 9.74142
+ln(10) * kBolt * T = 0.00413391
+kBolt = 5.98444e-06
+conconv = 0.000602214
+econv = 331.842
+Bohr radius = 0.529177
+Proton Charge = 1
+
+Dielectric constant for molecular interior = 4
+No blab level set (so no blabbing)
+For molecule using finite difference method with lattice levels:
+                   Centering Style   grid dimension    spacing
+Coarsest level: ON_ORIGIN 81 1
+Finest level:   ON_CENT_OF_INTR 81 0.25
+
+For model compounds using finite difference method with lattice levels:
+                   Centering Style   grid dimension    spacing
+Coarsest level: ON_GEOM_CENT 61 1
+Finest level:   ON_CENT_OF_INTR 61 0.25
+

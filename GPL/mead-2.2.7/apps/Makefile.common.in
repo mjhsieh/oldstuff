@@ -1,0 +1,69 @@
+# mead/apps -*- Makefile -*- fragment included by many */Makefile
+# ID: $Id: Makefile.common.in,v 1.10 2004/11/19 22:49:56 bashford Exp $
+#
+# NOTE! Makefiles that include this file MUST define vars `appname',
+#       `srcdir' and `top_srcdir'
+#       They may also want to define `LIBDEVEL'
+
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+bindir		= @bindir@
+
+mkinstalldirs	= $(top_srcdir)/mkinstalldirs
+PYSITEPKGDIR	= @PYSITEPKGDIR@
+mead_inst_dir	= $(PYSITEPKGDIR)/MEAD
+
+LOCALINCS	= -I$(top_srcdir) -I$(srcdir) $(LIBMSO_INCL)
+
+LOCALLIBS	= -L../../libmead -lmead $(LIBDEVEL)
+
+CXX_OPTFLAGS	= @CXX_OPTFLAGS@
+CXX_DEBUGFLAGS	= @CXX_DEBUGFLAGS@
+# In Makefile.in the CC_*FLAGS are taken from the CXX_*FLAGS
+# configuration output varables.  Don't see any reason they should differ.
+CC_OPTFLAGS	= @CXX_OPTFLAGS@
+CC_DEBUGFLAGS	= @CXX_DEBUGFLAGS@
+
+CXX		= @CXX@
+CC		= @CC@
+CPPFLAGS	= @CPPFLAGS@
+CXX_DEFS	= @CXX_DEFS@
+
+CXX_AR_CMD      = @CXX_AR_CMD@
+
+REGEX_LIB	= @REGEX_LIB@
+REGEX_CPP	= @REGEX_CPP@
+LIBS		= @LIBS@ -lm
+
+ALL_CPPFLAGS	= -I. $(LOCALINCS) $(CPPFLAGS) $(REGEX_CPP) $(CXX_DEFS)
+ALL_CXXFLAGS	= $(CXX_OPTFLAGS) $(CXX_DEBUGFLAGS)
+ALL_CFLAGS	= $(CC_DEBUGFLAGS) $(CC_OPTFLAGS)
+
+CXXLINK = $(CXX) $(ALL_CPPFLAGS) $(CXX_DEBUGFLAGS) $(CXX_OPTFLAGS) \
+           $(LDFLAGS)
+
+.SUFFIXES: .cc .o
+
+# The rule for making .o files from C++ source files:
+@CXX_O_RULE@
+
+.o :
+	$(CXXLINK) $< $(LOCALLIBS) -lm -o $@
+
+clean:
+	test -n "$(appname)"
+	-$(RM) *.o *.a $(appname)
+
+distclean: clean
+	-$(RM) Makefile
+
+install:
+	test -n "$(appname)"
+	$(mkinstalldirs) $(bindir)
+	$(INSTALL_PROGRAM) $(appname) $(bindir)
+
+uninstall:
+	test -n "$(appname)"
+	$(RM) $(bindir)/$(appname)
+
+# Makefile.common ends here
