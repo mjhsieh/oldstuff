@@ -88,7 +88,7 @@ a img {
  */
 
 #header-wrapper {
-  width:95%;
+  width:90%;
   margin:0 auto 10px;
   border:1px solid $bordercolor;
   }
@@ -133,7 +133,7 @@ a img {
 /* Outer-Wrapper
 ----------------------------------------------- */
 #outer-wrapper {
-  width: 750px;
+  width: 800px;
   margin: 0 auto;
   padding:10px;
   text-align:left;
@@ -141,7 +141,7 @@ a img {
   }
 
 #main-wrapper {
-  width: 500px;
+  width: 550px;
   float: left;
   word-wrap: break-word; /* fix for long text breaking sidebar float in IE */
   overflow: hidden;     /* fix for long non-text content breaking IE sidebar float */
